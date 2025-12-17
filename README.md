@@ -8,7 +8,9 @@ TMDB API를 활용하여 영화 정보를 제공하고,
 
 ## 👥 Team Collaboration Rules
 
-본 프로젝트는 GitHub 기반 협업을 원칙으로 합니다.
+- PR을 올리기 전 ISSUE를 생성하고 ISSUE 번호를 PR에 부여합니다.
+- default 브랜치는 **절대** 건들지 말고, 오직 PR을 통해 병합한 코드들을 올립니다.
+- default 브랜치에 변경사항이 생기면 주기적으로 git pull 또는 git merge를 통해 로컬 툴로 가져옵니다.(충돌 최소화 하기 위함)
 
 ---
 
