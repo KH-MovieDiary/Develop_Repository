@@ -1,1 +1,17 @@
-/.metadata/
+# === OS ===
+.DS_Store
+
+# === Eclipse / STS ===
+.metadata/
+.recommenders/
+.settings/
+.project
+.classpath
+.springBeans
+
+# === Maven ===
+target/
+*.log
+
+# === Server ===
+Servers/
