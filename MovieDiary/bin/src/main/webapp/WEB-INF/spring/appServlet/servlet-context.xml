@@ -21,11 +21,7 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
-<<<<<<< HEAD
-	<context:component-scan base-package="com.kh.MovieDiary" />
-=======
 	<context:component-scan base-package="com.kh.moviediary" />
->>>>>>> refs/heads/develop
 	
 	
 	

@@ -11,7 +11,7 @@
 	</appender>
 	
 	<!-- Application Loggers -->
-	<logger name="com.kh.MovieDiary">
+	<logger name="com.kh.moviediary">
 		<level value="info" />
 	</logger>
 	

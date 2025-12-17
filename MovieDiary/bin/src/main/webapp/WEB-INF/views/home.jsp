@@ -6,11 +6,7 @@
 </head>
 <body>
 <h1>
-<<<<<<< HEAD
-	Hello world!  
-=======
 	movieDiary 페이지입니다.
->>>>>>> refs/heads/develop
 </h1>
 
 <P>  The time on the server is ${serverTime}. </P>
