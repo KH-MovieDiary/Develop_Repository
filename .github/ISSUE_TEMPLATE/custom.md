@@ -8,11 +8,9 @@ assignees: ''
 ---
 
 ---
-name: ✨ Feature Request
-about: 새로운 기능 추가 또는 개선 요청
-title: "[FEAT] "
-labels: ["✨ FEAT"]
-assignees: ""
+name: ex)로그인 기능 추가
+about: ex)새로운 기능 추가 또는 개선 요청
+title: ex)[FEAT]/login
 ---
 
 ### ✨ 기능 요약
@@ -33,9 +31,9 @@ assignees: ""
 ---
 
 ### 🖥 적용 범위
-- [ ] Backend
-- [ ] Frontend
-- [ ] Database
+- [ ] Backend (Spring / API)
+- [ ] Frontend (JSP / JS)
+- [ ] Database (Mybatis / Table)
 - [ ] External API
 
 ---
