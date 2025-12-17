@@ -29,10 +29,6 @@ TMDB API를 활용하여 영화 정보를 제공하고,
 - `fix/*`
   - 버그 수정  
   - 예: `fix/login-error`
- 
-- `jihun126/*/*`
-   - [계정 이름 / 라벨 / 내용] 형식으로 작성
-   - 예: jihun126/feature/login
 
 ---
 
