@@ -104,6 +104,7 @@
         white-space: nowrap;
     }
 </style>
+	<c:set var="contextRoot" value="${pageContext.request.contextPath}"/>
 
 <div id="header">
     <div id="header_1">
@@ -131,7 +132,7 @@
             <ul>
                 <li><a href="">공지사항</a></li>
                 <li><a href="">영화 정보</a></li>
-                <li><a href="">감상평</a></li>
+                <li><a href="${contextRoot}/commentList.bo">감상평</a></li>
                 <li><a href="">마이페이지</a></li>
                 <li>
                     <form action="" method="get" class="search-form">
