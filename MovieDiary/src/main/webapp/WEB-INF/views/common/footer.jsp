@@ -9,7 +9,7 @@
 <body>
 
 <div id="footer">
-
+	<!--  -->
 	<div id="footer-1">
 	
 		<a href="#">이용약관</a> |
