@@ -182,12 +182,17 @@
 </head>
 
 <body>
+	
+
+
+
+
    <div id="header">
         <div id="header_1">
             <div id="header_1_right">
             
      
-                <a href="">회원가입</a>
+                <a href="${pageContext.request.contextPath }/enrollForm.me">회원가입</a>
                 
                 <a data-toggle="modal" data-target="#loginModal">로그인</a>
             
