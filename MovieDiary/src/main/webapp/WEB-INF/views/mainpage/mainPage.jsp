@@ -19,15 +19,14 @@
         }
 
         #header_1 {
-            background-color: red;
             width: 100%;
             height: 40px;
             background-color: white;
-            border-bottom: 1px solid;
+            border-bottom: 1px solid #ddd;
             display: flex;
             justify-content: flex-end; 
             align-items: center; 
-            padding-right: 50px; 
+            padding-right: 15%; 
             box-sizing: border-box;
         }
 
@@ -39,14 +38,20 @@
             font-size: 14px;
         }
 
-
         #header_2 {
             width: 100%;
             height: 100px;
             background-color:#e9ecef ;
             display: flex;
             justify-content: center; 
+        }
+        
+        .inner-wrap {
+            width: 70%;
+            height: 100%;
+            display: flex;
             align-items: center;
+            justify-content: center;
         }
 
         #header_2 ul {
@@ -54,8 +59,7 @@
             margin: 0;
             padding: 0;
             display: flex;
-            width: 60%;
-            justify-content: space-around;
+         align-items : center;
         }
 
         #header_2 li {
@@ -63,10 +67,11 @@
             font-size: 20px;
             font-weight: bold;
             cursor: pointer;
+            margin: 0 50px;
+            white-space:nowrap;
         }
         
         #header_2 li a {
-            width: 50%;
              color: black; 
              text-decoration: none;
         }
@@ -76,8 +81,6 @@
         }
         
         .search-area {
-            margin-left: 50px;
-            position: relative;
         }
         
         .search-form {
@@ -88,6 +91,7 @@
             padding: 5px 15px;
             width: 350px;
             border : 2px solid black;
+            font-weight:nomal;
         }
 
         .search-input {
@@ -100,13 +104,14 @@
         }
 
         .search-btn {
-            background: none;
-            border: none;
-            color: balck;
-            cursor: pointer;
-        }
-        
-        .search-btn:hover { color: #ff8fab; }
+          background: none;
+          border: none;
+          color: black;
+          cursor: pointer;
+          font-size: 16px; 
+          font-weight: bold; 
+         white-space: nowrap;
+      }
         
         #wrap {
             width : 70%;
@@ -182,44 +187,45 @@
 </head>
 
 <body>
-   <div id="header">
+<div id="header">
         <div id="header_1">
             <div id="header_1_right">
-            
+               <c:choose>
+                <c:when>
      
                 <a href="">회원가입</a>
                 
                 <a data-toggle="modal" data-target="#loginModal">로그인</a>
+            </c:when>
             
-           
+            <c:otherwise>
                 <!-- 로그인 후 -->
                     <lable>님 환영합니다</label> &nbsp;&nbsp;
                     
                     <a href="">로그아웃</a>
          
-            
+                </c:otherwise>
+               </c:choose>
             </div>
         </div>
         
         <div id="header_2">
+           <div class="inner-wrap">
            <ul>
               <li><a href>공지사항</a></li>
               <li><a href>영화 정보</a></li>
               <li><a href>감상평</a></li>
               <li><a href>마이페이지</a></li>
-           </ul>
-           
-           <div class="search-area">
-                <form action="" method="get" class="search-form">
+              <li>
+              <form action="" method="get" class="search-form">
                     <input type="text" class="search-input" name="" placeholder="영화 제목을 검색해보세요">
-                    <button type="submit" class="search-btn">
-                        <i class="fas fa-search"></i>
-                    </button>
+                      <button type="submit" class="search-btn">검색</button>
                 </form>
-            </div>
-            
+              </li>
+           </ul>
+              </div>
         </div>
-    </div>   
+    </div>
     
     
         <div class="modal fade" id="loginModal">
@@ -248,8 +254,8 @@
                 </form>
             </div>
         </div>
-
     </div>
+    
     <div id="wrap">
         <div id="content">
             <div id="movieRank">
