@@ -157,10 +157,6 @@
        		 </div>
         </div>
     </div>
-
-	<<div style="width: 70%; margin: 0 auto; background-color: pink; height: 500px;">
-	</div>
-    
     
         <div class="modal fade" id="loginModal">
         <div class="modal-dialog modal-sm">
