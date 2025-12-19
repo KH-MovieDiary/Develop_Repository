@@ -29,12 +29,13 @@
  <select id="reviewList" resultType="ReviewList">
  	SELECT REVIEW_ID
  		  ,MOVIE_ID
- 		  ,USER_ID
+ 		  ,NICKNAME
  		  ,VIEW_COUNT
  		  ,LIKE_COUNT
- 		  ,CREATE_DATE
+ 		  ,R.CREATE_DATE
  		  ,REVIEW_TITLE
- 	FROM REVIEW
+ 	FROM REVIEW R
+ 	JOIN MEMBER M USING(USER_ID)
  </select>
    
 

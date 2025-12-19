@@ -132,7 +132,7 @@
 							<tr>
 								<td>${b.reviewId}</td>
 			                    <td>${b.reviewTitle}</td>
-			                    <td>${b.userId}</td>
+			                    <td>${b.nickname}</td>
 			                    <td>${b.viewCount}</td>
 			                    <td>${b.likeCount}</td>
 			                    <td>${b.createDate}</td>
