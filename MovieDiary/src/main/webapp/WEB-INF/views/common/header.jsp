@@ -122,7 +122,7 @@
             <c:choose>
                 <%-- ✅ 로그인 전 --%>
                 <c:when test="${empty loginUser}">
-                    <a href="">회원가입</a>
+                    <a href="${pageContext.request.contextPath}/enrollForm.me">회원가입</a>
                     <a data-toggle="modal" data-target="#loginModal">로그인</a>
                 </c:when>
 
