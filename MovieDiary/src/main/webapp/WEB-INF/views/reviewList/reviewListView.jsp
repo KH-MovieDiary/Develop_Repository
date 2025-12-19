@@ -151,7 +151,7 @@
     			
     			$("board-table tbody tr").click(function(){
     				let rno = $(this).children().first().text()
-    				location.href = "detail.bo?rno="+rno;
+    				location.href = "detail.review?rno="+rno;
     			})
     			
     		});
