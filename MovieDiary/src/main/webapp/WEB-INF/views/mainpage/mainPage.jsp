@@ -11,7 +11,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <style>
-        /* ✅ mainpage 전용 스타일만 남기기 */
 
         #wrap {
             width: 70%;
