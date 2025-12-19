@@ -106,7 +106,7 @@
 
             <!-- 오른쪽: 검색 -->
             <div class="board-top-right">
-				<a href="">감상평 작성</a>            
+				<a href="${pageContext.request.contextPath}/insert.review">감상평 작성</a>            
             </div>
         </div>
     </form>

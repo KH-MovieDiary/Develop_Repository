@@ -20,4 +20,5 @@ public class Review {
 	private int likeCount;			//	LIKE_COUNT	NUMBER
 	private int movieId;			//	MOVIE_ID	NUMBER
 	private String userId;			//	USER_ID	VARCHAR2(20 BYTE)
+	private String movieTitle; 
 }

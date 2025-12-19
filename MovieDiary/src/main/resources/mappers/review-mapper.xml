@@ -5,16 +5,19 @@
   
  <mapper namespace="reviewMapper">
  
- <insert id="reviewInsert">
+ <insert id="reviewInsert" parameterType="Review">
  	INSERT INTO REVIEW
- 	VALUES()
- 
- 
- 
- 
- 
- 
- 
+ 	VALUES(SEQ_RENO.NEXTVAL
+ 		   ,#{content}
+ 		   ,SYSDATE
+ 		   ,SYSDATE
+ 		   ,0
+ 		   ,0
+ 		   ,(SELECT MOVIE_ID
+			FROM MOVIE
+			WHERE MOVIE_TITLE = #{movieTitle})
+		   ,#{userId}
+		   )
  </insert>
    
 

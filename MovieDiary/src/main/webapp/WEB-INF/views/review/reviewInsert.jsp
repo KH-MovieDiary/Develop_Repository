@@ -121,7 +121,7 @@
         <div class="innerOuter">
             <h2 class="form-title">영화감상문 작성하기</h2>
             
-            <form id="enrollForm" method="post" action="${contextRoot}/insert.review">
+            <form id="enrollForm" method="post" action="${pageContext.request.contextPath}/insert.review">
    
                 <div class="form-group">
                     <label for="movieTitle">영화 제목</label>
@@ -130,7 +130,7 @@
                 
                 <div class="form-group">
                     <label for="writer">작성자</label>
-                    <input type="text" id="writer" class="form-control" value="" name="userId" readonly>
+                    <input type="text" id="writer" class="form-control" value="${loginUser.userId}" name="userId" readonly>
                 </div>
 
                 <div class="form-group">
