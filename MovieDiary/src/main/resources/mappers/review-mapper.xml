@@ -10,7 +10,7 @@
  	VALUES(SEQ_RENO.NEXTVAL
  		   ,#{content}
  		   ,SYSDATE
- 		   ,SYSDATE
+ 		   ,NULL
  		   ,0
  		   ,0
  		   ,(SELECT MOVIE_ID
@@ -18,8 +18,39 @@
 			WHERE MOVIE_TITLE = #{movieTitle})
 		   ,#{userId}
 		   )
-		   
  </insert>
+ 
+ <update id="increaseCount">
+ 	UPDATE REVIEW
+ 	SET VIEWCOUNT=VIEWCOUNT+1;
+ 	WHERE REVIEW_ID=#{rno}
+ </update>
+ 
+ <select id="reviewDetail">
+ 	SELECT REVIEW_ID,
+ 		   CONTENT,
+ 		   CREATE_DATE,
+ 		   VIEW_COUNT,
+ 		   LIKE_COUNT,
+ 		   (SELECT MOVIE_TITLE 
+            FROM MOVIE M 
+            WHERE M.MOVIE_ID = R.MOVIE_ID) movieTitle
+ 		   ,USER_ID
+ 	FROM REVIEW
+ 	WHERE REVIEW_ID=#{rno}
+ </select>
+ 
+ <update id="reviewUpdate" parameterType="Review">
+ 	UPDATE REVIEW
+ 	SET CONTENT = #{content},
+ 		UPDATE_DATE = SYSDATE
+	WHERE REVIEW_ID = #{rno}
+ </update>
+ 
+ <delete id="reviewDelete">
+ 	DELETE FROM REVIEW
+ 	WHERE REVIEW_ID = #{rno}
+ </delete>
    
 
 </mapper>
