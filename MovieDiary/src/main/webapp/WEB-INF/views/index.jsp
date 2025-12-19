@@ -11,6 +11,6 @@
 	.
 	.
 	.
-	<jsp:forward page="/WEB-INF/views/mainpage/mainPage.jsp"/>
+<%-- 	<jsp:forward page="/WEB-INF/views/mainpage/mainPage.jsp"/> --%>
 </body>
 </html>

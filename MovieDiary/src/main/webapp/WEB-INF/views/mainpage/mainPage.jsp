@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+    
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -76,13 +79,13 @@
         }
 
         .poster_item {
-            background-color: darkseagreen;
+            border: 2px dashed pink;
             width: 100%;
             height: 70%;
         }
 
         .title_item {
-            background-color: palegreen;
+            border: 2px dashed green;
             width: 100%;
             height: 30%;
         }
@@ -99,28 +102,42 @@
                 <div id="header_movieRank">
                     영화 순위 / 더보기
                 </div>
-                <div id="content_movieRank">
-                    <div class="item_content">
-                        <div class="poster_item">포스터</div>
-                        <div class="title_item">제목</div>
-                    </div>
-                    <div class="item_content">
-                        <div class="poster_item"></div>
-                        <div class="title_item"></div>
-                    </div>
-                    <div class="item_content">
-                        <div class="poster_item"></div>
-                        <div class="title_item"></div>
-                    </div>
-                    <div class="item_content">
-                        <div class="poster_item"></div>
-                        <div class="title_item"></div>
-                    </div>
-                    <div class="item_content">
-                        <div class="poster_item"></div>
-                        <div class="title_item"></div>
-                    </div>
-                </div>
+               <div id="content_movieRank">
+    <c:forEach var="m" items="${top5}" varStatus="st">
+        <div class="item_content">
+            <div class="poster_item" style="display:flex; align-items:center; justify-content:center;">
+                <c:choose>
+                    <c:when test="${not empty m.posterUrl}">
+                        <img src="${m.posterUrl}"
+                             alt="poster"
+                             style="width:100%; height:100%; object-fit:cover;" />
+                    </c:when>
+                    <c:otherwise>
+                        포스터
+                    </c:otherwise>
+                </c:choose>
+            </div>
+            <div class="title_item"
+                 style="display:flex; align-items:center; justify-content:center; padding:6px; text-align:center;">
+                <c:out value="${m.title}" />
+            </div>
+        </div>
+    </c:forEach>
+
+    <c:set var="len" value="${empty top5 ? 0 : fn:length(top5)}" />
+<c:set var="remain" value="${5 - len}" />
+
+<c:if test="${remain > 0}">
+    <c:forEach begin="1" end="${remain}">
+        <div class="item_content">
+            <div class="poster_item"></div>
+            <div class="title_item"></div>
+        </div>
+    </c:forEach>
+</c:if>
+
+</div>
+
             </div>
 
             <div id="live_comment"></div>
