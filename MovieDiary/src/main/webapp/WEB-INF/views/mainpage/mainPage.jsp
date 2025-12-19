@@ -11,7 +11,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <style>
-        /* ✅ mainpage 전용 스타일만 남기기 */
 
         #wrap {
             width: 70%;
@@ -92,7 +91,6 @@
 
 <body>
 
-    <%-- ✅ 헤더 include (경로는 너 프로젝트 경로에 맞게) --%>
     <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
     <div id="wrap">
@@ -128,6 +126,8 @@
             <div id="live_comment"></div>
         </div>
     </div>
+
+	<jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
 </body>
 </html>
