@@ -1,0 +1,13 @@
+package com.kh.moviediary.member.dao;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class MemberDao {
+
+	public int idCheck(SqlSessionTemplate sqlSession, String inputId) {
+		return sqlSession.selectOne("memberMapper.");
+	}
+
+}
