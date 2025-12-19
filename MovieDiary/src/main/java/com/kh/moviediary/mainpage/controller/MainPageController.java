@@ -37,7 +37,7 @@ public class MainPageController {
             @SuppressWarnings("unchecked")
             List<Map<String, Object>> results = (List<Map<String, Object>>) result.get("results");
 
-            List<Map<String, Object>> top5 = new ArrayList<Map<String,Object>>();
+            List<Map<String, Object>> top5 = new ArrayList<Map<String, Object>>();
 
             if (results != null) {
                 for (Map<String, Object> m : results) {
@@ -61,7 +61,7 @@ public class MainPageController {
             model.addAttribute("error", "");
 
         } catch (Exception e) {
-            model.addAttribute("top5", new ArrayList<Map<String,Object>>());
+            model.addAttribute("top5", new ArrayList<Map<String, Object>>());
             model.addAttribute("top5Size", 0);
             model.addAttribute("error", "TMDB 호출 실패: " + e.getClass().getName() + " / " + e.getMessage());
         }
