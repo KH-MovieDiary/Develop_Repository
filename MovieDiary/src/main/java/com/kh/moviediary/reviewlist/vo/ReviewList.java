@@ -1,8 +1,8 @@
-package com.kh.moviediary.comment.model.vo;
+package com.kh.moviediary.reviewlist.vo;
 
 import java.sql.Date;
 
-public class Comment {
+public class ReviewList {
 
 	private String commentId; // COMMENT_ID VARCHAR2(100 BYTE)
 	private String content; // CONTENT VARCHAR2(1000 BYTE)

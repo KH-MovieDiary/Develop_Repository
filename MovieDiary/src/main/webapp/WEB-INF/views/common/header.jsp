@@ -132,7 +132,7 @@
             <ul>
                 <li><a href="">공지사항</a></li>
                 <li><a href="">영화 정보</a></li>
-                <li><a href="${contextRoot}/commentList.bo">감상평</a></li>
+                <li><a href="${contextRoot}/reviewList.bo">감상평</a></li>
                 <li><a href="">마이페이지</a></li>
                 <li>
                     <form action="" method="get" class="search-form">

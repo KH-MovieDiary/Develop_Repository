@@ -1,14 +1,14 @@
-package com.kh.moviediary.comment.controller;
+package com.kh.moviediary.reviewlist.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class CommentController {
+public class ReviewListController {
 
-	@RequestMapping("/commentList.bo")
+	@RequestMapping("/reviewList.bo")
 	public String commentList() {
 		
-		return "comment/commentListView";
+		return "reviewList/reviewListView";
 	}
 }
