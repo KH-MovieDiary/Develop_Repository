@@ -35,6 +35,6 @@ public class ReviewController {
 		
 		System.out.println(result);
 		
-		return "redirect:commentList.bo";
+		return "redirect:/reviewList.bo";
 	}
 }
