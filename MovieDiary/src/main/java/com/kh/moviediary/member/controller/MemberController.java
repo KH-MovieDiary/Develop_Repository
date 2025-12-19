@@ -21,7 +21,7 @@ public class MemberController {
 	@Autowired
 	private BCryptPasswordEncoder bcrypt;
 	
-	//È¸¿ø°¡ÀÔ ÆäÀÌÁö·Î ÀÌµ¿
+	//È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
 	@RequestMapping("/enrollForm.me")
 	public String enrollForm() {
 		
@@ -34,7 +34,7 @@ public class MemberController {
 
 		int count = service.idCheck(inputId);
 	    
-	    // °á°ú¿¡ µû¶ó ¾à¼ÓµÈ ¹®ÀÚ¿­ ¹ÝÈ¯
+	    // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Óµï¿½ ï¿½ï¿½ï¿½Ú¿ï¿½ ï¿½ï¿½È¯
 		if(count>0) {
 			
 			return "NNNNN";
