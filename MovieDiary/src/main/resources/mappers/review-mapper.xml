@@ -3,7 +3,24 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
-   <mapper namespace="reviewMapper">
+ <mapper namespace="reviewMapper">
+ 
+ <insert id="reviewInsert" parameterType="Review">
+ 	INSERT INTO REVIEW
+ 	VALUES(SEQ_RENO.NEXTVAL
+ 		   ,#{content}
+ 		   ,SYSDATE
+ 		   ,SYSDATE
+ 		   ,0
+ 		   ,0
+ 		   ,(SELECT MOVIE_ID
+			FROM MOVIE
+			WHERE MOVIE_TITLE = #{movieTitle})
+		   ,#{userId}
+		   )
+		   
+ </insert>
+   
 
-	</mapper>
+</mapper>
 
