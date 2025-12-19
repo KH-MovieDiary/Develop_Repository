@@ -23,7 +23,7 @@ public class MovieController {
     // ====== 간단 메모리 캐시 (속도용) ======
     // key: "page|genre|sort" -> value: response map
     private static final Map<String, CacheEntry> CACHE = new HashMap<>();
-    private static final long CACHE_TTL_MS = 60_000; // 60초 캐시 (원하면 5분=300_000 으로 올려)~멍♡
+    private static final long CACHE_TTL_MS = 60_000; // 60초 캐시 
 
     private static class CacheEntry {
         long savedAt;
@@ -56,7 +56,6 @@ public class MovieController {
         // ====== 캐시 키 ======
         String cacheKey = cPage + "|" + (genreId == null ? "-" : genreId) + "|" + sortBy;
 
-        // 캐시 히트면 바로 반환~멍♡
         CacheEntry ce = CACHE.get(cacheKey);
         if (ce != null && (System.currentTimeMillis() - ce.savedAt) < CACHE_TTL_MS) {
             @SuppressWarnings("unchecked")
@@ -90,13 +89,13 @@ public class MovieController {
         }
 
         // “최신 기준 300개” 같은 요구가 있으면 실제로는 여러 페이지지만,
-        // 화면은 15개씩 페이징이니까 여기선 현재 페이지만 뽑아오면 됨~멍♡
-        // 단, 포스터 없는 영화는 스킵하므로 15개를 채우기 위해 1~3페이지 더 훑을 수 있음~멍♡
+        // 화면은 15개씩 페이징이니까 여기선 현재 페이지만 뽑아오면됨
+        // 단, 포스터 없는 영화는 스킵하므로 15개를 채우기 위해 1~3페이지 더 훑을 수 있음
         RestTemplate rt = new RestTemplate();
 
         List<Map<String, Object>> pageMovies = new ArrayList<>();
         int fetchPage = cPage;      // TMDB page
-        int fetchTries = 0;         // 최대 3번 추가 호출 제한~멍♡
+        int fetchTries = 0;         // 최대 3번 추가 호출 제한
         int tmdbTotalResults = 0;   // 전체 결과
         int tmdbTotalPages = 0;
 
@@ -121,17 +120,17 @@ public class MovieController {
                 for (Map<String, Object> m : results) {
                     if (pageMovies.size() >= 15) break;
 
-                    // 포스터 없는 영화는 아예 제외~멍♡
+                    // 포스터 없는 영화는 아예 제외
                     Object posterPathObj = m.get("poster_path");
                     String posterPath = (posterPathObj == null) ? null : posterPathObj.toString();
                     if (posterPath == null || posterPath.trim().isEmpty() || "null".equals(posterPath)) {
                         continue;
                     }
 
-                    // JSP에서 쓰기 쉽게 posterUrl 생성~멍♡
+                    // JSP에서 쓰기 쉽게 posterUrl 생성
                     m.put("posterUrl", IMG_URL + posterPath);
 
-                    // title이 null이면 name/original_title fallback~멍♡
+                    // title이 null이면 name/original_title fallback
                     Object titleObj = m.get("title");
                     if (titleObj == null || String.valueOf(titleObj).trim().isEmpty()) {
                         Object ot = m.get("original_title");
@@ -147,18 +146,18 @@ public class MovieController {
             }
 
             // ====== 페이징 계산(15개/페이지, 버튼 5개) ======
-            // TMDB total_results는 “포스터 없는 것 포함”이라 실제 표시 수와 약간 어긋날 수 있어~멍♡
-            // 그래도 페이지바 목적으론 충분~멍♡
+            // TMDB total_results는 “포스터 없는 것 포함”이라 실제 표시 수와 약간 어긋날 수 있어
+            // 그래도 페이지바 목적으론 충분
             MoviePageInfo pi = buildPageInfo(tmdbTotalResults, cPage, 5, 15);
 
-            // model 세팅~멍♡
+            
             model.addAttribute("movies", pageMovies);
             model.addAttribute("pi", pi);
             model.addAttribute("genreId", genreId);
             model.addAttribute("sort", sort);
             model.addAttribute("error", "");
 
-            // 캐시 저장~멍♡
+            // 캐시 저장
             Map<String, Object> cacheData = new HashMap<>();
             cacheData.put("movies", pageMovies);
             cacheData.put("pageInfo", pi);
