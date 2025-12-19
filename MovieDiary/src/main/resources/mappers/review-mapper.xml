@@ -20,6 +20,21 @@
 		   )
 		   
  </insert>
+ 
+ <select id="listCount" resultType="_int">
+ 	SELECT COUNT(*)
+ 	FROM REVIEW
+ </select>
+ 
+ <select id="reviewList" resultType="ReviewList">
+ 	SELECT REVIEW_ID
+ 		  ,MOVIE_ID
+ 		  ,USER_ID
+ 		  ,VIEW_COUNT
+ 		  ,LIKE_COUNT
+ 		  ,CREATE_DATE
+ 	FROM REVIEW
+ </select>
    
 
 </mapper>
