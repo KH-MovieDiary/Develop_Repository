@@ -10,7 +10,6 @@
 
 	
 	<div class="content">
-		<br><br>
 		<div class="innerOuter">
 			<h2>회원가입</h2>
 			<br>
@@ -30,6 +29,9 @@
 					<label for="nickName">*별명 : </label>
 					<input type="text" class="form-control" id="nickName" placeholder="별명을 입력하세요" name="nickName"> <br><br>
 					
+					<label for="age"> *나이 : </label>
+                    <input type="number" class="form-control" id="age" placeholder="나이를 입력하세요" name="age" value="0"> <br><br>
+					
 					<label for="email">*이메일 : </label>
 					<div class="input-group">
 				        <input type="text" class="form-control" id="emailId" name="emailId" required>
@@ -48,11 +50,11 @@
 				            <option value="hanmail.net">hanmail.net</option>
 				        </select>
 				    </div>
+				    <br>
 				    
-				    <label for="age">*별명 : </label>
-					<input type="number" class="form-control" id="nickName" placeholder="별명을 입력하세요" name="nickName"> <br><br>
+				   
 				    
-				        <br><br>
+				        <br>
 				        
 			        <div class="form-group">
 				    <label>* 어떤 장르의 영화를 좋아하세요? (중복 선택 가능)</label> <br>
