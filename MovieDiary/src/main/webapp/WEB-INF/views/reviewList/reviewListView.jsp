@@ -89,7 +89,6 @@
 
     <h2>게시판</h2>
 
-    <!-- 🔹 검색 / 정렬 영역 (테이블 위, 오른쪽) -->
     <form action="${contextRoot}/board/list" method="get">
         <div class="board-top">
 
@@ -132,7 +131,7 @@
 						<c:forEach items="${list}" var="b">
 							<tr>
 								<td>${b.reviewId}</td>
-			                    <td>${b.movieId}</td>
+			                    <td>${b.reviewTitle}</td>
 			                    <td>${b.userId}</td>
 			                    <td>${b.viewCount}</td>
 			                    <td>${b.likeCount}</td>
@@ -145,11 +144,11 @@
     </table>
     
     <!-- 상세 페이지 이동 -->
-    <c:if test="${empty list }">
+    <c:if test="${not empty list }">
     	<script>
     		$(function(){
     			
-    			$("board-table tbody tr").click(function(){
+    			$(".board-table tbody tr").click(function(){
     				let rno = $(this).children().first().text()
     				location.href = "detail.bo?rno="+rno;
     			})
@@ -180,6 +179,7 @@
         <input type="text" name="keyword" placeholder="검색어 입력">
 		<button type="submit">검색</button>
              
+
 </div>
 
 	<jsp:include page="/WEB-INF/views/common/footer.jsp"/>
