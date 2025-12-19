@@ -47,25 +47,23 @@
     font-weight: bold;
 }
 
-/* 페이지네이션 */
 .paging {
     margin-top: 20px;
     text-align: center;
+    align-items: center;
 }
 
 .comment-area {
     margin-top: 40px;
 }
 
-/* textarea + 버튼 정렬 */
 .comment-input {
     display: flex;
-    justify-content: center;   /* 가운데 정렬 */
+    justify-content: center;   
     align-items: center;
-    gap: 10px;                 /* textarea와 버튼 사이 간격 */
+    gap: 10px;                 
 }
 
-/* textarea 크기 */
 #commentContent {
     width: 80%;
     height: 40px;
@@ -74,7 +72,6 @@
     font-size: 14px;
 }
 
-/* 등록 버튼 */
 .btn-comment {
     height: 40px;
     padding: 0 16px;
@@ -125,37 +122,53 @@
         </thead>
 
         <tbody>
-            <c:forEach var="b" items="">
-                <tr>
-                    <td></td>
-                    <td>
-                        <a href="">
-                            
-                        </a>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <c:if test="">
-                           
-                        </c:if>
-                    </td>
-                </tr>
-
-            </c:forEach>
+            <c:choose>
+					<c:when test="${empty list }">
+						<tr>
+							<td colspan='6'>조회된 게시글이 없습니다.</td>
+						</tr>
+					</c:when>
+					<c:otherwise>
+						<c:forEach items="${list}" var="b">
+							<tr>
+								<td>${b.reviewId}</td>
+			                    <td>${b.movieId}</td>
+			                    <td>${b.userId}</td>
+			                    <td>${b.viewCount}</td>
+			                    <td>${b.likeCount}</td>
+			                    <td>${b.createDate}</td>
+							</tr>
+						</c:forEach>
+					</c:otherwise>
+				</c:choose>
         </tbody>
     </table>
     
-    <!-- 🔹 페이지네이션 -->
+    <!-- 상세 페이지 이동 -->
+    <c:if test="${empty list }">
+    	<script>
+    		$(function(){
+    			
+    			$("board-table tbody tr").click(function(){
+    				let rno = $(this).children().first().text()
+    				location.href = "detail.bo?rno="+rno;
+    			})
+    			
+    		});
+    	</script>
+    </c:if>
+    
+    
     <div class="paging">
-        <a href="#">Previous</a>
-        <a href="#">1</a>
-        <a href="#">2</a>
-        <a href="#">3</a>
-        <a href="#">4</a>
-        <a href="#">5</a>
-        <a href="#">Next</a>
+        <ul class="pagination">
+        	<li class="page-item"><a class="page-link">이전</a></li>
+        
+        	<c:forEach begin="1" end="10" var="i">
+        		<li class="page-item"><a class="page-link">${i}</a></li>
+        	</c:forEach>
+        	
+        	<li class="page-item"><a class="page-link">다음</a></li>
+        </ul>
     </div>
 			
 		<select name="condition">
@@ -167,18 +180,6 @@
         <input type="text" name="keyword" placeholder="검색어 입력">
 		<button type="submit">검색</button>
              
-    <div class="comment-area">
-
-    <h4>댓글 <span id="commentCount"></span></h4>
-
-    <div class="comment-input">
-        <textarea id="commentContent" placeholder="댓글을 입력하세요"></textarea>
-        <button class="btn-comment" onclick="insertComment()">등록</button>
-    </div>
-
-    <div id="commentList"></div>
-
-    </div>
 </div>
 
 	<jsp:include page="/WEB-INF/views/common/footer.jsp"/>
