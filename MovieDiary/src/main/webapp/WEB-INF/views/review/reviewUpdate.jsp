@@ -64,53 +64,6 @@
             border-color: #ff9fb3;
             box-shadow: 0 0 0 3px rgba(255, 143, 171, 0.2);
         }
-
-        .btn-area {
-            margin-top: 40px;
-            text-align: center;
-        }
-        
-        .btn-pink {
-            background-color: #ff8fab;
-            color: white;
-            border: none;
-            padding: 12px 50px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(255, 143, 171, 0.4);
-            transition: all 0.3s ease;
-        }
-
-        .btn-pink:hover {
-            background-color: #ff7096;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(255, 143, 171, 0.6);
-            color: white;
-        }
-
-        .btn-gray {
-            background-color: #e9ecef;
-            color: #495057;
-            border: none;
-            padding: 12px 50px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border-radius: 12px;
-            margin-left: 10px;
-            transition: all 0.3s ease;
-        }
-        .btn-gray:hover {
-            background-color: #dee2e6;
-            color: #212529;
-        }
-        
-        input[readonly] {
-            background-color: #f8f9fa !important;
-            color: #6c757d;
-            border: none;
-        }
-
     </style>
 </head>
 <body>
@@ -121,11 +74,11 @@
         <div class="innerOuter">
             <h2 class="form-title">영화감상문 수정하기</h2>
             
-            <form id="enrollForm" method="post" action="${pageContext.request.contextPath}/update.review">
-   
-                <div class="form-group">
-                    <label for="movieTitle">영화 제목</label>
-                    <input type="text" id="movieTitle" class="form-control" name="movieTitle" value="${review.movieTitle }" readonly>
+            <form id="enrollForm" method="post" action="${contextRoot}/update.review">
+   				<input type="hidden" name="reviewId" value="${review.reviewId }">
+                	<div class="form-group">
+                    <label for="movieTitle">감상문 제목</label>
+                    <textarea id="reviewTitle" class="form-control" row="1" name="reviewTitle"  style="resize:none";>${review.reviewTitle}</textarea>
                 </div>
                 
                 <div class="form-group">

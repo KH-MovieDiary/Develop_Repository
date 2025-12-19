@@ -21,4 +21,5 @@ public class Review {
 	private int movieId;			//	MOVIE_ID	NUMBER
 	private String userId;			//	USER_ID	VARCHAR2(20 BYTE)
 	private String movieTitle; 
+	private String reviewTitle;
 }

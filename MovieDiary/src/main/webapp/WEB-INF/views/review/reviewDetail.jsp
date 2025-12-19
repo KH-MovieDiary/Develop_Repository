@@ -37,49 +37,6 @@
             border: none;
         }
 
-        .btn-area {
-            margin-top: 40px;
-            text-align: center;
-        }
-        
-		.btn-blue {
-		    background-color: #74c0fc;
-		    color: white;
-		    border: none;
-		    padding: 12px 50px;
-		    font-size: 1.1rem;
-		    font-weight: 600;
-		    border-radius: 12px;
-		    box-shadow: 0 4px 10px rgba(116, 192, 252, 0.4); 
-		    transition: all 0.3s ease;
-		}
-		
-		.btn-blue:hover {
-		    background-color: #4dabf7;
-		    transform: translateY(-2px);
-		    box-shadow: 0 6px 15px rgba(116, 192, 252, 0.6);
-		    color: white;
-		}
-		
-		.btn-red {
-		    background-color: #ff8787;  
-		    color: white;
-		    border: none;
-		    padding: 12px 50px;
-		    font-size: 1.1rem;
-		    font-weight: 600;
-		    border-radius: 12px;
-		    box-shadow: 0 4px 10px rgba(255, 135, 135, 0.4); 
-		    transition: all 0.3s ease;
-		    margin-left: 10px;
-		}
-		
-		.btn-red:hover {
-		    background-color: #fa5252; 
-		    transform: translateY(-2px);
-		    box-shadow: 0 6px 15px rgba(255, 135, 135, 0.6);
-		    color: white;
-		}
     </style>
 </head>
 <body>
@@ -89,8 +46,16 @@
     <div class="movie-register-wrapper">
         <div class="innerOuter">
             <h2 class="form-title">감상평 상세보기</h2>
+			<br> <a class="listBtn" id="listBtn" style="float: right;"
+				href="${contextRoot}/reviewList.bo">목록으로</a> <br>
+			<br>
+            
             
            <table id="contentArea" class="table">
+           		<tr>
+                    <th>감상평 제목</th>
+                    <td colspan="3">${review.reviewTitle}</td>
+                </tr>
                 <tr>
                     <th>영화 제목</th>
                     <td colspan="3">${review.movieTitle}</td>
@@ -103,7 +68,11 @@
                 </tr>
                 <tr>
                     <th>조회수</th>
-                    <td colspan="3">${review.viewCount}</td>
+                    <td>${review.viewCount}</td>
+                    <c:if test="${not empty review.updateDate}">
+                    <th>수정일</th>
+                    <td>${review.updateDate}</td>
+                    </c:if>
                 </tr>
                 <tr>
                     <th>내용</th>
@@ -117,8 +86,8 @@
 				
 				<c:if test="${review.userId eq loginUser.userId }">
 	                <div class="btn-area">
-	                    <button type="button" id="updateBtn" class="btn btn-blue">수정하기</button>
-	                    <button type="button" id= "deleteBtn" class="btn btn-red">삭제하기</button>
+	                    <button type="button" id="updateBtn" class="btn">수정하기</button>
+	                    <button type="button" id= "deleteBtn" class="btn">삭제하기</button>
 	                </div>
 				</c:if>
         </div>

@@ -65,7 +65,7 @@ public class ReviewController {
 	}
 	
 	
-	@PostMapping("/update.review")
+	@RequestMapping("/update.review")
 	public String reviewUpdate(Review r,HttpSession session) {
 		
 		int result = service.reviewUpdate(r);
@@ -82,12 +82,13 @@ public class ReviewController {
 	public String reviewDelete(int rno,HttpSession session) {
 		
 		int result = service.reviewDelete(rno);
-		
 		if(result>0) {
 			session.setAttribute("alertMsg", "삭제에 성공하였습니다");
+			return "redirect:/reviewList.bo";
 		} else {
 			session.setAttribute("alertMsg", "삭제에 실패하였습니다");
+			return "redirect:/reviewList.bo";
 		}
-		return null;
+		
 	}
 }

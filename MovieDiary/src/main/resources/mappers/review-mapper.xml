@@ -13,10 +13,9 @@
  		   ,NULL
  		   ,0
  		   ,0
- 		   ,(SELECT MOVIE_ID
-			FROM MOVIE
-			WHERE MOVIE_TITLE = #{movieTitle})
+ 		   ,NULL
 		   ,#{userId}
+		   ,#{reviewTitle}
 		   )
  </insert>
  
@@ -36,6 +35,8 @@
             FROM MOVIE M 
             WHERE M.MOVIE_ID = R.MOVIE_ID) movieTitle
  		   ,USER_ID
+ 		   ,REVIEW_TITLE
+ 		   ,UPDATE_DATE
  	FROM REVIEW R
  	WHERE REVIEW_ID=#{rno}
  </select>
@@ -43,6 +44,7 @@
  <update id="reviewUpdate" parameterType="Review">
  	UPDATE REVIEW
  	SET CONTENT = #{content},
+ 		REVIEW_TITLE = #{reviewTitle},
  		UPDATE_DATE = SYSDATE
 	WHERE REVIEW_ID = #{reviewId}
  </update>
