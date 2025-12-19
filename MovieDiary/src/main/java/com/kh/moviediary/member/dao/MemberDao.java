@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 public class MemberDao {
 
 	public int idCheck(SqlSessionTemplate sqlSession, String inputId) {
-		return sqlSession.selectOne("memberMapper.");
+		return sqlSession.selectOne("memberMapper.idCheck");
 	}
 
 }
