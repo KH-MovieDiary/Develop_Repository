@@ -139,7 +139,7 @@
     <div id="header_2">
         <div class="inner-wrap">
             <ul>
-                <li><a href="">공지사항</a></li>
+                <li><a href="${pageContext.request.contextPath}/mainpage">HOME</a></li>
                 <li><a href="">영화 정보</a></li>
                 <li><a href="${contextRoot}/reviewList.bo">감상평</a></li>
                 <li><a href="">마이페이지</a></li>
