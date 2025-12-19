@@ -1,7 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<!DOCTYPE html>
+<html>
+<head>
+	<!-- jQuery 라이브러리 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<!-- 부트스트랩에서 제공하고 있는 스타일 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- 부트스트랩에서 제공하고 있는 스크립트 -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <style>
     body {
         margin: 0;
@@ -105,7 +113,8 @@
     }
 </style>
 	<c:set var="contextRoot" value="${pageContext.request.contextPath}"/>
-
+</head>
+<body>
 <div id="header">
     <div id="header_1">
         <div id="header_1_right">
@@ -170,3 +179,6 @@
         </div>
     </div>
 </div>
+
+</body>
+</html>
