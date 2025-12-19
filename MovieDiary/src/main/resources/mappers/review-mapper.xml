@@ -18,6 +18,7 @@
 			WHERE MOVIE_TITLE = #{movieTitle})
 		   ,#{userId}
 		   )
+		   
  </insert>
    
 
