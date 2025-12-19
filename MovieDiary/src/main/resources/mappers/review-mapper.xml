@@ -22,11 +22,11 @@
  
  <update id="increaseCount">
  	UPDATE REVIEW
- 	SET VIEWCOUNT=VIEWCOUNT+1;
+ 	SET VIEW_COUNT=VIEW_COUNT+1
  	WHERE REVIEW_ID=#{rno}
  </update>
  
- <select id="reviewDetail">
+ <select id="reviewDetail" resultType="Review">
  	SELECT REVIEW_ID,
  		   CONTENT,
  		   CREATE_DATE,
@@ -36,7 +36,7 @@
             FROM MOVIE M 
             WHERE M.MOVIE_ID = R.MOVIE_ID) movieTitle
  		   ,USER_ID
- 	FROM REVIEW
+ 	FROM REVIEW R
  	WHERE REVIEW_ID=#{rno}
  </select>
  
@@ -44,7 +44,7 @@
  	UPDATE REVIEW
  	SET CONTENT = #{content},
  		UPDATE_DATE = SYSDATE
-	WHERE REVIEW_ID = #{rno}
+	WHERE REVIEW_ID = #{reviewId}
  </update>
  
  <delete id="reviewDelete">

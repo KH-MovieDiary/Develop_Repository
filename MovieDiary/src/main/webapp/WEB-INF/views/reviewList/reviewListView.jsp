@@ -145,11 +145,11 @@
     </table>
     
     <!-- 상세 페이지 이동 -->
-    <c:if test="${empty list }">
+    <c:if test="${not empty list }">
     	<script>
     		$(function(){
     			
-    			$("board-table tbody tr").click(function(){
+    			$(".board-table tbody tr").click(function(){
     				let rno = $(this).children().first().text()
     				location.href = "detail.review?rno="+rno;
     			})

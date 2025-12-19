@@ -121,7 +121,7 @@
         <div class="innerOuter">
             <h2 class="form-title">영화감상문 수정하기</h2>
             
-            <form id="enrollForm" method="post" action="${contextRoot}/update.review">
+            <form id="enrollForm" method="post" action="${pageContext.request.contextPath}/update.review">
    
                 <div class="form-group">
                     <label for="movieTitle">영화 제목</label>
