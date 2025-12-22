@@ -22,9 +22,9 @@ public class MovieController {
     private static final String BASE_URL = "https://api.themoviedb.org/3";
     private static final String IMG_URL  = "https://image.tmdb.org/t/p/w500";
 
-    // ====== 간단 메모리 캐시 (속도용) ======
     private static final Map<String, CacheEntry> CACHE = new HashMap<>();
     private static final long CACHE_TTL_MS = 60_000; // 60초
+
 
     private static class CacheEntry {
         long savedAt;
@@ -86,6 +86,7 @@ public class MovieController {
         int fetchPage = cPage;
         int fetchTries = 0;
         int tmdbTotalResults = 0;
+
         int tmdbTotalPages = 0;
 
         try {
@@ -146,13 +147,15 @@ public class MovieController {
             model.addAttribute("sort", sort);
             model.addAttribute("error", "");
 
-            Map<String, Object> cacheData = new HashMap<>();
+
+            Map<String, Object> cacheData = new HashMap<String, Object>();
+
             cacheData.put("movies", pageMovies);
             cacheData.put("pageInfo", pi);
             CACHE.put(cacheKey, new CacheEntry(System.currentTimeMillis(), cacheData));
 
         } catch (Exception e) {
-            model.addAttribute("movies", new ArrayList<>());
+            model.addAttribute("movies", new ArrayList<Map<String, Object>>());
             model.addAttribute("pi", buildPageInfo(0, 1, 5, 15));
             model.addAttribute("genreId", genreId);
             model.addAttribute("sort", sort);

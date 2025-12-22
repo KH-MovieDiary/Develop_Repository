@@ -64,7 +64,6 @@
             border-color: #ff9fb3;
             box-shadow: 0 0 0 3px rgba(255, 143, 171, 0.2);
         }
-
     </style>
 </head>
 <body>
@@ -73,27 +72,27 @@
 
     <div class="movie-register-wrapper">
         <div class="innerOuter">
-            <h2 class="form-title">영화감상문 작성하기</h2>
+            <h2 class="form-title">영화감상문 수정하기</h2>
             
-            <form id="enrollForm" method="post" action="${pageContext.request.contextPath}/insert.review">
-   
-                <div class="form-group">
-                    <label for="movieTitle">감상평 제목</label>
-                    <input type="text" id="movieTitle" class="form-control" name="reviewTitle" placeholder="" required>
+            <form id="enrollForm" method="post" action="${contextRoot}/update.review">
+   				<input type="hidden" name="reviewId" value="${review.reviewId }">
+                	<div class="form-group">
+                    <label for="movieTitle">감상문 제목</label>
+                    <textarea id="reviewTitle" class="form-control" row="1" name="reviewTitle"  style="resize:none";>${review.reviewTitle}</textarea>
                 </div>
                 
                 <div class="form-group">
                     <label for="writer">작성자</label>
-                    <input type="text" id="writer" class="form-control" value="${loginUser.userId}" name="userId" readonly>
+                    <input type="text" id="writer" class="form-control" value="${review.userId}" name="userId" readonly>
                 </div>
 
                 <div class="form-group">
                     <label for="content">내용</label>
-                    <textarea id="content" class="form-control" rows="15" style="resize:none;" name="content" placeholder="영화에 대한 자유로운 감상평이나 줄거리를 기록해주세요." required></textarea>
+                    <textarea id="content" class="form-control" rows="15" style="resize:none;" name="content" required>${review.content}</textarea>
                 </div>
 
                 <div class="btn-area">
-                    <button type="submit" class="btn btn-pink">등록하기</button>
+                    <button type="submit" class="btn btn-pink">수정하기</button>
                     <button type="reset" class="btn btn-gray">취소하기</button>
                 </div>
 
