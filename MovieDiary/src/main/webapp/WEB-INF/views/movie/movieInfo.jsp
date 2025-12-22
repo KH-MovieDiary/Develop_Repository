@@ -389,6 +389,11 @@
                             <div class="info-value" id="modalActors">-</div>
                         </div>
 
+                        <div class="info-row" style="align-items:flex-start;">
+                            <div class="info-label">줄거리</div>
+                            <div class="info-value" id="modalContent">-</div>
+                        </div>
+
                         <div class="info-row">
                             <div class="info-label">인기도</div>
                             <div class="info-value" id="modalPopularity">-</div>
@@ -454,6 +459,7 @@
             document.getElementById("modalGenres").innerHTML = "-";
             document.getElementById("modalDirector").innerText = "-";
             document.getElementById("modalActors").innerHTML = "-";
+            document.getElementById("modalContent").innerText = "-";
             document.getElementById("modalPopularity").innerText = "-";
 
             var url = "<c:url value='/tmdb/movieDetail.mo'/>" + "?tmdbId=" + encodeURIComponent(tmdbId);
@@ -485,12 +491,17 @@
                       document.getElementById("modalGenres").innerHTML = "-";
                   }
 
+                  document.getElementById("modalContent").innerText =
+                      (data.overview !== undefined && data.overview !== null && String(data.overview).trim() !== "")
+                      ? data.overview
+                      : "-";
+
                   setPoster(data.posterUrl || "");
                   setLoading(false);
 
-                  saveMovieToDb(tmdbId, data);
+                  fetchCreditsAndRender(tmdbId);
 
-                  loadCredits(tmdbId);
+                  saveMovieToDb(tmdbId, data);
               })
               .catch(err => {
                   setLoading(false);
@@ -505,7 +516,8 @@
                 adult: (detail.adult === true || detail.adult === "true") ? "Y" : "N",
                 releaseDate: detail.release_date || "",
                 popularity: (detail.popularity !== undefined && detail.popularity !== null) ? detail.popularity : 0,
-                category: (Array.isArray(detail.genres) && detail.genres.length > 0) ? detail.genres[0].name : ""
+                category: (Array.isArray(detail.genres) && detail.genres.length > 0) ? detail.genres[0].name : "",
+                content: detail.overview || ""  
             };
 
             fetch("<c:url value='/movie/saveFromTmdb.mo'/>", {
@@ -522,7 +534,8 @@
             });
         }
 
-        function loadCredits(tmdbId){
+
+        function fetchCreditsAndRender(tmdbId){
             var url = "<c:url value='/tmdb/movieCredits.mo'/>" + "?tmdbId=" + encodeURIComponent(tmdbId);
 
             fetch(url, { method: "GET" })
@@ -537,7 +550,7 @@
                   var actors = data.actors || [];
                   if(Array.isArray(actors) && actors.length > 0){
                       var html = "";
-                      actors.forEach(function(name){
+                      actors.forEach(name => {
                           html += "<span class='chip'>" + escapeHtml(name) + "</span>";
                       });
                       document.getElementById("modalActors").innerHTML = html;
@@ -546,6 +559,7 @@
                   }
               })
               .catch(err => {
+                  // 실패해도 화면/기존 기능 영향 없게 처리
                   document.getElementById("modalDirector").innerText = "-";
                   document.getElementById("modalActors").innerHTML = "-";
               });

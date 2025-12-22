@@ -91,7 +91,6 @@
             height: 30%;
         }
 
-        /* ===== movieInfo.jsp 모달 CSS 그대로 ===== */
         .modal-backdrop{
             display:none;
             position:fixed;
@@ -312,7 +311,6 @@
 
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
-    <!-- movieInfo.jsp 모달 HTML 그대로 -->
     <div id="movieModal" class="modal-backdrop" onclick="backdropClose(event)">
         <div class="modal-box">
             <div class="modal-top">
@@ -347,6 +345,11 @@
                         <div class="info-row" style="align-items:flex-start;">
                             <div class="info-label">배우</div>
                             <div class="info-value" id="modalActors">-</div>
+                        </div>
+
+                        <div class="info-row" style="align-items:flex-start;">
+                            <div class="info-label">줄거리</div>
+                            <div class="info-value" id="modalContent">-</div>
                         </div>
 
                         <div class="info-row">
@@ -399,6 +402,7 @@
             document.getElementById("modalPopularity").innerText = "-";
             document.getElementById("modalDirector").innerText = "-";
             document.getElementById("modalActors").innerHTML = "-";
+            document.getElementById("modalContent").innerText = "-";
 
             var url = "<c:url value='/tmdb/movieDetail.mo'/>" + "?tmdbId=" + encodeURIComponent(tmdbId);
 
@@ -429,6 +433,11 @@
                       document.getElementById("modalGenres").innerHTML = "-";
                   }
 
+                  document.getElementById("modalContent").innerText =
+                      (data.overview !== undefined && data.overview !== null && String(data.overview).trim() !== "")
+                      ? data.overview
+                      : "-";
+
                   setPoster(data.posterUrl || "");
                   setLoading(false);
 
@@ -443,14 +452,14 @@
         }
 
         function saveMovieToDb(tmdbId, detail){
-            // detail은 /tmdb/movieDetail.mo 응답 JSON
             var payload = {
                 tmdbId: tmdbId,
                 title: detail.title || detail.original_title || "",
                 adult: (detail.adult === true || detail.adult === "true") ? "Y" : "N",
-                releaseDate: detail.release_date || "", 
+                releaseDate: detail.release_date || "",
                 popularity: (detail.popularity !== undefined && detail.popularity !== null) ? detail.popularity : 0,
-                category: (Array.isArray(detail.genres) && detail.genres.length > 0) ? detail.genres[0].name : ""
+                category: (Array.isArray(detail.genres) && detail.genres.length > 0) ? detail.genres[0].name : "",
+                content: detail.overview || ""
             };
 
             fetch("<c:url value='/movie/saveFromTmdb.mo'/>", {
@@ -460,13 +469,10 @@
             })
             .then(resp => resp.json())
             .then(r => {
-                // console.log("save result", r);
             })
             .catch(e => {
-                // console.log("save fail", e);
             });
         }
-
 
         function fetchCreditsAndRender(tmdbId){
             var url = "<c:url value='/tmdb/movieCredits.mo'/>" + "?tmdbId=" + encodeURIComponent(tmdbId);
@@ -492,7 +498,6 @@
                   }
               })
               .catch(err => {
-                  // 실패해도 화면/기존 기능 영향 없게 처리
                   document.getElementById("modalDirector").innerText = "-";
                   document.getElementById("modalActors").innerHTML = "-";
               });

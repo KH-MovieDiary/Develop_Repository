@@ -28,4 +28,5 @@ public class Movie {
     private int reviewCount;
     private int likeCount;
     private int dislikeCount;
+    private String content;
 }
