@@ -39,6 +39,25 @@
 	        , #{picture}
 	    )
 	</insert>
+	
+	<select id="loginUser" resultType="Member">
+		SELECT   USER_ID
+				,USER_PWD
+				,EMAIL
+				,GENDER
+				,NICKNAME
+				,FAVORITE_GENRE
+				,CREATE_DATE
+				,UPDATE_DATE
+				,PICTURE
+				,STATUS
+				,BIRTHDAY
+		FROM MEMBER
+		WHERE USER_ID = #{userId}
+		AND STATUS = 'Y'
+	
+	
+	</select>
 
 
 

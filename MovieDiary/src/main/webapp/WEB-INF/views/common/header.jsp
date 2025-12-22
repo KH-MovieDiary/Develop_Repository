@@ -129,7 +129,7 @@
                 <%-- ✅ 로그인 후 --%>
                 <c:otherwise>
                     <label>${loginUser.userId}님 환영합니다</label>&nbsp;&nbsp;
-                    <a href="">로그아웃</a>
+                    <a href="${contextRoot }/logout.me">로그아웃</a>
                 </c:otherwise>
             </c:choose>
 
@@ -162,7 +162,7 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
-            <form action="" method="post">
+            <form action="${contextRoot }/login.me" method="post">
                 <div class="modal-body">
                     <label for="userId" class="mr-sm-2">ID : </label>
                     <input type="text" class="form-control mb-2 mr-sm-2" placeholder="Enter ID" id="userId" name="userId">
