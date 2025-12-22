@@ -48,7 +48,7 @@ public class ReviewListController {
 										   ,String keyword
 										   ,Model model) {
 		
-		HashMap<String,String> map = new HashMap<String,String>();
+		HashMap<String,String> map = new HashMap<>();
 		map.put("condition", condition);
 		map.put("keyword", keyword);
 		

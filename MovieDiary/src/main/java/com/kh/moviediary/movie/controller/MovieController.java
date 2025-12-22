@@ -22,7 +22,7 @@ public class MovieController {
     private static final String IMG_URL  = "https://image.tmdb.org/t/p/w500";
 
     private static final Map<String, CacheEntry> CACHE = new HashMap<String, CacheEntry>();
-    private static final long CACHE_TTL_MS = 60000;
+    private static final long CACHE_TTL_MS = 60_000;
 
     private static class CacheEntry {
         long savedAt;
@@ -87,7 +87,7 @@ public class MovieController {
 
         RestTemplate rt = new RestTemplate();
 
-        List<Map<String, Object>> pageMovies = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> pageMovies = new ArrayList<>();
         int fetchPage = cPage;
         int fetchTries = 0;
         int tmdbTotalResults = 0;
@@ -152,7 +152,7 @@ public class MovieController {
             model.addAttribute("sort", sort);
             model.addAttribute("error", "");
 
-            Map<String, Object> cacheData = new HashMap<String, Object>();
+            Map<String, Object> cacheData = new HashMap<>();
             cacheData.put("movies", pageMovies);
             cacheData.put("pageInfo", pi);
 
@@ -160,7 +160,7 @@ public class MovieController {
 
         } catch (Exception e) {
 
-            model.addAttribute("movies", new ArrayList<Map<String, Object>>());
+            model.addAttribute("movies", new ArrayList<>());
             model.addAttribute("pi", buildPageInfo(0, 1, 5, 15));
             model.addAttribute("genreId", genreId);
             model.addAttribute("sort", sort);
@@ -181,7 +181,7 @@ public class MovieController {
             tmdbId = tmdbId.substring(0, tmdbId.indexOf('.'));
         }
 
-        Map<String, Object> res = new HashMap<String, Object>();
+        Map<String, Object> res = new HashMap<>();
         RestTemplate rt = new RestTemplate();
 
         try {
@@ -243,7 +243,7 @@ public class MovieController {
             tmdbId = tmdbId.substring(0, tmdbId.indexOf('.'));
         }
 
-        Map<String, Object> res = new HashMap<String, Object>();
+        Map<String, Object> res = new HashMap<>();
         RestTemplate rt = new RestTemplate();
 
         try {
@@ -276,7 +276,7 @@ public class MovieController {
 
             @SuppressWarnings("unchecked")
             List<Map<String, Object>> cast = (List<Map<String, Object>>) data.get("cast");
-            List<String> actorNames = new java.util.ArrayList<String>();
+            List<String> actorNames = new java.util.ArrayList<>();
             if (cast != null) {
                 int limit = Math.min(8, cast.size());
                 for (int i = 0; i < limit; i++) {
