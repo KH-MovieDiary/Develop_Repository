@@ -22,5 +22,6 @@ public class ReviewList {
 	private int movieId; // MOVIE_ID NUMBER
 	private String userId; // USER_ID VARCHAR2(100 BYTE)
 	private String reviewTitle; //REVIEW_TITLE VARCHAR2(100 BYTE)
+	private String nickname; //NICKNAME	VARCHAR2(30 BYTE)
 
 }
