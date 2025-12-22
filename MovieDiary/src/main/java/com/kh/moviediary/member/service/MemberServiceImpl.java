@@ -30,6 +30,12 @@ public class MemberServiceImpl implements MemberService{
 	public int nickCheck(String nickName) {
 		return dao.nickCheck(sqlSession, nickName);
 	}
+
+	@Override
+	public Member loginUser(Member m) {
+		Member loginUser = dao.loginUser(sqlSession, m);
+		return loginUser;
+	}
 	
 
 }

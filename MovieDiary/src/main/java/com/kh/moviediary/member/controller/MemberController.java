@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +26,11 @@ public class MemberController {
 	
 	@Autowired
 	private BCryptPasswordEncoder bcrypt;
+	
+	@RequestMapping("/mypage.me")
+	public String mypage(Model model) {
+		return "mypage/mypage";
+	}
 	
 	@RequestMapping("/enrollForm.me")
 	public String enrollForm() {
@@ -101,6 +107,28 @@ public class MemberController {
 	        session.setAttribute("alertMsg", "회원가입실패");
 	        return "common/errorPage";
 	    }
+	}
+	
+	@RequestMapping("login.me")
+	public String loginUser(Member m, HttpSession session, Model model) {
+		Member loginUser = service.loginUser(m);
+		
+		if(loginUser != null && bcrypt.matches(m.getUserPwd(), loginUser.getUserPwd())) {
+			session.setAttribute("alertMsg", "로그인 성공");
+			session.setAttribute("loginUser", loginUser);
+			
+			return "redirect:/";
+		}else {
+			session.setAttribute("alertMsg", "로그인 실패");
+			return "mainpage/mainPage";
+		}
+	}
+	
+	
+	@RequestMapping("logout.me")
+	public String logoutMember(HttpSession session) {
+	    session.invalidate(); // 세션 무효화 (로그아웃)
+	    return "redirect:/";
 	}
 	
 	
