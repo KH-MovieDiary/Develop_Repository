@@ -44,6 +44,40 @@
         , #{dislikeCount}
         , #{content}
     )
-</insert>
+	</insert>
 
+
+	<select id="selectCommentList" parameterType="_int" resultType="com.kh.moviediary.comment.vo.MovieComment">
+        SELECT
+            COMMENT_ID 
+            ,CONTENT      
+            ,CREATE_DATE   
+            ,UPDATE_DATE   
+            ,MOVIE_ID      
+            ,USER_ID       
+            ,LIKE_COUNT    
+        FROM MOVIE_COMMENT
+        WHERE MOVIE_ID = #{movieId}
+        ORDER BY CREATE_DATE DESC, COMMENT_ID DESC
+    </select>
+
+    <insert id="insertComment" parameterType="com.kh.moviediary.comment.vo.MovieComment">
+        INSERT INTO MOVIE_COMMENT (
+            COMMENT_ID
+            ,CONTENT
+            ,CREATE_DATE
+            ,UPDATE_DATE
+            ,MOVIE_ID
+            ,USER_ID
+            ,LIKE_COUNT
+        ) VALUES (
+            SEQ_CONO.NEXTVAL
+            ,#{content}
+            ,SYSDATE
+            ,NULL
+            ,#{movieId}
+            ,#{userId}
+            ,0
+        )
+    </insert>
 </mapper>
