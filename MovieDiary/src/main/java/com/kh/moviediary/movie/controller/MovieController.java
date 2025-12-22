@@ -39,8 +39,11 @@ public class MovieController {
             @RequestParam(value="cPage", defaultValue="1") int cPage,
             @RequestParam(value="genreId", required=false) Integer genreId,
             @RequestParam(value="sort", defaultValue="release_date") String sort,
+            @RequestParam(value="keyword", required=false, defaultValue="") String keyword,
             Model model
     ) {
+
+        String kw = (keyword == null) ? "" : keyword.trim();
 
         String sortBy;
         if ("popularity".equalsIgnoreCase(sort)) {
@@ -51,7 +54,7 @@ public class MovieController {
             sortBy = "primary_release_date.desc";
         }
 
-        String cacheKey = cPage + "|" + (genreId == null ? "-" : genreId) + "|" + sortBy;
+        String cacheKey = cPage + "|" + (genreId == null ? "-" : genreId) + "|" + sortBy + "|" + kw;
 
         CacheEntry ce = CACHE.get(cacheKey);
         if (ce != null && (System.currentTimeMillis() - ce.savedAt) < CACHE_TTL_MS) {
@@ -67,22 +70,10 @@ public class MovieController {
             model.addAttribute("pi", pageInfo);
             model.addAttribute("genreId", genreId);
             model.addAttribute("sort", sort);
+            model.addAttribute("keyword", kw);
             model.addAttribute("error", "");
 
             return "movie/movieInfo";
-        }
-
-        String baseDiscover =
-                BASE_URL + "/discover/movie"
-                + "?api_key=" + API_KEY
-                + "&language=ko-KR"
-                + "&include_adult=false"
-                + "&with_original_language=ko"
-                + "&with_origin_country=KR"
-                + "&sort_by=" + sortBy;
-
-        if (genreId != null) {
-            baseDiscover += "&with_genres=" + genreId;
         }
 
         RestTemplate rt = new RestTemplate();
@@ -96,7 +87,33 @@ public class MovieController {
         try {
             while (pageMovies.size() < 15 && fetchTries < 3) {
 
-                String url = baseDiscover + "&page=" + fetchPage;
+                String url;
+
+                if (!kw.isEmpty()) {
+                    url =
+                        BASE_URL + "/search/movie"
+                        + "?api_key=" + API_KEY
+                        + "&language=ko-KR"
+                        + "&include_adult=false"
+                        + "&query=" + urlEncode(kw)
+                        + "&page=" + fetchPage;
+
+                } else {
+                    String baseDiscover =
+                            BASE_URL + "/discover/movie"
+                            + "?api_key=" + API_KEY
+                            + "&language=ko-KR"
+                            + "&include_adult=false"
+                            + "&with_original_language=ko"
+                            + "&with_origin_country=KR"
+                            + "&sort_by=" + sortBy;
+
+                    if (genreId != null) {
+                        baseDiscover += "&with_genres=" + genreId;
+                    }
+
+                    url = baseDiscover + "&page=" + fetchPage;
+                }
 
                 @SuppressWarnings("unchecked")
                 Map<String, Object> result = rt.getForObject(url, Map.class);
@@ -118,8 +135,8 @@ public class MovieController {
                 for (Map<String, Object> m : results) {
                     if (pageMovies.size() >= 15) break;
 
-                    String posterPath = (String) m.get("poster_path");
-                    if (posterPath == null || posterPath.trim().isEmpty()) continue;
+                    String posterPath = (m.get("poster_path") == null) ? null : String.valueOf(m.get("poster_path"));
+                    if (posterPath == null || posterPath.trim().isEmpty() || "null".equalsIgnoreCase(posterPath)) continue;
 
                     m.put("posterUrl", IMG_URL + posterPath);
 
@@ -150,6 +167,7 @@ public class MovieController {
             model.addAttribute("pi", pi);
             model.addAttribute("genreId", genreId);
             model.addAttribute("sort", sort);
+            model.addAttribute("keyword", kw);
             model.addAttribute("error", "");
 
             Map<String, Object> cacheData = new HashMap<>();
@@ -164,6 +182,7 @@ public class MovieController {
             model.addAttribute("pi", buildPageInfo(0, 1, 5, 15));
             model.addAttribute("genreId", genreId);
             model.addAttribute("sort", sort);
+            model.addAttribute("keyword", kw);
             model.addAttribute("error",
                     "TMDB 호출 실패: " + e.getClass().getName() + " / " + e.getMessage());
         }
@@ -234,6 +253,7 @@ public class MovieController {
 
         return pi;
     }
+
     @ResponseBody
     @GetMapping("/tmdb/movieCredits.mo")
     public Map<String, Object> tmdbMovieCredits(@RequestParam("tmdbId") String tmdbIdRaw) {
@@ -255,7 +275,6 @@ public class MovieController {
             @SuppressWarnings("unchecked")
             Map<String, Object> data = rt.getForObject(url, Map.class);
 
-            String director = "";
             StringBuilder directors = new StringBuilder();
 
             @SuppressWarnings("unchecked")
@@ -272,7 +291,6 @@ public class MovieController {
                     }
                 }
             }
-            director = directors.toString();
 
             @SuppressWarnings("unchecked")
             List<Map<String, Object>> cast = (List<Map<String, Object>>) data.get("cast");
@@ -288,7 +306,7 @@ public class MovieController {
             }
 
             res.put("ok", true);
-            res.put("director", director.isBlank() ? "-" : director);
+            res.put("director", directors.length() == 0 ? "-" : directors.toString());
             res.put("actors", actorNames);
 
         } catch (Exception e) {
@@ -299,4 +317,11 @@ public class MovieController {
         return res;
     }
 
+    private String urlEncode(String s) {
+        try {
+            return java.net.URLEncoder.encode(s, "UTF-8");
+        } catch (Exception e) {
+            return s;
+        }
+    }
 }
