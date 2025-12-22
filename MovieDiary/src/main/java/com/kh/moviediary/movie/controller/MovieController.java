@@ -21,7 +21,7 @@ public class MovieController {
     private static final String BASE_URL = "https://api.themoviedb.org/3";
     private static final String IMG_URL  = "https://image.tmdb.org/t/p/w500";
 
-    private static final Map<String, CacheEntry> CACHE = new HashMap<>();
+    private static final Map<String, CacheEntry> CACHE = new HashMap<String, CacheEntry>();
     private static final long CACHE_TTL_MS = 60_000;
 
     private static class CacheEntry {

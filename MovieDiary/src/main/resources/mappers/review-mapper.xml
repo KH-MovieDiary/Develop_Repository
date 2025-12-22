@@ -71,6 +71,28 @@
  	JOIN MEMBER M USING(USER_ID)
  </select>
  
+ <select id="reviewLike" parameterType="Reviewlike" resultType="string">
+ 	SELECT LIKE_YN
+    FROM REVIEW_LIKE
+    WHERE REVIEW_ID = #{reviewId}
+       	  AND USER_ID = #{userId}
+ </select>
+ 
+ <insert id="likeInsert" parameterType="Reviewlike">
+ 	INSERT INTO REVIEW_LIKE
+ 	VALUES(#{reviewId}
+ 		  ,#{userId}
+ 		  ,'Y'
+ 		  )
+ </insert>
+ 
+ <update id="likeUpdate" parameterType="Reviewlike">
+ 	UPDATE REVIEW_LIKE
+ 	SET LIKE_YN = DECODE(LIKE_YN, 'Y', 'N', 'Y')
+    WHERE REVIEW_ID = #{reviewId}
+         AND USER_ID = #{userId}
+ </update>
+ 
  <select id="searchList" resultType="ReviewList">
  	SELECT REVIEW_ID
  		  ,MOVIE_ID

@@ -90,6 +90,20 @@
 	                    <button type="button" id= "deleteBtn" class="btn">삭제하기</button>
 	                </div>
 				</c:if>
+				
+				<c:if test= "${not empty loginUser }">
+					<button type="button" id="likeBtn" class="${likeYn == 'Y' ? 'y' : ''}">좋아요</button><br>
+					<style>
+						.y {
+      						 color: red;
+      						 font-weight: bold;
+      						}
+					</style>
+				</c:if>
+				<span id="likeCount">${review.likeCount }</span>
+				
+				<input type="hidden" id="rno" value="${review.reviewId }">
+				<input type="hidden" id="uid" value="${loginUser.userId }">
         </div>
     </div>
     
@@ -123,6 +137,39 @@
     		
     		});
     	});
+    	
+    	$(function(){
+    		$("#likeBtn").click(function(){
+    			
+    		$.ajax({
+    			url: "like.review",
+    			data: {
+    				reviewId: $("#rno").val(),
+    				userId: $("#uid").val()
+    			},
+    			success: function(result){
+    				if(result>0){
+    					let currentCount = parseInt($("#likeCount").text());
+    					
+    					if($("#likeBtn").hasClass("y")){
+    						alert("좋아요를 취소하였습니다");
+    						$("#likeCount").text(currentCount - 1);
+                            $("#likeBtn").removeClass("y");
+    					} else{
+    						alert("좋아요를 눌렀습니다")
+    						 $("#likeCount").text(currentCount + 1);
+    						 $("#likeBtn").addClass("y");
+    					}
+    				} else{
+    					alert("좋아요가 반영되지 않았습니다")
+    				}
+    			},
+    			error: function(){
+    				console.log("통신실패");
+    			}
+    		});
+    	});
+    });
     </script>
     
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />
