@@ -22,8 +22,8 @@ public class MovieController {
 
     // ====== 간단 메모리 캐시 (속도용) ======
     // key: "page|genre|sort" -> value: response map
-    private static final Map<String, CacheEntry> CACHE = new HashMap<>();
-    private static final long CACHE_TTL_MS = 60_000; // 60초 캐시 
+    private static final Map<String, CacheEntry> CACHE = new HashMap<String, CacheEntry>();
+    private static final long CACHE_TTL_MS = 60000; // 60초 캐시 
 
     private static class CacheEntry {
         long savedAt;
@@ -93,7 +93,7 @@ public class MovieController {
         // 단, 포스터 없는 영화는 스킵하므로 15개를 채우기 위해 1~3페이지 더 훑을 수 있음
         RestTemplate rt = new RestTemplate();
 
-        List<Map<String, Object>> pageMovies = new ArrayList<>();
+        List<Map<String, Object>> pageMovies = new ArrayList<Map<String, Object>>();
         int fetchPage = cPage;      // TMDB page
         int fetchTries = 0;         // 최대 3번 추가 호출 제한
         int tmdbTotalResults = 0;   // 전체 결과
@@ -158,13 +158,13 @@ public class MovieController {
             model.addAttribute("error", "");
 
             // 캐시 저장
-            Map<String, Object> cacheData = new HashMap<>();
+            Map<String, Object> cacheData = new HashMap<String, Object>();
             cacheData.put("movies", pageMovies);
             cacheData.put("pageInfo", pi);
             CACHE.put(cacheKey, new CacheEntry(System.currentTimeMillis(), cacheData));
 
         } catch (Exception e) {
-            model.addAttribute("movies", new ArrayList<>());
+            model.addAttribute("movies", new ArrayList<Map<String, Object>>());
             model.addAttribute("pi", buildPageInfo(0, 1, 5, 15));
             model.addAttribute("genreId", genreId);
             model.addAttribute("sort", sort);
