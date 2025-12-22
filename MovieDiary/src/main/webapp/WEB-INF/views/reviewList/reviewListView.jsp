@@ -157,30 +157,53 @@
     	</script>
     </c:if>
     
+    <c:url var="url" value="${empty map ? 'reviewList.bo' : 'searchList.bo' }">
     
-    <div class="paging">
+    	<c:if test="${not empty map}">
+			<c:param name="condition" value="${map.condition}"/>    
+			<c:param name="keyword" value="${map.keyword}"/>    
+    	</c:if>
+    	
+    	<c:param name="page"></c:param>
+    </c:url>
+    
+    
+   <div class="paging">
         <ul class="pagination">
-        	<li class="page-item"><a class="page-link">이전</a></li>
         
-        	<c:forEach begin="1" end="10" var="i">
-        		<li class="page-item"><a class="page-link">${i}</a></li>
+	        <c:choose>
+		        <c:when test="${pi.currentPage eq 1}">
+	    	    	<li class="page-item disabled" ><a class="page-link" href="#">이전</a></li>
+	        	</c:when>
+	        	<c:otherwise>
+	        		<li class="page-item"><a class="page-link" href="${url}${pi.currentPage-1}">이전</a></li>
+	        	</c:otherwise>
+	        </c:choose>
+        
+        	<c:forEach begin="${pi.startPage}" end="${pi.endPage}" var="i">
+        		<li class="page-item ${i eq pi.currentPage ? 'disabled':''}"><a class="page-link" href="${url}${i}">${i}</a></li>
         	</c:forEach>
         	
-        	<li class="page-item"><a class="page-link">다음</a></li>
+        	<c:choose>
+        		<c:when test="${pi.currentPage eq pi.maxPage}">
+        			<li class="page-item disabled"><a class="page-link" href="#">다음</a></li>
+        		</c:when>
+				<c:otherwise>
+					<li class="page-item"><a class="page-link" href="${url}${pi.currentPage+1}">다음</a></li>
+				</c:otherwise>
+        	</c:choose>
         </ul>
     </div>
-			
-		<select name="condition">
-			<option value="title">제목</option>
-			<option value="writer">작성자</option>
-		</select>
-	
-		<!-- 검색어 -->
-        <input type="text" name="keyword" placeholder="검색어 입력">
-		<button type="submit">검색</button>
-             
-
-</div>
+		
+	<form action="${contextRoot}/searchList.bo" method="get" align="center">
+			<select name="condition">
+				<option value="title">제목</option>
+				<option value="writer">작성자</option>
+			</select>
+		
+	        <input type="text" name="keyword" value="${map.keyword}" placeholder="검색어 입력">
+			<button type="submit">검색</button>
+	</form>	
 
 	<jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 

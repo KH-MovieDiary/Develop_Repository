@@ -96,8 +96,9 @@
 				</c:if>
 				<span id="likeCount">${review.likeCount }</span>
 				
+				<input type="hidden" id="uid" value="user01">
 				<input type="hidden" id="rno" value="${review.reviewId }">
-				<input type="hidden" id="uid" value="${loginUser.userId }">
+				<!-- <input type="hidden" id="uid" value="${loginUser.userId }">  -->
         </div>
     </div>
     
@@ -147,11 +148,11 @@
     					
     					if($("#likeBtn").hasClass("y")){
     						alert("좋아요를 취소하였습니다");
-    						$("#countArea").text(currentCount - 1);
+    						$("#likeCount").text(currentCount - 1);
                             $("#likeBtn").removeClass("y");
     					} else{
     						alert("좋아요를 눌렀습니다")
-    						 $("#countArea").text(currentCount + 1);
+    						 $("#likeCount").text(currentCount + 1);
     						 $("#likeBtn").addClass("y");
     					}
     				} else{

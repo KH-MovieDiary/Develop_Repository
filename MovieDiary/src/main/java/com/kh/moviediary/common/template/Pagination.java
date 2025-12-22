@@ -1,6 +1,6 @@
 package com.kh.moviediary.common.template;
 
-import com.kh.moviediary.common.vo.ReivewPageInfo;
+import com.kh.moviediary.common.vo.ReviewPageInfo;
 
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +10,7 @@ import lombok.Data;
 public class Pagination {
 	
 	
-	public static ReivewPageInfo getPageInfo(int listCount,int currentPage
+	public static ReviewPageInfo getPageInfo(int listCount,int currentPage
 									  ,int boardLimit,int pageLimit) {
 		
 		int maxPage = (int)Math.ceil((double)listCount/boardLimit);
@@ -21,7 +21,7 @@ public class Pagination {
 			endPage = maxPage;
 		}
 		
-		ReivewPageInfo pi = ReivewPageInfo.builder()
+		ReviewPageInfo pi = ReviewPageInfo.builder()
 							  .listCount(listCount)
 							  .currentPage(currentPage)
 							  .pageLimit(pageLimit)
