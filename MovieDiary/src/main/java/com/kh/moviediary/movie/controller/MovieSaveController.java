@@ -32,7 +32,6 @@ public class MovieSaveController {
     )
     public Map<String, Object> saveFromTmdb(@RequestBody Map<String, Object> body) {
 
-
         Map<String, Object> res = new HashMap<>();
 
         try {
@@ -41,6 +40,7 @@ public class MovieSaveController {
             String category = (body.get("category") == null) ? "" : String.valueOf(body.get("category"));
             String adult = (body.get("adult") == null) ? "N" : String.valueOf(body.get("adult"));
             String releaseDate = (body.get("releaseDate") == null) ? "" : String.valueOf(body.get("releaseDate"));
+            String content = (body.get("content") == null) ? "" : String.valueOf(body.get("content"));
 
             float popularity = 0f;
             if (body.get("popularity") != null && !"".equals(String.valueOf(body.get("popularity")))) {
@@ -54,7 +54,7 @@ public class MovieSaveController {
                     .movieId(tmdbId)
                     .movieTitle(title)
                     .category(category)
-                    .director(director)          
+                    .director(director)
                     .adult(adult)
                     .releaseDateStr(releaseDate)
                     .popularity(popularity)
@@ -62,8 +62,8 @@ public class MovieSaveController {
                     .reviewCount(0)
                     .likeCount(0)
                     .dislikeCount(0)
+                    .content(content)
                     .build();
-
 
             int result = movieService.insertMovieIfNotExists(movie);
 
