@@ -98,7 +98,6 @@
             color:#fff;
         }
 
-        /* ===== 모달(깔끔 버전) ===== */
         .modal-backdrop{
             display:none;
             position:fixed;
@@ -365,7 +364,7 @@
                 <div class="modal-movie-area">
                     <div class="modal-poster" id="modalPosterWrap">포스터</div>
 
-                    <div class="modal-info">
+                    <div class="modal-info" style="overflow-y:auto;">
                         <div id="modalLoading" class="loading" style="display:none;">불러오는 중...</div>
 
                         <div class="modal-title" id="modalMovieName">영화 이름</div>
@@ -381,6 +380,16 @@
                         </div>
 
                         <div class="info-row">
+                            <div class="info-label">감독</div>
+                            <div class="info-value" id="modalDirector">-</div>
+                        </div>
+
+                        <div class="info-row" style="align-items:flex-start;">
+                            <div class="info-label">배우</div>
+                            <div class="info-value" id="modalActors">-</div>
+                        </div>
+
+                        <div class="info-row">
                             <div class="info-label">인기도</div>
                             <div class="info-value" id="modalPopularity">-</div>
                         </div>
@@ -389,11 +398,12 @@
                             <div class="info-label">평점</div>
                             <div class="info-value" id="modalUserScore">평점(유저가 매긴 점수)</div>
                         </div>
+
                         <div id="button_area">
-					        <button id="btnLike">👍 좋아요(20)</button>
-					        <button id="btnDislike">👎 싫어요(3)</button>
-					        <button id="btnWriteReview">✍️ 감상문 쓰기</button>
-					    </div>
+                            <button id="btnLike">👍 좋아요(20)</button>
+                            <button id="btnDislike">👎 싫어요(3)</button>
+                            <button id="btnWriteReview">✍️ 감상문 쓰기</button>
+                        </div>
                     </div>
                 </div>
 
@@ -442,6 +452,8 @@
             document.getElementById("modalMovieName").innerText = "영화 이름";
             document.getElementById("modalReleaseDate").innerText = "-";
             document.getElementById("modalGenres").innerHTML = "-";
+            document.getElementById("modalDirector").innerText = "-";
+            document.getElementById("modalActors").innerHTML = "-";
             document.getElementById("modalPopularity").innerText = "-";
 
             var url = "<c:url value='/tmdb/movieDetail.mo'/>" + "?tmdbId=" + encodeURIComponent(tmdbId);
@@ -475,10 +487,67 @@
 
                   setPoster(data.posterUrl || "");
                   setLoading(false);
+
+                  saveMovieToDb(tmdbId, data);
+
+                  loadCredits(tmdbId);
               })
               .catch(err => {
                   setLoading(false);
                   document.getElementById("modalMovieName").innerText = "불러오기 실패";
+              });
+        }
+
+        function saveMovieToDb(tmdbId, detail){
+            var payload = {
+                tmdbId: tmdbId,
+                title: detail.title || detail.original_title || "",
+                adult: (detail.adult === true || detail.adult === "true") ? "Y" : "N",
+                releaseDate: detail.release_date || "",
+                popularity: (detail.popularity !== undefined && detail.popularity !== null) ? detail.popularity : 0,
+                category: (Array.isArray(detail.genres) && detail.genres.length > 0) ? detail.genres[0].name : ""
+            };
+
+            fetch("<c:url value='/movie/saveFromTmdb.mo'/>", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            })
+            .then(resp => resp.json())
+            .then(r => {
+                // console.log("save result", r);
+            })
+            .catch(e => {
+                // console.log("save fail", e);
+            });
+        }
+
+        function loadCredits(tmdbId){
+            var url = "<c:url value='/tmdb/movieCredits.mo'/>" + "?tmdbId=" + encodeURIComponent(tmdbId);
+
+            fetch(url, { method: "GET" })
+              .then(resp => resp.json())
+              .then(data => {
+                  if(!data || data.ok !== true){
+                      throw new Error((data && data.message) ? data.message : "credits fetch failed");
+                  }
+
+                  document.getElementById("modalDirector").innerText = data.director || "-";
+
+                  var actors = data.actors || [];
+                  if(Array.isArray(actors) && actors.length > 0){
+                      var html = "";
+                      actors.forEach(function(name){
+                          html += "<span class='chip'>" + escapeHtml(name) + "</span>";
+                      });
+                      document.getElementById("modalActors").innerHTML = html;
+                  } else {
+                      document.getElementById("modalActors").innerHTML = "-";
+                  }
+              })
+              .catch(err => {
+                  document.getElementById("modalDirector").innerText = "-";
+                  document.getElementById("modalActors").innerHTML = "-";
               });
         }
 

@@ -19,7 +19,7 @@ public class MainPageController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String mainPage(Model model) {
-    	System.out.println("ggdgzsd");
+        System.out.println("ggdgzsd");
 
         String url =
                 BASE_URL + "/movie/now_playing"
@@ -43,6 +43,13 @@ public class MainPageController {
                 for (Map<String, Object> m : results) {
                     if (top5.size() >= 5) break;
 
+                    Object idObj = m.get("id");
+                    if (idObj != null) {
+                        m.put("tmdbId", String.valueOf(idObj));
+                    } else {
+                        m.put("tmdbId", "");
+                    }
+
                     Object posterPathObj = m.get("poster_path");
                     String posterPath = (posterPathObj == null) ? null : posterPathObj.toString();
 
@@ -65,9 +72,7 @@ public class MainPageController {
             model.addAttribute("top5Size", 0);
             model.addAttribute("error", "TMDB 호출 실패: " + e.getClass().getName() + " / " + e.getMessage());
         }
-       
 
         return "mainpage/mainPage";
     }
-
 }

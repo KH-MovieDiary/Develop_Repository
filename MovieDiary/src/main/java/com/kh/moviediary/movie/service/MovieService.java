@@ -1,8 +1,11 @@
 package com.kh.moviediary.movie.service;
 
-import org.springframework.stereotype.Service;
+import com.kh.moviediary.movie.vo.Movie;
 
-@Service
-public class MovieService {
 
+public interface MovieService {
+
+	int insertMovie(Movie movie);
+	
+	int insertMovieIfNotExists(Movie movie);
 }
