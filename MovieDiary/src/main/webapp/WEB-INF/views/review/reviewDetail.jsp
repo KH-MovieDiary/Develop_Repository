@@ -102,9 +102,8 @@
 				</c:if>
 				<span id="likeCount">${review.likeCount }</span>
 				
-				<input type="hidden" id="uid" value="user01">
 				<input type="hidden" id="rno" value="${review.reviewId }">
-				<!-- <input type="hidden" id="uid" value="${loginUser.userId }">  -->
+				<input type="hidden" id="uid" value="${loginUser.userId }">
         </div>
     </div>
     
