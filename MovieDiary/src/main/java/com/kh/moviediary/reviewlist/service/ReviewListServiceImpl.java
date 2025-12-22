@@ -26,8 +26,8 @@ public class ReviewListServiceImpl implements ReviewListService{
 	}
 
 	@Override
-	public ArrayList<ReviewList> reviewList(ReviewPageInfo pi) {
-		return dao.reviewList(sqlSession, pi);
+	public ArrayList<ReviewList> reviewList(ReviewPageInfo pi, String sort) {
+		return dao.reviewList(sqlSession, pi, sort);
 	}
 
 	@Override
