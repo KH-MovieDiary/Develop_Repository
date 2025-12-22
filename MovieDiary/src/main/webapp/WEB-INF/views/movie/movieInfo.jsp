@@ -420,21 +420,25 @@
     </div>
 
     <script>
-        function goSearch(page){
-            var genreId = document.getElementById("genre").value;
-            var sort = document.getElementById("filter").value;
-
-            var url = "<c:url value='/movieInfo.mo'/>" + "?cPage=" + page;
-
-            if(genreId && genreId !== ""){
-                url += "&genreId=" + encodeURIComponent(genreId);
-            }
-            if(sort && sort !== ""){
-                url += "&sort=" + encodeURIComponent(sort);
-            }
-
-            location.href = url;
-        }
+	    function goSearch(page){
+	        var genreId = document.getElementById("genre").value;
+	        var sort = document.getElementById("filter").value;
+	        var keyword = "${keyword}";
+	
+	        var url = "<c:url value='/movieInfo.mo'/>" + "?cPage=" + page;
+	
+	        if(genreId && genreId !== ""){
+	            url += "&genreId=" + encodeURIComponent(genreId);
+	        }
+	        if(sort && sort !== ""){
+	            url += "&sort=" + encodeURIComponent(sort);
+	        }
+	        if(keyword && String(keyword).trim() !== ""){
+	            url += "&keyword=" + encodeURIComponent(keyword);
+	        }
+	
+	        location.href = url;
+    }
 
         document.addEventListener("click", function(e){
             var card = e.target.closest(".movie_item");
