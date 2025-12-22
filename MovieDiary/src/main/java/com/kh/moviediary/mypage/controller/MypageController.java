@@ -29,8 +29,8 @@ public class MypageController {
         // content1 test data
         Member loginUser = Member.builder()
                 .userId("testUser01")
-                .nickname("테스트유저")
-                .age(25)
+                .nickName("테스트유저")
+                .birthday("1988-12-05")
                 .gender("M")
                 .favoriteGenre("액션, SF")
                 .picture(null)
