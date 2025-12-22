@@ -41,7 +41,7 @@ public class MypageController {
         model.addAttribute("loginUser", loginUser);
         
         //content3 test data start
-        List<ReviewList> myReviewList = new ArrayList<>();
+        List<ReviewList> myReviewList = new ArrayList<ReviewList>();
 
         for (int i = 1; i <= 25; i++) {
             ReviewList review = ReviewList.builder()
@@ -60,10 +60,10 @@ public class MypageController {
         model.addAttribute("myReviewList", myReviewList);
         
         //content4 test data 
-        List<Map<String, Object>> myActivityList = new ArrayList<>();
+        List<Map<String, Object>> myActivityList = new ArrayList<Map<String, Object>>();
 
         for (int i = 1; i <= 20; i++) {
-            Map<String, Object> map = new HashMap<>();
+            Map<String, Object> map = new HashMap<String, Object>();
             map.put("reviewId", i);
             map.put("activityType", i % 2 == 0 ? "COMMENT" : "LIKE");
             map.put("likeCount", (int)(Math.random() * 100));
@@ -84,7 +84,7 @@ public class MypageController {
                 + "&page=1";
 
         RestTemplate rt = new RestTemplate();
-        List<Map<String, Object>> likedMovies = new ArrayList<>();
+        List<Map<String, Object>> likedMovies = new ArrayList<Map<String, Object>>();
 
         try {
             @SuppressWarnings("unchecked")

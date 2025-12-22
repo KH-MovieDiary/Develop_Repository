@@ -22,8 +22,8 @@ public class MovieController {
     private static final String BASE_URL = "https://api.themoviedb.org/3";
     private static final String IMG_URL  = "https://image.tmdb.org/t/p/w500";
 
-    private static final Map<String, CacheEntry> CACHE = new HashMap<>();
-    private static final long CACHE_TTL_MS = 60_000; // 60초
+    private static final Map<String, CacheEntry> CACHE = new HashMap<String, CacheEntry>();
+    private static final long CACHE_TTL_MS = 60000; // 60초
 
 
     private static class CacheEntry {
@@ -82,7 +82,7 @@ public class MovieController {
 
         RestTemplate rt = new RestTemplate();
 
-        List<Map<String, Object>> pageMovies = new ArrayList<>();
+        List<Map<String, Object>> pageMovies = new ArrayList<Map<String, Object>>();
         int fetchPage = cPage;
         int fetchTries = 0;
         int tmdbTotalResults = 0;
@@ -174,7 +174,7 @@ public class MovieController {
             tmdbId = tmdbId.substring(0, tmdbId.indexOf('.'));
         }
 
-        Map<String, Object> res = new HashMap<>();
+        Map<String, Object> res = new HashMap<String, Object>();
         RestTemplate rt = new RestTemplate();
 
         try {

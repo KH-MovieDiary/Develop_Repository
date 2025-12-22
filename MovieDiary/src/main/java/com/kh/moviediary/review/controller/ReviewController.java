@@ -11,14 +11,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.kh.moviediary.member.vo.Member;
 import com.kh.moviediary.review.model.vo.Review;
 import com.kh.moviediary.review.service.ReviewService;
+import com.kh.moviediary.reviewLike.model.vo.Reviewlike;
+import com.kh.moviediary.reviewLike.service.ReviewlikeService;
 
 @Controller
 public class ReviewController {
 	
 	@Autowired
 	ReviewService service;
+	
+	@Autowired
+	ReviewlikeService likeservice;
 	
 	@GetMapping("/insert.review")
 	public String reviewInsertForm() {
@@ -45,11 +51,31 @@ public class ReviewController {
 	@RequestMapping("/detail.review")
 	public String reviewDetail(@RequestParam(value="rno") int rno,Model model,HttpSession session,HttpServletRequest request) {
 		
+		
 		int result = service.increaseCount(rno);
 		
 		if(result>0) {
 			Review r = service.reviewDetail(rno);
+			
+			String likeYn = "N";
+	     
+	        Member loginUser = (Member) session.getAttribute("loginUser");
+	        
+	        if (loginUser != null) {
+	            Reviewlike rl = new Reviewlike();
+	            rl.setReviewId(rno);
+	            rl.setUserId(loginUser.getUserId());
+
+	            String likeResult = likeservice.selectLike(rl); 
+	            
+	            if (likeResult != null) {
+	                likeYn = likeResult;
+	            }
+	        }
+	        
 			model.addAttribute("review", r);
+			model.addAttribute("likeYn", likeYn);
+			
 			return "review/reviewDetail";
 		} else {
 			session.setAttribute("alertMsg", "상세보기를 실패하였습니다");
