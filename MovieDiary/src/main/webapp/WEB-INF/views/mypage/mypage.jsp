@@ -219,8 +219,8 @@
             </div>
 
             <div class="profile-info">
-                <p><span>닉네임</span> ${loginUser.nickname}</p>
-                <p><span>나이</span> ${loginUser.age}</p>
+                <p><span>닉네임</span> ${loginUser.nickName}</p>
+                <p><span>나이</span> ${loginUser.birthday}</p>
                 <p><span>성별</span> ${loginUser.gender}</p>
                 <p><span>장르</span> ${loginUser.favoriteGenre}</p>
                 <p><span>가입일</span> ${loginUser.createDate}</p>

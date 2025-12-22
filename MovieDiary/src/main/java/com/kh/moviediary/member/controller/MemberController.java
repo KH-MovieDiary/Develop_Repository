@@ -27,6 +27,11 @@ public class MemberController {
 	@Autowired
 	private BCryptPasswordEncoder bcrypt;
 	
+	@RequestMapping("/mypage.me")
+	public String mypage(Model model) {
+		return "mypage/mypage";
+	}
+	
 	@RequestMapping("/enrollForm.me")
 	public String enrollForm() {
 		

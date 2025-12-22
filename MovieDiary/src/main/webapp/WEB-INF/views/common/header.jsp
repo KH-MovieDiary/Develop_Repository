@@ -128,7 +128,7 @@
 
                 <%-- ✅ 로그인 후 --%>
                 <c:otherwise>
-                    <label>${loginUser.userId}님 환영합니다</label>&nbsp;&nbsp;
+                    <label>${loginUser.nickName}님 환영합니다</label>&nbsp;&nbsp;
                     <a href="${contextRoot }/logout.me">로그아웃</a>
                 </c:otherwise>
             </c:choose>
@@ -142,7 +142,7 @@
                 <li><a href="${contextRoot}">HOME</a></li>
                 <li><a href="${contextRoot}/movieInfo.mo">영화 정보</a></li>
                 <li><a href="${contextRoot}/reviewList.bo">감상평</a></li>
-                <li><a href="">마이페이지</a></li>
+                <li><a href="${contextRoot }/mypage.me">마이페이지</a></li>
                 <li>
                     <form action="" method="get" class="search-form">
                         <input type="text" class="search-input" name="" placeholder="영화 제목을 검색해보세요">
