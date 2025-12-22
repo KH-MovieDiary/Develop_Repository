@@ -36,6 +36,27 @@
             border-radius: 20px;
             border: none;
         }
+        
+        .comment-area{
+        	width:70%;
+        	margin: 0 auto;
+        	display: flex;
+        	justify-content: center;
+        	align-items: center;
+        }
+        
+        .comment-input{
+        	width: 100%;
+        	display: flex;
+        	justify-content: center;
+        	gap: 5px;
+        }
+
+		#commentContent{
+			width: 70%;
+        	height: 40px;
+        	resize: none;
+		}
 
     </style>
 </head>
@@ -104,8 +125,32 @@
 				
 				<input type="hidden" id="rno" value="${review.reviewId }">
 				<input type="hidden" id="uid" value="${loginUser.userId }">
-        </div>
+    	</div>
     </div>
+    
+	<div class="comment-area">
+	
+		<div class="comment-input">
+			<label for="commentContent" style="margin-right : 5px">댓글</label>
+		    <textarea id="commentContent" placeholder="댓글을 입력하세요"></textarea>
+		    <button class="btn-comment" onclick="insertComment();">등록</button>
+		</div>
+		
+		<div id="commentList">
+		    <c:forEach items="${commentList}" var="c">
+		        <div class="comment-item">
+		            <div class="comment-top">
+		                <span class="comment-writer">${c.userId}</span>
+		                <span class="comment-date">${c.createDate}</span>
+		            </div>
+		
+		            <div class="comment-content">
+		                ${c.content}
+		            </div>
+		        </div>
+		    </c:forEach>
+		</div>
+	</div>
     
     <script>
     	$(function(){
