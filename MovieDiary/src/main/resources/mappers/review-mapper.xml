@@ -70,6 +70,40 @@
  	FROM REVIEW R
  	JOIN MEMBER M USING(USER_ID)
  </select>
+ 
+ <select id="searchList" resultType="ReviewList">
+ 	SELECT REVIEW_ID
+ 		  ,MOVIE_ID
+ 		  ,NICKNAME
+ 		  ,VIEW_COUNT
+ 		  ,LIKE_COUNT
+ 		  ,R.CREATE_DATE
+ 		  ,REVIEW_TITLE
+ 	FROM REVIEW R
+ 	JOIN MEMBER M USING(USER_ID)
+ 	<choose>
+ 		<when test="condition == 'title'">
+ 			WHERE REVIEW_TITLE LIKE '%'||#{keyword}||'%'
+ 		</when>
+		<otherwise>
+			WHERE NICKNAME = #{keyword}
+		</otherwise>
+ 	</choose>
+ </select>
+   
+ <select id="searchListCount" resultType="_int">
+ 	SELECT COUNT(*)
+ 	FROM REVIEW
+ 	JOIN MEMBER M USING(USER_ID)
+ 	<choose>
+ 		<when test="condition == 'title'">
+ 			WHERE REVIEW_TITLE LIKE '%'||#{keyword}||'%'
+ 		</when>
+		<otherwise>
+			WHERE NICKNAME = #{keyword}
+		</otherwise>
+ 	</choose>
+ </select>  
    
 
 </mapper>

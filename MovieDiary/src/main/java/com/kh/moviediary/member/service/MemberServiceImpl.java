@@ -18,13 +18,17 @@ public class MemberServiceImpl implements MemberService{
 	
 	@Override
 	public int insertMember(Member m) {
-		
-		return 0;
+		return dao.insertMember(sqlSession, m);
 	}
 
 	@Override
 	public int idCheck(String inputId) {
 		return dao.idCheck(sqlSession, inputId);
+	}
+
+	@Override
+	public int nickCheck(String nickName) {
+		return dao.nickCheck(sqlSession, nickName);
 	}
 	
 

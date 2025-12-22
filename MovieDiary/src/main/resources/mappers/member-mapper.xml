@@ -10,6 +10,35 @@
   		FROM MEMBER
   		WHERE USER_ID = #{userId}
   	</select>
+  	
+  	<select id="nickCheck" parameterType="string" resultType="_int">
+  		SELECT COUNT(*)
+  		FROM MEMBER
+  		WHERE NICKNAME = #{nickName}
+  	</select>
+  	
+  	<insert id="insertMember" parameterType="Member">
+	    INSERT INTO MEMBER (
+	        USER_ID
+	        , USER_PWD
+	        , EMAIL
+	        , BIRTHDAY
+	        , GENDER
+	        , NICKNAME
+	        , FAVORITE_GENRE
+	        , PICTURE
+	    )
+	    VALUES (
+	        #{userId}
+	        , #{userPwd}
+	        , #{email}
+	        , #{birthday}
+	        , #{gender}
+	        , #{nickName}
+	        , #{favoriteGenre}
+	        , #{picture}
+	    )
+	</insert>
 
 
 
