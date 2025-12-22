@@ -143,6 +143,52 @@
         font-weight: 600;
         box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
     }
+    
+	/* 7. 성별 라디오 버튼 스타일 (장르 선택 스타일과 동일하게) */
+	.gender-wrapper {
+	    display: flex;
+	    gap: 20px;
+	    margin-top: 10px;
+	}
+	
+	.gender-wrapper input[type="radio"] {
+	    display: none;
+	}
+	
+	.gender-wrapper label {
+	    flex: 1;
+	    height: 48px;
+	    display: inline-flex;
+	    align-items: center;
+	    justify-content: center;
+	    border: 1px solid #e1e1e1;
+	    border-radius: 8px;
+	    cursor: pointer;
+	    font-size: 14px; /* 장르와 크기 통일 */
+	    color: #555;
+	    transition: all 0.2s ease;
+	    background-color: #ffffff;
+	    margin: 0;
+	}
+	
+	.gender-wrapper label:hover {
+	    background-color: #f8f9fa;
+	    border-color: #d1d1d1;
+	}
+	
+	/* 장르 체크박스(:checked)와 동일한 색상값 적용 */
+	.gender-wrapper input[type="radio"]:checked + label {
+	    background-color: #e9ecef;
+	    border-color: #ced4da;
+	    color: #212529;
+	    font-weight: 600;
+	    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+	}
+    
+    
+    
+    
+    
 
     /* 6. 프로필 사진 및 파일 선택 */
     #titleImgArea {
@@ -212,7 +258,7 @@
 				        <button type="button" id="idCheckbtn" class="custom-btn">아이디 확인</button>
 				    </div>
 				   
-				
+					<br>
 					<label for="inputPwd">*비밀번호</label>
 					<div id="resultDiv2" style="font-size:0.8em; display:none; margin-top:5px;"></div>
 					<input type="password" class="form-control" id="inputPwd" placeholder="비밀번호를 입력하세요" name="userPwd" required> <br><br>
@@ -226,7 +272,7 @@
 					    <input type="text" class="form-control" id="nickName" placeholder="별명을 입력하세요" name="nickName" required>
 					    <button type="button" id="nickNameCheckbtn" class="custom-btn">닉네임 확인</button>
 					</div>
-					<br><br>
+					<br>
 					
 					<label for="birthday">* 생년월일</label>
     				<input type="date" class="form-control" id="birthday" name="birthday" required> <br><br>
@@ -248,12 +294,18 @@
 				    <input type="hidden" name="email" id="fullEmail">
 				    <br>
 				    
-				   
-				    
-				        <br>
+				    <label for="gender">* 성별</label>
+					<div class="gender-wrapper">
+					    <input type="radio" name="gender" id="male" value="M" required>
+					    <label for="male">남성</label>
+					    
+					    <input type="radio" name="gender" id="female" value="F">
+					    <label for="female">여성</label>
+					</div>
+					<br>
 				        
 			        <div class="form-group">
-				    <label>* 선호 장르 (중복 선택 가능)</label>
+				    <label>선호 장르 (중복 선택 가능)</label>
 				    <div class="genre-grid">
 				        <input type="checkbox" name="favoriteGenre" id="family" value="10751"><label for="family">가족</label>
 				        <input type="checkbox" name="favoriteGenre" id="horror" value="27"><label for="horror">공포</label>
