@@ -17,9 +17,9 @@ public class Member {
 	private String userId;
 	private String userPwd;
 	private String email;
-	private int age;
+	private String birthday;
 	private String gender;
-	private String nickname;
+	private String nickName;
 	private String favoriteGenre;
 	private Date createDate;
 	private Date updateDate;

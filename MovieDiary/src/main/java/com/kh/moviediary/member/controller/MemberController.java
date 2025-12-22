@@ -1,13 +1,18 @@
 package com.kh.moviediary.member.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.moviediary.member.service.MemberService;
 import com.kh.moviediary.member.vo.Member;
@@ -21,20 +26,20 @@ public class MemberController {
 	@Autowired
 	private BCryptPasswordEncoder bcrypt;
 	
-	//È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
 	@RequestMapping("/enrollForm.me")
 	public String enrollForm() {
 		
 		return "member/memberEnrollForm";
 	}
 	
+	
+	
 	@ResponseBody
-	@RequestMapping(value="idCheck.me", produces="text/html; charset=utf-8")
+	@RequestMapping(value="/idCheck.me", produces="text/html; charset=utf-8")
 	public String idCheck(String inputId) {
 
 		int count = service.idCheck(inputId);
-	    
-	    // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Óµï¿½ ï¿½ï¿½ï¿½Ú¿ï¿½ ï¿½ï¿½È¯
+
 		if(count>0) {
 			
 			return "NNNNN";
@@ -44,25 +49,61 @@ public class MemberController {
 		}
 	}
 	
+	
+	@ResponseBody
+	@RequestMapping(value="/nickCheck.me", produces="text/html; charset=utf-8")
+	public String nickCheck(String nickName) {
+		int count = service.nickCheck(nickName);
+		
+		if(count>0) {
+			return "NNNNN";
+		}else {
+			return "NNNNY";
+		}
+	}
+	
+	
 	@RequestMapping("/insert.me")
-	public String insertMember(Member m, String emailId, String emailDomain, Model model, HttpSession session) {
+	public String insertMember(Member m, MultipartFile uploadFile, HttpSession session) {
+	   
+	    m.setUserPwd(bcrypt.encode(m.getUserPwd()));
 	    
-	    m.setEmail(emailId + "@" + emailDomain);
-	    
-	    //ºñ¹Ğ¹øÈ£ ¾ÏÈ£È­
-	    String encPwd = bcrypt.encode(m.getUserPwd());
-	    m.setUserPwd(encPwd);
+	    if(uploadFile!=null && !uploadFile.getOriginalFilename().equals("")) { 
+		    
+	    	String originName=uploadFile.getOriginalFilename();
+		    String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+		    int ranNum = (int)(Math.random()*90000+10000);
+		    String ext = originName.substring(originName.lastIndexOf("."));
+		    String changeName = currentTime+ranNum+ext;
+		    String savePath = session.getServletContext().getRealPath("/resources/uploadFiles/");
+		    
+		    try {
+				uploadFile.transferTo(new File(savePath+changeName));
+				
+				m.setPicture("resources/uploadFiles/" + changeName);
+				System.out.println("ì‚¬ì§„ ì €ì¥ ì„±ê³µ");
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				System.out.println("ì‚¬ì§„ ì €ì¥ ì‹¤íŒ¨");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    }
 
 	    int result = service.insertMember(m);
 	    
 	    if(result > 0) {
-	        session.setAttribute("alertMsg", "¼º°øÀûÀ¸·Î È¸¿ø°¡ÀÔÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù.");
+	        session.setAttribute("alertMsg", "íšŒì›ê°€ì…ì„±ê³µ");
 	        return "redirect:/"; 
 	    } else {
-	        model.addAttribute("errorMsg", "È¸¿ø°¡ÀÔ¿¡ ½ÇÆĞÇß½À´Ï´Ù.");
+	        session.setAttribute("alertMsg", "íšŒì›ê°€ì…ì‹¤íŒ¨");
 	        return "common/errorPage";
 	    }
 	}
+	
+	
 	
 
 }
