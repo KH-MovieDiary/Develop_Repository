@@ -1,15 +1,20 @@
 package com.kh.moviediary.reviewlist.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-import com.kh.moviediary.common.vo.ReivewPageInfo;
+import com.kh.moviediary.common.vo.ReviewPageInfo;
 import com.kh.moviediary.reviewlist.vo.ReviewList;
 
 public interface ReviewListService {
 	
-	//°Ô½Ã±Û ¼ö Á¶È¸
+	//ï¿½Ô½Ã±ï¿½ ï¿½ï¿½ ï¿½ï¿½È¸
 	int listCount();
 
-	ArrayList<ReviewList> reviewList(ReivewPageInfo pi);
+	ArrayList<ReviewList> reviewList(ReviewPageInfo pi);
+
+	ArrayList<ReviewList> searchList(HashMap<String, String> map, ReviewPageInfo pi);
+
+	int searchListCount(HashMap<String, String> map);
 
 }
