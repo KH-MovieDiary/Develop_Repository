@@ -93,6 +93,12 @@
 				
 				<c:if test= "${not empty loginUser }">
 					<button type="button" id="likeBtn" class="${likeYn == 'Y' ? 'y' : ''}">좋아요</button><br>
+					<style>
+						.y {
+      						 color: red;
+      						 font-weight: bold;
+      						}
+					</style>
 				</c:if>
 				<span id="likeCount">${review.likeCount }</span>
 				
@@ -144,7 +150,7 @@
     			},
     			success: function(result){
     				if(result>0){
-    					let currentCount = parseInt($("#countArea").text());
+    					let currentCount = parseInt($("#likeCount").text());
     					
     					if($("#likeBtn").hasClass("y")){
     						alert("좋아요를 취소하였습니다");
