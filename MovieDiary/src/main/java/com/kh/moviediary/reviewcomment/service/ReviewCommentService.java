@@ -1,5 +1,13 @@
 package com.kh.moviediary.reviewcomment.service;
 
-public class ReviewCommentService {
+import java.util.List;
+
+import com.kh.moviediary.reviewcomment.vo.ReviewComment;
+
+public interface ReviewCommentService {
+
+	int insertReply(ReviewComment rc);
+
+	List<ReviewComment> selectList(int reviewId);
 
 }

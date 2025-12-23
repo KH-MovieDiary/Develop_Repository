@@ -126,34 +126,41 @@
 				
 				<input type="hidden" id="rno" value="${review.reviewId }">
 				<input type="hidden" id="uid" value="${loginUser.userId }">
-    	</div>
-    </div>
     
-	<div class="comment-area">
-	
-		<div class="comment-input">
-			<label for="commentContent" style="margin-right : 5px">댓글</label>
-		    <textarea id="commentContent" placeholder="댓글을 입력하세요"></textarea>
-		    <button class="btn-comment" onclick="insertComment();">등록</button>
-		</div>
-		
-		<div id="commentList">
-		    <c:forEach items="${commentList}" var="c">
-		        <div class="comment-item">
-		            <div class="comment-top">
-		                <span class="comment-writer">${c.userId}</span>
-		                <span class="comment-date">${c.createDate}</span>
-		            </div>
-		
-		            <div class="comment-content">
-		                ${c.content}
-		            </div>
-		        </div>
-		    </c:forEach>
+			<br>
+			댓글 : <span id="rCount"></span>
+			<table class="replyArea">
+				<thead>
+					<tr>
+						<th>
+							<c:choose>
+								
+								<c:when	test="${empty loginUser}">
+									<textarea id="replyContent" placeholder="로그인 후 이용가능합니다." readonly></textarea>
+								</c:when>
+									
+								<c:otherwise>
+									<textarea id="replyContent" placeholder="댓글을 작성하세요."></textarea>
+								</c:otherwise>
+									
+							</c:choose>
+						</th>
+						<th>
+							<button id="replyBtn">등록</button>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+				    
+				</tbody>
+			</table>
 		</div>
 	</div>
     
     <script>
+    	
+    	replyList();
+    
     	$(function(){
     		$("#updateBtn").click(function(){
     			let form = $("<form>").attr("action","updateForm.review").attr("method","post");
@@ -214,6 +221,67 @@
     		});
     	});
     });
+    	
+    	
+		function replyList(){
+    		
+			$.ajax({
+				
+				url : "selectList.re",
+				data : {
+					reviewId : ${review.reviewId}
+				},
+				success : function(list){
+					$(".replyArea tbody").html("");
+					if(list.length === 0){
+						let tr = $("<tr>");
+						tr.append($("<td>").attr("colspan", 2).text("조회된 댓글이 없습니다"));
+						$(".replyArea tbody").append(tr);
+					}else{
+						for(let r of list){
+							let tr =$("<tr>");
+							tr.append($("<td>").text(r.nickname)
+									 ,$("<td>").text(r.content)
+									 ,$("<td>").text(r.createDate));
+							$(".replyArea tbody").append(tr);
+						}
+						$("#rCount").text(list.length);
+					}
+				},
+				error : function(){
+					alert("통신 오류");
+				}
+			});
+    		
+    	}
+    	
+		$(function(){
+    		
+    		$("#replyBtn").click(function(){
+    			
+    			$.ajax({
+    				
+    				url : "insertReply.re",
+    				data : {
+    					content : $("#replyContent").val(),
+    					userId : "${loginUser.userId}",
+    					reviewId : ${review.reviewId}
+    				},
+    				success : function(result){
+    					if(result>0){
+    						alert("댓글 등록 성공");
+    						$("#replyContent").val("");
+    						replyList();
+    					}else{
+    						alert("댓글 등록 실패");
+    					}
+    				},
+    				error : function(){
+    					alert("통신 오류");
+    				}
+    			});
+    		});
+    	});
     </script>
     
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />

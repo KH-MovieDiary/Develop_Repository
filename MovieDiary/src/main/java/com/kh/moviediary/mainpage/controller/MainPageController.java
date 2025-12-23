@@ -19,7 +19,6 @@ public class MainPageController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String mainPage(Model model) {
-        System.out.println("ggdgzsd");
 
         String url =
                 BASE_URL + "/movie/now_playing"
