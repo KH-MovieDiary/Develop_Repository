@@ -91,7 +91,8 @@
 			            	    <input type="hidden" name="movieId" value="${movieId}">
 			       			</c:when>
 							<c:otherwise>
-			            		 <input type="text" id="movieTitle" class="form-control" name="movieTitle" placeholder="" required>
+			            		 <input type="text" id="movieTitle" class="form-control" name="movieTitle" placeholder="영화를 검색하세요" onclick="openSearchModal()" required>
+       							 <input type="hidden" name="tmdbId" value="${tmdbId}">
 			            	</c:otherwise>
 			        </c:choose>
                 </div>
@@ -115,6 +116,169 @@
             </form>
         </div>
     </div>
+    
+    <div id="movieSearchModal" class="simple-modal-overlay">
+    <div class="simple-modal-box">
+        
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+            <h4 style="margin:0;">영화 검색</h4>
+            <button type="button" onclick="closeSearchModal()" style="border:none; background:none; font-size:20px; cursor:pointer;">&times;</button>
+        </div>
+
+        <div style="display:flex; gap:5px; margin-bottom:10px;">
+            <input type="text" id="modalSearchKeyword" placeholder="영화 제목을 입력하세요" 
+                   style="width:100%; padding:8px; border:1px solid #ccc;"
+                   onkeyup="if(window.event.keyCode==13){searchMovieAjax()}">
+            <button type="button" onclick="searchMovieAjax()" style="padding:8px 15px;">검색</button>
+        </div>
+
+        <div id="searchResultArea" style="height:300px; overflow-y:auto; border:1px solid #eee;">
+            </div>
+    </div>
+</div>
+
+<style>
+    .simple-modal-overlay, #movieSearchModal.modal-backdrop {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.5); /* 그냥 어두운 반투명 */
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .simple-modal-box, #movieSearchModal .modal-box {
+        background: white;
+        width: 500px;      
+        height: 80vh;        
+        padding: 20px;
+        border: 1px solid #ccc;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .modal-header-area {
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #333;
+    }
+    .modal-header-area h4 { margin: 0; font-weight: bold; color: #000; }
+    .modal-close-btn { 
+        background: none; border: none; font-size: 20px; cursor: pointer; 
+    }
+
+    .search-input-area {
+        display: flex; 
+        gap: 5px; 
+        margin-bottom: 15px;
+    }
+    #modalSearchKeyword {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        outline: none;
+    }
+    .search-btn {
+        padding: 10px 20px;
+        background: #333; 
+        color: white; 
+        border: none;
+        cursor: pointer;
+    }
+
+    #searchResultArea {
+        flex: 1;           
+        overflow-y: auto;  
+        border: 1px solid #ddd; 
+    }
+
+    .simple-item, .search-item {
+        display: flex !important;      
+        align-items: center;            
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+        color: #000;
+    }
+
+    .simple-item:hover, .search-item:hover { background-color: #f5f5f5; }
+
+    .simple-item img, .search-item img {
+        width: 50px !important;
+        height: 75px !important;
+        object-fit: cover;
+        margin-right: 15px;
+        border: 1px solid #eee;
+    }
+    
+    .simple-item .title, .search-item .title { font-weight: bold; font-size: 15px; margin-bottom: 5px; }
+    .simple-item .date, .search-item .date { font-size: 13px; color: #666; }
+</style>
+
+<script type="text/javascript">
+function openSearchModal() {
+ 
+ document.getElementById("movieSearchModal").style.display = "flex";
+ document.getElementById("modalSearchKeyword").focus();
+}
+
+function closeSearchModal() {
+ document.getElementById("movieSearchModal").style.display = "none";
+ document.getElementById("modalSearchKeyword").value = "";
+ document.getElementById("searchResultArea").innerHTML = "";
+}
+
+function searchMovieAjax() {
+ var keyword = $("#modalSearchKeyword").val();
+ if(!keyword) { alert("검색어를 입력하세요"); return; }
+
+ $.ajax({
+     url: "${pageContext.request.contextPath}/tmdb/searchMovie.mo",
+     data: { keyword: keyword },
+     type: "GET",
+     success: function(list) {
+         var html = "";
+         
+         if(list.length === 0) {
+             html = "<div>검색 결과가 없습니다.</div>";
+         } else {
+             for(var i=0; i<list.length; i++) {
+                 var m = list[i];
+                 var title = m.title ? m.title : m.original_title;
+                 var date = m.release_date ? m.release_date : "";
+                 var poster = m.posterUrl ? m.posterUrl : "resources/images/no-image.png";
+                 var id = m.id;
+
+                 html += `<div class="search-item" onclick="selectMovie('\${id}', '\${title.replace(/'/g, "&#39;")}')">`;
+                 html += `  <img src="\${poster}">`;
+                 html += `  <div class="info">`;
+                 html += `    <div class="title">\${title}</div>`;
+                 html += `    <div class="date">\${date}</div>`;
+                 html += `  </div>`;
+                 html += `</div>`;
+             }
+         }
+         $("#searchResultArea").html(html);
+     },
+     error: function() {
+         alert("검색 실패");
+     }
+ });
+}
+
+function selectMovie(id, title) {
+
+ $("input[name='movieTitle']").val(title);
+ $("input[name='tmdbId']").val(id);
+ closeSearchModal();
+}
+
+
+
+</script>
     
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
