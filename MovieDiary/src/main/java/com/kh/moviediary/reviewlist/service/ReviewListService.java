@@ -8,10 +8,9 @@ import com.kh.moviediary.reviewlist.vo.ReviewList;
 
 public interface ReviewListService {
 	
-	//�Խñ� �� ��ȸ
 	int listCount();
 
-	ArrayList<ReviewList> reviewList(ReviewPageInfo pi);
+	ArrayList<ReviewList> reviewList(ReviewPageInfo pi, String sort);
 
 	ArrayList<ReviewList> searchList(HashMap<String, String> map, ReviewPageInfo pi);
 

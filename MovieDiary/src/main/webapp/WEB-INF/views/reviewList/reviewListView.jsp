@@ -78,6 +78,11 @@
     font-size: 14px;
     cursor: pointer;
 }
+
+.paging{
+	display: flex;
+	justify-content: center;
+}
 </style>
 </head>
 
@@ -89,25 +94,35 @@
 
     <h2>게시판</h2>
 
-    <form action="${contextRoot}/board/list" method="get">
-        <div class="board-top">
-
-           <!-- 왼쪽: 정렬 -->
-            <div class="board-top-left">
-                <select name="sort">
-                    <option value="date">작성일순</option>
-                    <option value="count">조회수순</option>
+    <div class="board-top">
+	    <form id="listSort" action="${empty map ? 'reviewList.bo' : 'searchList.bo' }" method="get">
+			
+			<c:if test="${not empty map}">
+				<input type="hidden" name="condition" value="${map.condition}">
+				<input type="hidden" name="keyword" value="${map.keyword}">
+			</c:if>
+			
+           <div class="board-top-left">
+                <select name="sort" onchange="changeSort()">
+                    <option value="date" ${sort eq 'date' ? 'selected' : ''}>작성일순</option>
+                    <option value="count" ${sort eq 'count' ? 'selected' : ''}>조회수순</option>
+                    <option value="like" ${sort eq 'like' ? 'selected' : '' }>좋아요순</option>
                 </select>
             </div>
+            
+	    </form>
 
-            <!-- 오른쪽: 검색 -->
-            <div class="board-top-right">
-				<a href="${pageContext.request.contextPath}/insert.review">감상평 작성</a>            
-            </div>
+        <div class="board-top-right">
+			<a href="${pageContext.request.contextPath}/insert.review">감상평 작성</a>            
         </div>
-    </form>
+    </div>
+    
+    <script>
+    	function changeSort(){
+    		document.getElementById("listSort").submit();
+    	}
+    </script>
 
-    <!-- 🔹 게시글 테이블 -->
     <table class="board-table">
         <thead>
             <tr>
@@ -164,6 +179,7 @@
 			<c:param name="keyword" value="${map.keyword}"/>    
     	</c:if>
     	
+    	<c:param name="sort" value="${sort}"/>
     	<c:param name="page"></c:param>
     </c:url>
     
@@ -204,6 +220,8 @@
 	        <input type="text" name="keyword" value="${map.keyword}" placeholder="검색어 입력">
 			<button type="submit">검색</button>
 	</form>	
+	
+</div>
 
 	<jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 

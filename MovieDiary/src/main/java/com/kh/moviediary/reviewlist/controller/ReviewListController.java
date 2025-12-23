@@ -21,8 +21,9 @@ public class ReviewListController {
 	private ReviewListService service;
 
 	@RequestMapping("/reviewList.bo")
-	public String commentList(@RequestParam(value="page",defaultValue="1")
-								int currentPage
+	public String commentList(
+			@RequestParam(value="page",defaultValue="1") int currentPage
+		   ,@RequestParam(value="sort", defaultValue="date") String sort
 							   ,Model model) {
 		
 		int listCount = service.listCount();
@@ -31,12 +32,11 @@ public class ReviewListController {
 		
 		ReviewPageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
 		
-		ArrayList<ReviewList> list = service.reviewList(pi);
-		System.out.println(list.size());
+		ArrayList<ReviewList> list = service.reviewList(pi, sort);
 		
 		model.addAttribute("pi", pi);
 		model.addAttribute("list", list);
-		
+		model.addAttribute("sort", sort);
 		
 		return "reviewList/reviewListView";
 	}
@@ -46,11 +46,13 @@ public class ReviewListController {
 											int currentPage
 										   ,String condition
 										   ,String keyword
+										   ,String sort
 										   ,Model model) {
 		
 		HashMap<String,String> map = new HashMap<>();
 		map.put("condition", condition);
 		map.put("keyword", keyword);
+		map.put("sort", sort);
 		
 		int listCount = service.searchListCount(map);
 		int pageLimit = 10;
@@ -62,7 +64,8 @@ public class ReviewListController {
 		
 		model.addAttribute("list", searchList);
 		model.addAttribute("pi", pi);
-		model.addAttribute("map",map);
+		model.addAttribute("map", map);
+		model.addAttribute("sort",sort);
 		
 		return "reviewList/reviewListView";
 	}
