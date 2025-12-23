@@ -15,6 +15,7 @@
  		<typeAlias type="com.kh.moviediary.reviewLike.model.vo.Reviewlike" alias="Reviewlike"/>
  		<typeAlias type="com.kh.moviediary.member.vo.Member" alias="Member"/>
  		<typeAlias type="com.kh.moviediary.movie.vo.Movie" alias="Movie"/>
+ 		<typeAlias type="com.kh.moviediary.reviewcomment.vo.ReviewComment" alias="ReviewComment"/>
  	</typeAliases>
  	
 </configuration>

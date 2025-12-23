@@ -149,7 +149,33 @@
 		</otherwise>
  	</choose>
  </select>  
+ 
+ <select id="selectList" parameterType="int" resultType="ReviewComment">
+ 	SELECT NICKNAME
+ 		  ,CONTENT
+ 		  ,R.CREATE_DATE
+ 	FROM REVIEW_COMMENT R
+ 	JOIN MEMBER M USING(USER_ID)
+ 	WHERE REVIEW_ID = #{reviewId}
+ 	ORDER BY R.CREATE_DATE DESC
+ </select>
    
+ <insert id="insertReply" parameterType="ReviewComment">
+ 	 INSERT INTO REVIEW_COMMENT(
+        REVIEW_COMMENT_ID,
+        CREATE_DATE,
+        UPDATE_DATE,
+        CONTENT,
+        REVIEW_ID,
+        USER_ID)
+    VALUES(
+        SEQ_RCNO.NEXTVAL,
+        SYSDATE,
+        SYSDATE,
+        #{content},
+        #{reviewId},
+        #{userId})
+ </insert>
 
 </mapper>
 
