@@ -22,4 +22,5 @@ public class Review {
 	private String userId;			//	USER_ID	VARCHAR2(20 BYTE)
 	private String movieTitle; 
 	private String reviewTitle;
+	private String nickname;
 }
