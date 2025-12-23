@@ -28,7 +28,7 @@
  <select id="reviewDetail" resultType="Review">
  	SELECT REVIEW_ID,
  		   CONTENT,
- 		   CREATE_DATE,
+ 		   R.CREATE_DATE,
  		   VIEW_COUNT,
  		   LIKE_COUNT,
  		   (SELECT MOVIE_TITLE 
@@ -36,8 +36,10 @@
             WHERE M.MOVIE_ID = R.MOVIE_ID) movieTitle
  		   ,USER_ID
  		   ,REVIEW_TITLE
- 		   ,UPDATE_DATE
+ 		   ,R.UPDATE_DATE
+ 		   ,NICKNAME
  	FROM REVIEW R
+ 	JOIN MEMBER M USING(USER_ID)
  	WHERE REVIEW_ID=#{rno}
  </select>
  
