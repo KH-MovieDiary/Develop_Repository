@@ -65,9 +65,17 @@
 			,GENDER = #{gender}
 			,FAVORITE_GENRE = #{favoriteGenre}
 			,PICTURE = #{picture}
+			,UPDATE_DATE = SYSDATE
 		WHERE USER_ID = #{userId}
 		AND STATUS = 'Y'
 	</update>
+	
+	<update id="deleteMember" parameterType="string">
+  		UPDATE MEMBER
+  		SET STATUS = 'N'
+  		,UPDATE_DATE = SYSDATE
+  		WHERE USER_ID = #{userId}
+  	</update>
 
 
 
