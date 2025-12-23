@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -76,15 +77,29 @@
             <h2 class="form-title">영화감상문 작성하기</h2>
             
             <form id="enrollForm" method="post" action="${pageContext.request.contextPath}/insert.review">
-   
+   		
+   				<div class="form-group">
+                    <label for="reviewTitle">감상평 제목</label>
+                    <input type="text" id="reviewTitle" class="form-control" name="reviewTitle" placeholder="" required>
+                </div>
+                
                 <div class="form-group">
-                    <label for="movieTitle">감상평 제목</label>
-                    <input type="text" id="movieTitle" class="form-control" name="reviewTitle" placeholder="" required>
+                    <label for="movieTitle">영화 제목</label>
+			     	<c:choose>
+			        		<c:when test="${not empty movieTitle}">
+			            		<input type="text" name="movieTitle" class="form-control" value="${movieTitle}" readonly>
+			            	    <input type="hidden" name="movieId" value="${movieId}">
+			       			</c:when>
+							<c:otherwise>
+			            		 <input type="text" id="movieTitle" class="form-control" name="movieTitle" placeholder="" required>
+			            	</c:otherwise>
+			        </c:choose>
                 </div>
                 
                 <div class="form-group">
                     <label for="writer">작성자</label>
-                    <input type="text" id="writer" class="form-control" value="${loginUser.userId}" name="userId" readonly>
+                    <input type="text" id="writer" class="form-control" value="${loginUser.nickName}" readonly>				
+					<input type="hidden" name="userId" value="${loginUser.userId}">
                 </div>
 
                 <div class="form-group">

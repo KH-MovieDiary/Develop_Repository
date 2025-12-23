@@ -27,14 +27,21 @@ public class ReviewController {
 	ReviewlikeService likeservice;
 	
 	@GetMapping("/insert.review")
-	public String reviewInsertForm() {
+	public String reviewInsertForm(@RequestParam(value="movieTitle", required=false) String movieTitle,
+								   @RequestParam(value="tmdbId", required=false) String movieId,
+								   Model model){
+		
+	
+		if(movieTitle != null && movieId != null) {
+			model.addAttribute("movieTitle",movieTitle);
+			model.addAttribute("movieId",movieId);
+		}
 		
 		return "review/reviewInsert";
 	}
 	
 	@PostMapping("/insert.review")
 	public String reviewInsert(Review r, HttpSession session) {
-		
 		int result = service.reviewInsert(r);
 		
 		if(result>0) {
