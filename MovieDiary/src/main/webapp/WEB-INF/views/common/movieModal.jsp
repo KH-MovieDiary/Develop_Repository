@@ -304,7 +304,7 @@
                 </div>
             </div>
 
-            <div class="modal-review-area">
+            <div class="modal-review-area" style="overflow-y:auto;">
                 <div class="modal-review-box">
 
                     <div class="review-header">
@@ -315,7 +315,15 @@
                     <div id="commentList" class="review-list"></div>
 
                     <div class="review-input-wrap">
-                        <textarea id="commentInput" placeholder="리뷰를 입력하세요"></textarea>
+                    	<c:choose>
+                    		<c:when test="${empty loginUser}">
+                    			<textarea id="commentInput" placeholder="로그인 후 입력 가능합니다." disabled></textarea>
+                    		</c:when>
+                    		<c:otherwise>
+                    			<textarea id="commentInput" placeholder="리뷰를 입력하세요"></textarea>
+                    		</c:otherwise>
+                    	</c:choose>
+                        
                         <button id="btnCommentSubmit" type="button" onclick="submitComment()">등록</button>
                     </div>
 
