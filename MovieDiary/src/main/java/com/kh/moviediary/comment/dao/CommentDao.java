@@ -21,4 +21,9 @@ public class CommentDao {
     public int insertComment(SqlSessionTemplate sqlSession, MovieComment c) {
         return sqlSession.insert("movieMapper.insertComment", c);
     }
+
+	public int deleteComment(SqlSessionTemplate sqlSession, int commentId) {
+
+		return sqlSession.delete("movieMapper.deleteComment",commentId);
+	}
 }

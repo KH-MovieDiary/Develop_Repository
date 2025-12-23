@@ -80,4 +80,9 @@
             ,0
         )
     </insert>
+    
+    <delete id="deleteComment" parameterType="com.kh.moviediary.comment.vo.MovieComment">
+    	DELETE FROM MOVIE_COMMENT
+		WHERE COMMENT_ID = #{commentId}
+    </delete>
 </mapper>
