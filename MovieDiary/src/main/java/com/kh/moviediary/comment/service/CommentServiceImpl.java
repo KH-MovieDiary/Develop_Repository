@@ -27,5 +27,10 @@ public class CommentServiceImpl implements CommentService {
         return commentDao.insertComment(sqlSession, c);
     }
 
+	@Override
+	public int deleteComment(int commentId) {
+		return commentDao.deleteComment(sqlSession, commentId);
+	}
+
 }
 
