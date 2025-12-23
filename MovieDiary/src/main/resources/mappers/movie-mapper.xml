@@ -85,4 +85,49 @@
     	DELETE FROM MOVIE_COMMENT
 		WHERE COMMENT_ID = #{commentId}
     </delete>
+    
+    <!-- 내 선택 조회 -->
+	<select id="selectMyChoice" parameterType="map" resultType="string">
+	    SELECT LIKE_TYPE
+	    FROM MOVIE_LIKE
+	    WHERE MOVIE_ID = #{movieId}
+	      AND USER_ID  = #{userId}
+	</select>
+	
+	<!-- 좋아요 / 싫어요 전체 카운트 -->
+	<select id="selectCounts" parameterType="map" resultType="map">
+	    SELECT
+	        (SELECT COUNT(*)
+	           FROM MOVIE_LIKE
+	          WHERE MOVIE_ID = #{movieId}
+	            AND LIKE_TYPE = 'LIKE')    AS LIKE_COUNT,
+	
+	        (SELECT COUNT(*)
+	           FROM MOVIE_LIKE
+	          WHERE MOVIE_ID = #{movieId}
+	            AND LIKE_TYPE = 'DISLIKE') AS DISLIKE_COUNT
+	    FROM DUAL
+	</select>
+	
+	<!-- 최초 클릭 (insert) -->
+	<insert id="insertLike" parameterType="map">
+	    INSERT INTO MOVIE_LIKE (MOVIE_ID, USER_ID, LIKE_TYPE)
+	    VALUES (#{movieId}, #{userId}, #{likeType})
+	</insert>
+	
+	<!-- LIKE ↔ DISLIKE 변경 -->
+	<update id="updateLike" parameterType="map">
+	    UPDATE MOVIE_LIKE
+	       SET LIKE_TYPE = #{likeType}
+	     WHERE MOVIE_ID = #{movieId}
+	       AND USER_ID  = #{userId}
+	</update>
+	
+	<!-- 같은 버튼 다시 누르면 취소 -->
+	<delete id="deleteLike" parameterType="map">
+	    DELETE FROM MOVIE_LIKE
+	     WHERE MOVIE_ID = #{movieId}
+	       AND USER_ID  = #{userId}
+	</delete>
+
 </mapper>

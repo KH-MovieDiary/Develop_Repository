@@ -260,6 +260,26 @@
             font-weight:900;
             cursor:pointer;
         }
+		#btnLike, #btnDislike{
+		    cursor:pointer !important;
+		    border: 1px solid #e5e7eb;
+		    background:#fff;
+		    transition: all .15s ease;
+		}
+		#btnLike:hover{ background:#ecfeff; border-color:#06b6d4; }
+		#btnDislike:hover{ background:#fff1f2; border-color:#fb7185; }
+		
+		#btnLike.active{
+		    background:#06b6d4;
+		    border-color:#06b6d4;
+		    color:#fff;
+		}
+		#btnDislike.active{
+		    background:#fb7185;
+		    border-color:#fb7185;
+		    color:#fff;
+		}
+        
     </style>
 </head>
 <body>
@@ -367,6 +387,9 @@
         const COMMENT_LIST_URL   = "<c:url value='/comment/list.mo'/>";
         const COMMENT_INSERT_URL = "<c:url value='/comment/insert.mo'/>";
         const COMMENT_DELETE_URL = "<c:url value='/comment/delete.mo'/>";
+        const LIKE_STATUS_URL = "<c:url value='/like/status.mo'/>";
+        const LIKE_TOGGLE_URL = "<c:url value='/like/toggle.mo'/>";
+
 
         let CURRENT_MOVIE_ID = null;
 
@@ -389,6 +412,8 @@
             document.getElementById("modalContent").innerText = "-";
 
             CURRENT_MOVIE_ID = parseInt(tmdbId, 10);
+            loadLikeState(CURRENT_MOVIE_ID);
+
             loadComments(CURRENT_MOVIE_ID);
 
             var url = TMDB_DETAIL_URL + "?tmdbId=" + encodeURIComponent(tmdbId);
@@ -651,6 +676,90 @@
                   console.error(err);
                   alert("삭제 실패");
               });
+        }
+        function loadLikeState(movieId){
+            fetch(LIKE_STATUS_URL + "?movieId=" + encodeURIComponent(movieId))
+              .then(r => r.text())
+              .then(txt => {
+                  // txt: "LIKE,3,1" / "DISLIKE,3,1" / ",3,1"
+                  const parts = String(txt || "").split(",");
+                  const myChoice = (parts[0] || "").trim(); // LIKE/DISLIKE/""
+                  const likeCount = parseInt(parts[1], 10) || 0;
+                  const dislikeCount = parseInt(parts[2], 10) || 0;
+                  applyLikeUI(likeCount, dislikeCount, myChoice);
+              })
+              .catch(e => console.error(e));
+        }
+
+        function applyLikeUI(likeCount, dislikeCount, myChoice){
+            const btnLike = document.getElementById("btnLike");
+            const btnDislike = document.getElementById("btnDislike");
+            if(!btnLike || !btnDislike) return;
+
+            btnLike.textContent = "👍 좋아요(" + likeCount + ")";
+            btnDislike.textContent = "👎 싫어요(" + dislikeCount + ")";
+
+            btnLike.classList.remove("active");
+            btnDislike.classList.remove("active");
+
+            if(String(myChoice).toUpperCase() === "LIKE") btnLike.classList.add("active");
+            if(String(myChoice).toUpperCase() === "DISLIKE") btnDislike.classList.add("active");
+
+            // 로그인 안 했으면 클릭 막기(보이긴 보이되)
+            if(!LOGIN_USER_ID){
+                btnLike.style.opacity = "0.6";
+                btnDislike.style.opacity = "0.6";
+            }else{
+                btnLike.style.opacity = "1";
+                btnDislike.style.opacity = "1";
+            }
+        }
+
+        document.getElementById("btnLike")?.addEventListener("click", function(){
+            if(!CURRENT_MOVIE_ID) return;
+            toggleLike("LIKE");
+        });
+        document.getElementById("btnDislike")?.addEventListener("click", function(){
+            if(!CURRENT_MOVIE_ID) return;
+            toggleLike("DISLIKE");
+        });
+
+        function toggleLike(action){
+            if(!LOGIN_USER_ID){
+                alert("로그인 후 이용 가능합니다.");
+                return;
+            }
+
+            const params = new URLSearchParams();
+            params.append("movieId", CURRENT_MOVIE_ID);
+            params.append("action", action);
+
+            fetch(LIKE_TOGGLE_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
+                body: params.toString()
+            })
+            .then(r => r.text())
+            .then(txt => {
+                if(txt === "LOGIN"){
+                    alert("로그인 후 이용 가능합니다.");
+                    return;
+                }
+                if(txt === "BAD"){
+                    alert("요청이 올바르지 않습니다.");
+                    return;
+                }
+                const parts = String(txt || "").split(",");
+                const myChoice = (parts[0] || "").trim();
+                const likeCount = parseInt(parts[1], 10) || 0;
+                const dislikeCount = parseInt(parts[2], 10) || 0;
+
+                applyLikeUI(likeCount, dislikeCount, myChoice);
+            })
+            .catch(e => {
+                console.error(e);
+                alert("처리 실패");
+            });
         }
     </script>
 </body>
