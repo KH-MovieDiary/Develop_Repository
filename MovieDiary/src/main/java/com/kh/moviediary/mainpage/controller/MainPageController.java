@@ -40,7 +40,7 @@ public class MainPageController {
 
             if (results != null) {
                 for (Map<String, Object> m : results) {
-                    if (top5.size() >= 5) break;
+                    if (top5.size() >= 20) break; // ✅ 5 -> 20 으로 변경
 
                     Object idObj = m.get("id");
                     if (idObj != null) {
@@ -58,10 +58,18 @@ public class MainPageController {
                         m.put("posterUrl", IMG_URL + posterPath);
                     }
 
+                    // JSP에서 m.title 사용 중이라 title 키 보장
+                    Object titleObj = m.get("title");
+                    if (titleObj == null) {
+                        Object nameObj = m.get("name");
+                        m.put("title", nameObj == null ? "" : String.valueOf(nameObj));
+                    }
+
                     top5.add(m);
                 }
             }
 
+            // ✅ 이름 유지: top5
             model.addAttribute("top5", top5);
             model.addAttribute("top5Size", top5.size());
             model.addAttribute("error", "");
