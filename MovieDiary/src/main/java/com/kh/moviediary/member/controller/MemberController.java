@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+
+
 import com.kh.moviediary.member.service.MemberService;
 import com.kh.moviediary.member.vo.Member;
 
@@ -101,6 +103,8 @@ public class MemberController {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+	    } else {
+	    	m.setPicture("resources/uploadFiles/default_profile.jpg");
 	    }
 
 	    int result = service.insertMember(m);
@@ -190,10 +194,29 @@ public class MemberController {
 	        return "common/errorPage";
 	    }
 	    
-		
-		
+	}
 	
-	
+	@RequestMapping("delete.me")
+	public String deleteMember(String userId, HttpSession session, javax.servlet.http.HttpServletRequest request, Model model) {
+	    
+	    // STATUS 컬럼을 'N'으로 바꾸는 서비스 호출
+	    int result = service.deleteMember(userId);
+	    
+	    if(result > 0) {
+	    	// 1. 기존 세션 파괴 (로그아웃 효과)
+	        request.getSession().invalidate();
+	        
+	        // 2. 새로운 세션 생성 (true를 인자로 주면 새 세션 발급)
+	        HttpSession newSession = request.getSession(true);
+	        
+	        // 3. 새 세션에 알림 메시지 저장
+	        newSession.setAttribute("alertMsg", "성공적으로 탈퇴되었습니다. 그동안 이용해주셔서 감사합니다.");
+	        
+	        return "redirect:/";
+	    } else {
+	        model.addAttribute("errorMsg", "회원 탈퇴 실패");
+	        return "common/errorPage";
+	    }
 	}
 	
 	
