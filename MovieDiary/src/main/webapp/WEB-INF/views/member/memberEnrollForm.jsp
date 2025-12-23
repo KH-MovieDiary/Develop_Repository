@@ -251,7 +251,7 @@
 			
 			<form action="insert.me" method="post" enctype="multipart/form-data">
 				<div class="form-group">
-					<label for="inputId">* 아이디</label>
+					<label for="inputId">* 아이디 (가입 후 수정불가)</label>
 					<div id="resultDiv" style="font-size:0.8em; display:none"></div>
 				    <div class="id-wrapper">
 				        <input type="text" class="form-control" id="inputId" name="userId" placeholder="5자 이상" required>
@@ -264,9 +264,10 @@
 					<input type="password" class="form-control" id="inputPwd" placeholder="비밀번호를 입력하세요" name="userPwd" required> <br><br>
 					
 					<label for="checkPwd">*비밀번호 확인</label>
+					<div id="resultDiv2_1" style="font-size:0.8em; display:none; margin-top:5px;"></div>
 					<input type="password" class="form-control" id="checkPwd" placeholder="비밀번호를 한번 더 입력하세요" required> <br><br>
 				
-					<label for="nickName">*닉네임</label> 
+					<label for="nickName">*닉네임 (가입 후 수정불가)</label> 
 					<div id="resultDiv3" style="font-size:0.8em; display:none; margin-bottom:5px;"></div>
 					<div class="id-wrapper">
 					    <input type="text" class="form-control" id="nickName" placeholder="별명을 입력하세요" name="nickName" required>
@@ -294,7 +295,7 @@
 				    <input type="hidden" name="email" id="fullEmail">
 				    <br>
 				    
-				    <label for="gender">* 성별</label>
+				    <p><span>성별</span>
 					<div class="gender-wrapper">
 					    <input type="radio" name="gender" id="male" value="M" required>
 					    <label for="male">남성</label>
@@ -305,7 +306,7 @@
 					<br>
 				        
 			        <div class="form-group">
-				    <label>선호 장르 (중복 선택 가능)</label>
+				    <label>선호 장르 (최대 5개 선택 가능)</label>
 				    <div class="genre-grid">
 				        <input type="checkbox" name="favoriteGenre" id="family" value="10751"><label for="family">가족</label>
 				        <input type="checkbox" name="favoriteGenre" id="horror" value="27"><label for="horror">공포</label>
@@ -378,6 +379,10 @@
 	    let isIdChecked = false; // 아이디 중복 확인 통과 여부
 	    let isNickNameChecked = false;
 	    let isPwdValid = false;  // 비밀번호 조건 및 일치 여부
+	    
+	    let isPwdConditionMet = false;
+	    let isPwdMatched = false;
+	    
 	    const $submitBtn = $(".btns button[type=submit]");
 	    const $requiredInputs = $("input[required], #emailId, #emailDomain");
 
@@ -393,6 +398,17 @@
 	    $("#emailId, #emailDomain").on("input change", function() {
 	        combineEmail();
 	        checkFormValidity(); // 기존에 쓰시던 전체 유효성 검사 함수
+	    });
+	    
+	 // 장르 체크박스 선택 제한 로직
+	    $("input[name='favoriteGenre']").on("change", function() {
+	        const maxSelection = 5;
+	        const selectedCount = $("input[name='favoriteGenre']:checked").length;
+
+	        if (selectedCount > maxSelection) {
+	            alert("장르는 최대 " + maxSelection + "개까지만 선택할 수 있습니다.");
+	            $(this).prop("checked", false); // 방금 선택한 것을 취소
+	        }
 	    });
 	    
 	    
@@ -459,30 +475,61 @@
 
 
 	    function checkPasswordMatch() {
-	        const pwd = $("#inputPwd").val();
-	        const pwdCheck = $("#checkPwd").val();
-	        const $resultDiv2 = $("#resultDiv2");
-	        
-	        // 정규표현식: 소문자, 숫자, 특수문자 포함 8자 이상
-	        const pwdRegex = /^(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[a-z\d@$!%*?&]{8,}$/;
+		    const pwd = $("#inputPwd").val();
+		    const pwdCheck = $("#checkPwd").val();
+		    const $resultDiv2 = $("#resultDiv2");
+		    const $resultDiv2_1 = $("#resultDiv2_1");
+		    
+		    // 정규표현식: 소문자, 숫자, 특수문자 포함 8자 이상
+		    const pwdRegex = /^(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[a-z\d@$!%*?&]{8,}$/;
 
-	        $resultDiv2.show();
+		    // 1. 첫 번째 비밀번호(조건) 검사
+		    if (pwd === "") {
+		        $resultDiv2.hide();
+		        isPwdConditionMet = false;
+		    } else {
+		        $resultDiv2.show();
+		        if (!pwdRegex.test(pwd)) {
+		            $resultDiv2.text("✕ 비밀번호는 소문자, 숫자, 특수문자 조합 8자 이상이어야 합니다.").css("color", "red");
+		            isPwdConditionMet = false;
+		        } else {
+		            $resultDiv2.text("✓ 비밀번호 확인").css("color", "green"); // 조건 만족 시 출력
+		            isPwdConditionMet = true;
+		        }
+		    }
 
-	        if (pwd === "") {
-	            $resultDiv2.hide();
-	            isPwdValid = false;
-	        } else if (!pwdRegex.test(pwd)) {
-	            $resultDiv2.text("✕ 비밀번호는 소문자, 숫자, 특수문자 조합 8자 이상이어야 합니다.").css("color", "red");
-	            isPwdValid = false;
-	        } else if (pwd !== pwdCheck) {
-	            $resultDiv2.text("✕ 비밀번호가 일치하지 않습니다.").css("color", "red");
-	            isPwdValid = false;
-	        } else {
-	            $resultDiv2.text("✓ 비밀번호가 조건에 부합하며 일치합니다.").css("color", "green");
-	            isPwdValid = true;
-	        }
-	        checkFormValidity();
-	    }
+		    // 2. 두 번째 비밀번호(일치) 검사
+		    // 비밀번호 확인 칸에 포커스가 있거나 값이 있을 때만 검사 결과 표시
+		    if (pwdCheck === "" && !$("#checkPwd").is(":focus")) {
+		        $resultDiv2_1.hide();
+		        isPwdMatched = false;
+		    } else {
+		        $resultDiv2_1.show();
+		        if (pwd === "" || pwd !== pwdCheck) {
+		            $resultDiv2_1.text("✕ 비밀번호가 일치하지 않습니다.").css("color", "red");
+		            isPwdMatched = false;
+		        } else {
+	                // 상단 비밀번호 조건도 맞고, 두 값이 일치할 때
+	                if(isPwdConditionMet) {
+	                    $resultDiv2_1.text("✓ 비밀번호가 일치합니다.").css("color", "green");
+	                    isPwdMatched = true;
+	                } else {
+	                    $resultDiv2_1.text("✕ 비밀번호 조건을 확인해주세요.").css("color", "red");
+	                    isPwdMatched = false;
+	                }
+		        }
+		    }
+
+		    // 최종 상태 업데이트 및 버튼 활성화 체크
+		    isPwdValid = isPwdConditionMet && isPwdMatched;
+		    checkFormValidity();
+		}
+	    
+	 // 이벤트 리스너 통합 (중복 선언 방지)
+		$("#inputPwd, #checkPwd").on("input focus", function() {
+		    checkPasswordMatch();
+		});
+	    
 
 	    $("#inputPwd, #checkPwd").on("input", checkPasswordMatch);
 

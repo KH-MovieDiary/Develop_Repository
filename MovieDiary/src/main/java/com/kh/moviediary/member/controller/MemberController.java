@@ -38,6 +38,11 @@ public class MemberController {
 		return "member/memberEnrollForm";
 	}
 	
+	@RequestMapping("/updateForm.me")
+	public String updateForm() {
+		return "member/memberUpdateForm";
+	}
+	
 	
 	
 	@ResponseBody
@@ -129,6 +134,66 @@ public class MemberController {
 	public String logoutMember(HttpSession session) {
 	    session.invalidate(); // 세션 무효화 (로그아웃)
 	    return "redirect:/";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="checkPwd.me", produces="text/html; charset=UTF-8")
+	public String checkPassword(String userPwd, HttpSession session) {
+	    Member loginUser = (Member)session.getAttribute("loginUser");
+
+	    if(loginUser != null && bcrypt.matches(userPwd, loginUser.getUserPwd())) {
+	        return "true";
+	    } else {
+	        return "false";
+	    }
+	}
+	
+	@RequestMapping("update.me")
+	public String updateMember(Member m, MultipartFile uploadFile, HttpSession session, Model model) {
+		// 1. 새로운 첨부파일(프로필 사진)이 넘어온 경우 처리
+	    if(uploadFile != null && !uploadFile.getOriginalFilename().equals("")) {
+	        
+	        // 기존 파일이 있다면 삭제하는 로직을 추가하면 더 깔끔합니다 (선택사항)
+	        
+	        String originName = uploadFile.getOriginalFilename();
+	        String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+	        int ranNum = (int)(Math.random() * 90000 + 10000);
+	        String ext = originName.substring(originName.lastIndexOf("."));
+	        String changeName = currentTime + ranNum + ext;
+	        String savePath = session.getServletContext().getRealPath("/resources/uploadFiles/");
+	        
+	        try {
+	            uploadFile.transferTo(new File(savePath + changeName));
+	            // 새로운 경로를 Member 객체에 세팅
+	            m.setPicture("resources/uploadFiles/" + changeName);
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    } else {
+	        // 파일을 새로 올리지 않았다면 기존 사진 경로를 유지해야 합니다.
+	        // JSP에서 <input type="hidden" name="picture" value="${loginUser.picture}"> 로 넘겨줘야 함
+	    }
+
+	    // 2. 서비스 호출하여 DB 업데이트 (이메일, 생년월일, 성별, 장르, 사진 등)
+	    int result = service.updateMember(m);
+	    
+	    if(result > 0) {
+	        // 3. [중요] DB 업데이트 성공 시 세션 정보 갱신
+	        // updateMember 서비스 성공 후, 변경된 정보로 다시 DB 조회를 해와야 세션이 최신화됩니다.
+	        Member updateMember = service.loginUser(m); 
+	        session.setAttribute("loginUser", updateMember);
+	        
+	        session.setAttribute("alertMsg", "성공적으로 정보가 수정되었습니다.");
+	        return "redirect:mypage.me";
+	    } else {
+	        model.addAttribute("errorMsg", "회원 정보 수정 실패");
+	        return "common/errorPage";
+	    }
+	    
+		
+		
+	
+	
 	}
 	
 	

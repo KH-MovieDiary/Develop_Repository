@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html>
@@ -214,16 +216,29 @@
                         : '/resources/img/default_profile.png'}">
                 </div>
 
-                <a href="/member/update"><button>회원 정보 수정</button></a>
+                <a href="${pageContext.request.contextPath}/updateForm.me"><button>회원 정보 수정</button></a>
                 <a href="/member/delete"><button>회원 탈퇴</button></a>
             </div>
 
             <div class="profile-info">
                 <p><span>닉네임</span> ${loginUser.nickName}</p>
-                <p><span>나이</span> ${loginUser.birthday}</p>
-                <p><span>성별</span> ${loginUser.gender}</p>
-                <p><span>장르</span> ${loginUser.favoriteGenre}</p>
-                <p><span>가입일</span> ${loginUser.createDate}</p>
+                <p><span>생년월일</span>${loginUser.birthday}</p>	
+    			<p><span>나이</span> 만 ${loginUser.age}세</p>
+                <p><span>성별</span> 
+			        <c:choose>
+			            <c:when test="${loginUser.gender == 'M'}">남성</c:when>
+			            <c:otherwise>여성</c:otherwise>
+			        </c:choose>
+		    	</p>
+				
+               <p><span>장르</span> ${loginUser.genreNames }</p>	
+
+
+                <p><span>가입일</span> 
+    			<fmt:formatDate value="${loginUser.createDate}" pattern="yyyy년 MM월 dd일"/>
+				</p>
+
+
             </div>
         </div>
     </section>
