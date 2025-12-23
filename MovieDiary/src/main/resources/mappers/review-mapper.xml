@@ -13,7 +13,7 @@
  		   ,NULL
  		   ,0
  		   ,0
- 		   ,NULL
+ 		   ,#{movieId}
 		   ,#{userId}
 		   ,#{reviewTitle}
 		   )

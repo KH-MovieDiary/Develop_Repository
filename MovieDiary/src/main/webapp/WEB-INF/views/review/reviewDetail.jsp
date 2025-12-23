@@ -11,6 +11,7 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     
     <style>
         body {
@@ -100,7 +101,7 @@
       						}
 					</style>
 				</c:if>
-				<span id="likeCount">${review.likeCount }</span>
+				좋아요 수 : <span id="likeCount">${review.likeCount }</span>
 				
 				<input type="hidden" id="rno" value="${review.reviewId }">
 				<input type="hidden" id="uid" value="${loginUser.userId }">

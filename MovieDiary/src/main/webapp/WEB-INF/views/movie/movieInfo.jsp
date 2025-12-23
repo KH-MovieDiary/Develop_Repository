@@ -408,6 +408,7 @@
                             <button id="btnLike">👍 좋아요(20)</button>
                             <button id="btnDislike">👎 싫어요(3)</button>
                             <button id="btnWriteReview">✍️ 감상문 쓰기</button>
+
                         </div>
                     </div>
                 </div>
@@ -478,7 +479,11 @@
                   var title = data.title || data.original_title || "제목 없음";
                   document.getElementById("modalTitle").innerText = title;
                   document.getElementById("modalMovieName").innerText = title;
-
+                  
+                  var btn = document.getElementById("btnWriteReview");
+                  var ctx = "${pageContext.request.contextPath}"; 
+                  btn.setAttribute("onclick", "location.href='" + ctx + "/insert.review?movieTitle=" + encodeURIComponent(title) + "&tmdbId=" + tmdbId + "'");
+                  
                   document.getElementById("modalReleaseDate").innerText = data.release_date || "-";
 
                   document.getElementById("modalPopularity").innerText =
