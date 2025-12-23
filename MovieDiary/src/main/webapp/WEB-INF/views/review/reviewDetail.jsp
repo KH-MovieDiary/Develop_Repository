@@ -198,11 +198,9 @@
     					let currentCount = parseInt($("#likeCount").text());
     					
     					if($("#likeBtn").hasClass("y")){
-    						alert("좋아요를 취소하였습니다");
     						$("#likeCount").text(currentCount - 1);
                             $("#likeBtn").removeClass("y");
     					} else{
-    						alert("좋아요를 눌렀습니다")
     						 $("#likeCount").text(currentCount + 1);
     						 $("#likeBtn").addClass("y");
     					}
