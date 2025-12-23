@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,7 +11,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <style>
-    /* 1. 전체 레이아웃 및 공통 요소 */
     .innerOuter {
         max-width: 650px;
         background: #ffffff;
@@ -18,30 +19,57 @@
         box-shadow: 0 15px 35px rgba(0,0,0,0.05);
         margin: 50px auto;
     }
-
+    
+	.id-wrapper {
+	        display: flex;
+	        align-items: center;
+	        gap: 10px;
+	        width : 100%
+	    }
+    
     .form-control {
         width: 100%; 
         border: 1px solid #e1e1e1;
         height: 48px;
         border-radius: 8px;
-        padding: 0 15px; /* 패딩 추가 */
+        padding: 0 15px;
+		box-sizing: border-box;
     }
 
-    /* 2. 아이디 입력 영역 및 확인 버튼 */
-    .id-wrapper {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    #inputId {
-        flex: 1;
-        max-width: 75%; /* 버튼 공간 확보를 위해 너비 조절 */
-    }
+ 
+	.input-row {
+	    display: flex;
+	    align-items: center;
+	    gap: 10px;
+	    width: 100%;
+	    margin-bottom: 20px; 
+	}
+	
+
+	.input-row .form-control {
+	    flex: 1;
+	    box-sizing: border-box; 
+	    width: 0; 
+	}
+	
+
+	.custom-btn, .btn-spacer {
+	    width: 110px !important;
+	    flex-shrink: 0; 
+	}
+	
+
+	.btn-spacer {
+	    display: block; 
+	} 
+   
+   
+   
 
     /* 3. 버튼 공통 디자인 (깔끔한 스타일) */
     .custom-btn {
         height: 40px;
-        width : 100px;
+        width : 110px;
         padding: 0 20px;
         border: none;
         border-radius: 8px;
@@ -53,6 +81,7 @@
         align-items: center;
         justify-content: center;
         white-space: nowrap; /* 글자 줄바꿈 방지 */
+        flex-shrink: 0; /* 화면이 좁아져도 버튼 너비 유지 */
     }
 
     /* 메인 버튼 (아이디 확인, 회원가입) */
@@ -61,7 +90,7 @@
         color: white;
         min-width: 110px;
     }
-    #idCheckbtn:hover, .btn-primary:not(:disabled):hover {
+    #idCheckbtn:hover, #nickNameCheckbtn .btn-primary:not(:disabled):hover {
         background-color: #212529;
     }
 
@@ -306,28 +335,16 @@
 					<br>
 				        
 			        <div class="form-group">
-				    <label>선호 장르 (최대 5개 선택 가능)</label>
-				    <div class="genre-grid">
-				        <input type="checkbox" name="favoriteGenre" id="family" value="10751"><label for="family">가족</label>
-				        <input type="checkbox" name="favoriteGenre" id="horror" value="27"><label for="horror">공포</label>
-				        <input type="checkbox" name="favoriteGenre" id="mystery" value="9648"><label for="mystery">미스터리</label>
-				        <input type="checkbox" name="favoriteGenre" id="adventure" value="12"><label for="adventure">모험</label>
-				        <input type="checkbox" name="favoriteGenre" id="music" value="10402"><label for="music">음악</label>
-				        <input type="checkbox" name="favoriteGenre" id="tvMovie" value="10770"><label for="tvMovie">TV영화</label>
-				        <input type="checkbox" name="favoriteGenre" id="documentary" value="99"><label for="documentary">다큐멘터리</label>
-				        <input type="checkbox" name="favoriteGenre" id="drama" value="18"><label for="drama">드라마</label>
-				        <input type="checkbox" name="favoriteGenre" id="romance" value="10749"><label for="romance">로맨스</label>
-				        <input type="checkbox" name="favoriteGenre" id="crime" value="80"><label for="crime">범죄</label>
-				        <input type="checkbox" name="favoriteGenre" id="war" value="10752"><label for="war">전쟁</label>
-				        <input type="checkbox" name="favoriteGenre" id="history" value="36"><label for="history">역사</label>
-				        <input type="checkbox" name="favoriteGenre" id="western" value="37"><label for="western">서부</label>
-				        <input type="checkbox" name="favoriteGenre" id="thriller" value="53"><label for="thriller">스릴러</label>
-				        <input type="checkbox" name="favoriteGenre" id="sf" value="878"><label for="sf">SF</label>
-				        <input type="checkbox" name="favoriteGenre" id="animation" value="16"><label for="animation">애니메이션</label>
-				        <input type="checkbox" name="favoriteGenre" id="comedy" value="35"><label for="comedy">코미디</label>
-				        <input type="checkbox" name="favoriteGenre" id="fantasy" value="14"><label for="fantasy">판타지</label>
-				        
-				    </div>
+					    <label>선호 장르 (최대 5개 선택 가능)</label>
+					    <div class="genre-grid">
+					        <c:set var="genres" value="가족:10751,공포:27,미스터리:9648,모험:12,음악:10402,TV영화:10770,다큐멘터리:99,드라마:18,로맨스:10749,범죄:80,전쟁:10752,역사:36,서부:37,스릴러:53,SF:878,애니메이션:16,코미디:35,판타지:14" />
+					        
+					        <c:forTokens items="${genres}" delims="," var="genre">
+					            <c:set var="g" value="${fn:split(genre, ':')}" />
+					            <input type="checkbox" name="favoriteGenre" id="genre_${g[1]}" value="${g[1]}">
+					            <label for="genre_${g[1]}">${g[0]}</label>
+					        </c:forTokens>
+					    </div>
 					</div>
 					
 					<br><br>

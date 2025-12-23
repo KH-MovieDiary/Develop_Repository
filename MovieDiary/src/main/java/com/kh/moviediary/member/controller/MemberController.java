@@ -41,8 +41,19 @@ public class MemberController {
 	}
 	
 	@RequestMapping("/updateForm.me")
-	public String updateForm() {
-		return "member/memberUpdateForm";
+	public String updateForm(HttpSession session, Model model) {
+		// 세션에 저장된 로그인 유저 정보를 가져옵니다.
+	    Member loginUser = (Member)session.getAttribute("loginUser");
+	    
+	    // 유저가 선택했던 장르 문자열이 있다면 (예: "10751,27")
+	    if (loginUser.getFavoriteGenre() != null && !loginUser.getFavoriteGenre().equals("")) {
+	        // 콤마를 기준으로 잘라서 리스트로 변환합니다.
+	        // List로 변환해두면 JSP의 fn:contains나 반복문에서 비교하기 매우 좋습니다.
+	        java.util.List<String> genreList = java.util.Arrays.asList(loginUser.getFavoriteGenre().split(","));
+	        model.addAttribute("genreList", genreList);
+	    }
+	    
+	    return "member/memberUpdateForm";
 	}
 	
 	
@@ -77,9 +88,16 @@ public class MemberController {
 	
 	
 	@RequestMapping("/insert.me")
-	public String insertMember(Member m, MultipartFile uploadFile, HttpSession session) {
+	public String insertMember(Member m, String[] favoriteGenre, MultipartFile uploadFile, HttpSession session) {
 	   
 	    m.setUserPwd(bcrypt.encode(m.getUserPwd()));
+	    
+	    if (favoriteGenre != null && favoriteGenre.length > 0) {
+	        // 배열 ["10751", "27"] -> 문자열 "10751,27" 변환
+	        String joinGenres = String.join(",", favoriteGenre);
+	        m.setFavoriteGenre(joinGenres);
+	    }
+
 	    
 	    if(uploadFile!=null && !uploadFile.getOriginalFilename().equals("")) { 
 		    
@@ -129,7 +147,7 @@ public class MemberController {
 			return "redirect:/";
 		}else {
 			session.setAttribute("alertMsg", "로그인 실패");
-			return "mainpage/mainPage";
+			return "redirect:/";
 		}
 	}
 	
@@ -153,7 +171,7 @@ public class MemberController {
 	}
 	
 	@RequestMapping("update.me")
-	public String updateMember(Member m, MultipartFile uploadFile, HttpSession session, Model model) {
+	public String updateMember(Member m, String[] favoriteGenre, MultipartFile uploadFile, HttpSession session, Model model) {
 		// 1. 새로운 첨부파일(프로필 사진)이 넘어온 경우 처리
 	    if(uploadFile != null && !uploadFile.getOriginalFilename().equals("")) {
 	        
@@ -177,6 +195,23 @@ public class MemberController {
 	        // 파일을 새로 올리지 않았다면 기존 사진 경로를 유지해야 합니다.
 	        // JSP에서 <input type="hidden" name="picture" value="${loginUser.picture}"> 로 넘겨줘야 함
 	    }
+	    
+	    // 1. 선호 장르 배열 처리 (비즈니스 로직)
+	    if (favoriteGenre != null && favoriteGenre.length > 0) {
+	        // 배열을 "10751,27,9648" 형태의 문자열로 결합
+	        String joinGenres = String.join(",", favoriteGenre);
+	        
+	        // [보안/유효성 검사] DB 컬럼 크기가 100바이트이므로 길이 체크
+	        if (joinGenres.length() > 100) {
+	            // 자르거나 에러 처리
+	            joinGenres = joinGenres.substring(0, 100);
+	        }
+	        
+	        m.setFavoriteGenre(joinGenres); // 가공된 데이터를 객체에 삽입
+	    } else {
+	        m.setFavoriteGenre(null); // 선택 안했을 경우 처리
+	    }
+	    
 
 	    // 2. 서비스 호출하여 DB 업데이트 (이메일, 생년월일, 성별, 장르, 사진 등)
 	    int result = service.updateMember(m);
@@ -186,7 +221,6 @@ public class MemberController {
 	        // updateMember 서비스 성공 후, 변경된 정보로 다시 DB 조회를 해와야 세션이 최신화됩니다.
 	        Member updateMember = service.loginUser(m); 
 	        session.setAttribute("loginUser", updateMember);
-	        
 	        session.setAttribute("alertMsg", "성공적으로 정보가 수정되었습니다.");
 	        return "redirect:mypage.me";
 	    } else {

@@ -68,9 +68,15 @@
     <div class="movie-register-wrapper">
         <div class="innerOuter">
             <h2 class="form-title">감상평 상세보기</h2>
-			<br> <a class="listBtn" id="listBtn" style="float: right;"
-				href="${contextRoot}/reviewList.bo">목록으로</a> <br>
-			<br>
+			<br> 
+			<div style="float: right; display: flex; gap: 10px;">
+			    <a class="listBtn" id="sendNoteBtn" 
+			       href="${contextRoot}/websocket/noteHandler?targetId=${review.userId}">쪽지 보내기</a>
+			    
+			    <a class="listBtn" id="listBtn" 
+			       href="${contextRoot}/reviewList.bo">목록으로</a>
+			</div>
+			<br><br>
             
             
            <table id="contentArea" class="table">
