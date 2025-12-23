@@ -209,7 +209,9 @@
 
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
+
     <jsp:include page="/WEB-INF/views/common/movieModal.jsp" />
+
 
     <script>
         function goSearch(page){
@@ -241,6 +243,7 @@
 
             openModal(tmdbId);
         });
+
     </script>
 
 </body>

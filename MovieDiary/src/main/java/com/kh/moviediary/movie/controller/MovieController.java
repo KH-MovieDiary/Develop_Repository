@@ -21,7 +21,7 @@ public class MovieController {
     private static final String BASE_URL = "https://api.themoviedb.org/3";
     private static final String IMG_URL  = "https://image.tmdb.org/t/p/w500";
 
-    private static final Map<String, CacheEntry> CACHE = new HashMap<>();
+    private static final Map<String, CacheEntry> CACHE = new HashMap<String, CacheEntry>();
     private static final long CACHE_TTL_MS = 60_000;
 
     private static class CacheEntry {
@@ -253,6 +253,52 @@ public class MovieController {
 
         return pi;
     }
+    
+    //영화검색 모달창 
+    @ResponseBody
+    @GetMapping("/tmdb/searchMovie.mo")
+    public List<Map<String, Object>> searchMovie(@RequestParam("keyword") String keyword) {
+        
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+        
+        RestTemplate rt = new RestTemplate();
+        List<Map<String, Object>> totalResults = new ArrayList<>();
+        
+        for(int i = 1; i <= 5; i++) {
+            try {
+                String url = BASE_URL + "/search/movie"
+                           + "?api_key=" + API_KEY
+                           + "&language=ko-KR"
+                           + "&include_adult=false"
+                           + "&query=" + urlEncode(keyword)
+                           + "&page=" + i;
+
+                @SuppressWarnings("unchecked")
+                Map<String, Object> map = rt.getForObject(url, Map.class);
+                
+                @SuppressWarnings("unchecked")
+                List<Map<String, Object>> results = (List<Map<String, Object>>) map.get("results");
+                
+                if(results != null && !results.isEmpty()) {
+                    for(Map<String, Object> m : results) {
+                        if(m.get("poster_path") != null) {
+                            m.put("posterUrl", "https://image.tmdb.org/t/p/w92" + m.get("poster_path")); 
+                        }
+                        totalResults.add(m);
+                    }
+                } else {
+                    break;
+                }
+                
+            } catch (Exception e) {
+            }
+        }
+        
+        return totalResults;
+    }
+
 
     @ResponseBody
     @GetMapping("/tmdb/movieCredits.mo")

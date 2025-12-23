@@ -13,7 +13,7 @@
  		   ,NULL
  		   ,0
  		   ,0
- 		   ,NULL
+ 		   ,#{movieId}
 		   ,#{userId}
 		   ,#{reviewTitle}
 		   )
@@ -69,7 +69,40 @@
  		  ,REVIEW_TITLE
  	FROM REVIEW R
  	JOIN MEMBER M USING(USER_ID)
+ 	<choose>
+ 		<when test="sort == 'date'">
+ 			ORDER BY R.CREATE_DATE DESC
+ 		</when>
+ 		<when test="sort == 'count'">
+ 			ORDER BY VIEW_COUNT DESC
+ 		</when>
+ 		<otherwise>
+ 			ORDER BY LIKE_COUNT DESC
+ 		</otherwise>
+ 	</choose>
  </select>
+ 
+ <select id="reviewLike" parameterType="Reviewlike" resultType="string">
+ 	SELECT LIKE_YN
+    FROM REVIEW_LIKE
+    WHERE REVIEW_ID = #{reviewId}
+       	  AND USER_ID = #{userId}
+ </select>
+ 
+ <insert id="likeInsert" parameterType="Reviewlike">
+ 	INSERT INTO REVIEW_LIKE
+ 	VALUES(#{reviewId}
+ 		  ,#{userId}
+ 		  ,'Y'
+ 		  )
+ </insert>
+ 
+ <update id="likeUpdate" parameterType="Reviewlike">
+ 	UPDATE REVIEW_LIKE
+ 	SET LIKE_YN = DECODE(LIKE_YN, 'Y', 'N', 'Y')
+    WHERE REVIEW_ID = #{reviewId}
+         AND USER_ID = #{userId}
+ </update>
  
  <select id="searchList" resultType="ReviewList">
  	SELECT REVIEW_ID
@@ -88,6 +121,18 @@
 		<otherwise>
 			WHERE NICKNAME = #{keyword}
 		</otherwise>
+ 	</choose>
+ 	
+ 	<choose>
+ 		<when test="sort == 'count'">
+ 			ORDER BY LIKE_COUNT DESC
+ 		</when>
+ 		<when test="sort == 'count'">
+ 			ORDER BY VIEW_COUNT DESC
+ 		</when>
+ 		<otherwise>
+ 			ORDER BY R.CREATE_DATE DESC
+ 		</otherwise>
  	</choose>
  </select>
    

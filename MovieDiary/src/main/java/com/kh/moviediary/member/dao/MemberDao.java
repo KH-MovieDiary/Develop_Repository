@@ -24,4 +24,12 @@ public class MemberDao {
 		return sqlSession.selectOne("memberMapper.loginUser", m);
 	}
 
+	public int updateUser(SqlSessionTemplate sqlSession, Member m) {
+		return sqlSession.update("memberMapper.updateUser",m);
+	}
+
+	public int deleteMember(SqlSessionTemplate sqlSession, String userId) {
+		return sqlSession.update("memberMapper.deleteMember",userId);
+	}
+
 }

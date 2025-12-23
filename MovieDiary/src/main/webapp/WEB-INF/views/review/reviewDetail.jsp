@@ -11,6 +11,7 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     
     <style>
         body {
@@ -36,6 +37,27 @@
             border-radius: 20px;
             border: none;
         }
+        
+        .comment-area{
+        	width:70%;
+        	margin: 0 auto;
+        	display: flex;
+        	justify-content: center;
+        	align-items: center;
+        }
+        
+        .comment-input{
+        	width: 100%;
+        	display: flex;
+        	justify-content: center;
+        	gap: 5px;
+        }
+
+		#commentContent{
+			width: 70%;
+        	height: 40px;
+        	resize: none;
+		}
 
     </style>
 </head>
@@ -90,8 +112,46 @@
 	                    <button type="button" id= "deleteBtn" class="btn">삭제하기</button>
 	                </div>
 				</c:if>
-        </div>
+				
+				<c:if test= "${not empty loginUser }">
+					<button type="button" id="likeBtn" class="${likeYn == 'Y' ? 'y' : ''}">좋아요</button><br>
+					<style>
+						.y {
+      						 color: red;
+      						 font-weight: bold;
+      						}
+					</style>
+				</c:if>
+				좋아요 수 : <span id="likeCount">${review.likeCount }</span>
+				
+				<input type="hidden" id="rno" value="${review.reviewId }">
+				<input type="hidden" id="uid" value="${loginUser.userId }">
+    	</div>
     </div>
+    
+	<div class="comment-area">
+	
+		<div class="comment-input">
+			<label for="commentContent" style="margin-right : 5px">댓글</label>
+		    <textarea id="commentContent" placeholder="댓글을 입력하세요"></textarea>
+		    <button class="btn-comment" onclick="insertComment();">등록</button>
+		</div>
+		
+		<div id="commentList">
+		    <c:forEach items="${commentList}" var="c">
+		        <div class="comment-item">
+		            <div class="comment-top">
+		                <span class="comment-writer">${c.userId}</span>
+		                <span class="comment-date">${c.createDate}</span>
+		            </div>
+		
+		            <div class="comment-content">
+		                ${c.content}
+		            </div>
+		        </div>
+		    </c:forEach>
+		</div>
+	</div>
     
     <script>
     	$(function(){
@@ -123,6 +183,37 @@
     		
     		});
     	});
+    	
+    	$(function(){
+    		$("#likeBtn").click(function(){
+    			
+    		$.ajax({
+    			url: "like.review",
+    			data: {
+    				reviewId: $("#rno").val(),
+    				userId: $("#uid").val()
+    			},
+    			success: function(result){
+    				if(result>0){
+    					let currentCount = parseInt($("#likeCount").text());
+    					
+    					if($("#likeBtn").hasClass("y")){
+    						$("#likeCount").text(currentCount - 1);
+                            $("#likeBtn").removeClass("y");
+    					} else{
+    						 $("#likeCount").text(currentCount + 1);
+    						 $("#likeBtn").addClass("y");
+    					}
+    				} else{
+    					alert("좋아요가 반영되지 않았습니다")
+    				}
+    			},
+    			error: function(){
+    				console.log("통신실패");
+    			}
+    		});
+    	});
+    });
     </script>
     
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />

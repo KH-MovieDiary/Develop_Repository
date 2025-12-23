@@ -18,14 +18,14 @@ public class ReviewListDao {
 		return sqlSession.selectOne("reviewMapper.listCount");
 	}
 
-	public ArrayList<ReviewList> reviewList(SqlSessionTemplate sqlSession, ReviewPageInfo pi) {
+	public ArrayList<ReviewList> reviewList(SqlSessionTemplate sqlSession, ReviewPageInfo pi, String sort) {
 		
 		int limit = pi.getPageLimit();
 		int offset = (pi.getCurrentPage()-1)*limit;
 		
 		RowBounds rowBounds = new RowBounds(offset, limit);
 		
-		return (ArrayList)sqlSession.selectList("reviewMapper.reviewList",null,rowBounds);
+		return (ArrayList)sqlSession.selectList("reviewMapper.reviewList",sort,rowBounds);
 	}
 
 	public ArrayList<ReviewList> searchList(SqlSessionTemplate sqlSession, HashMap<String, String> map,
