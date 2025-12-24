@@ -429,6 +429,10 @@
                   document.getElementById("modalTitle").innerText = title;
                   document.getElementById("modalMovieName").innerText = title;
 
+                  var btn = document.getElementById("btnWriteReview");
+                  var ctx = "${pageContext.request.contextPath}";
+                  btn.setAttribute("onclick","location.href='" + ctx + "/insert.review?movieTitle=" + encodeURIComponent(title) + "&tmdbId=" + tmdbId + "'");
+
                   document.getElementById("modalReleaseDate").innerText = data.release_date || "-";
 
                   document.getElementById("modalPopularity").innerText =
