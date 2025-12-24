@@ -212,11 +212,9 @@
 	              <button type="button" id= "deleteBtn" class="btn">삭제하기</button>
 	         </c:if>
 	                    
-	              <c:if test= "${not empty loginUser }">
 				   <button type="button" id="likeBtn" class="${likeYn == 'Y' ? 'y' : ''}">
-				    <span class="heart-icon">♥</span> <span id="likeCount">${review.likeCount }</span>
+				   <span class="heart-icon">♥</span> <span id="likeCount">${review.likeCount }</span>
 					</button>
-				  </c:if>
 	         </div>
 				
 				
@@ -300,6 +298,11 @@
     	
     	$(function(){
     		$("#likeBtn").click(function(){
+    			
+    		if( ${empty loginUser} ) {
+    	        alert("로그인 후 이용가능합니다.");
+    	        return;
+    	       }
     			
     		$.ajax({
     			url: "like.review",
