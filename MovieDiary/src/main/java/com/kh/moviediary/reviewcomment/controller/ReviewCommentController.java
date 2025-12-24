@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.moviediary.reviewcomment.service.ReviewCommentService;
@@ -21,7 +22,6 @@ public class ReviewCommentController {
 	@RequestMapping("/insertReply.re")
 	public int insertReply(ReviewComment rc) {
 
-		System.out.println(rc);
 		int result = service.insertReply(rc);
 		
 		return result;
@@ -34,6 +34,15 @@ public class ReviewCommentController {
 		List<ReviewComment> list = service.selectList(reviewId);
 		
 		return list;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/deleteReply.re")
+	public int deleteReply(@RequestParam("rcId") int rcId) {
+		
+		int result = service.deleteReply(rcId);
+		
+		return result;
 	}
 	
 }

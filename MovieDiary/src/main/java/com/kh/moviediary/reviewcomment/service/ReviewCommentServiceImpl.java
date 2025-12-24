@@ -29,4 +29,9 @@ public class ReviewCommentServiceImpl implements ReviewCommentService{
 		return dao.selectList(sqlSession, reviewId);
 	}
 
+	@Override
+	public int deleteReply(int rcId) {
+		return dao.deleteReply(sqlSession, rcId);
+	}
+
 }
