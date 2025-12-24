@@ -431,7 +431,7 @@
 
                   var btn = document.getElementById("btnWriteReview");
                   var ctx = "${pageContext.request.contextPath}";
-                  btn.setAttribute("onclick","location.href='" + ctx + "/insert.review?movieTitle=" + encodeURIComponent(title) + "&tmdbId=" + tmdbId + "'");
+                  btn.setAttribute("onclick","location.href='" + ctx + "/insert.review?movieTitle=" + encodeURIComponent(title) + "&tmdbId=" +parseInt(tmdbId) + "'");
 
                   document.getElementById("modalReleaseDate").innerText = data.release_date || "-";
 
