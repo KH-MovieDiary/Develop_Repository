@@ -291,7 +291,7 @@
                         <div class="h1">현재 상영작</div>
                         <div class="sub">마우스를 올리면 잠깐 멈추고, 클릭하면 상세 모달이 열려요</div>
                     </div>
-                    <div class="more-btn" onClick="watchMore();" style="color : black">더보기</div>
+                    <div><a href="${contextRoot}/movieInfo.mo">더보기</a></div>              
                 </div>
 
                 <div id="content_movieRank">
@@ -368,10 +368,6 @@
 
             openModal(tmdbId);
         });
-        
-      	function watchMore() {
-      		
-      	}
     </script>
 
 </body>
