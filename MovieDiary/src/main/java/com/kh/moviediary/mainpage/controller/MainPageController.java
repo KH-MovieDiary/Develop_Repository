@@ -4,11 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+
+import com.kh.moviediary.mainpage.service.MainPageService;
+import com.kh.moviediary.review.model.vo.Review;
 
 @Controller
 public class MainPageController {
@@ -16,6 +21,9 @@ public class MainPageController {
     private static final String API_KEY = "7c6e7a1753d67ca027fa6776c3dbba6f";
     private static final String BASE_URL = "https://api.themoviedb.org/3";
     private static final String IMG_URL  = "https://image.tmdb.org/t/p/w500";
+
+    @Autowired
+    private MainPageService service;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String mainPage(Model model) {
@@ -40,25 +48,16 @@ public class MainPageController {
 
             if (results != null) {
                 for (Map<String, Object> m : results) {
-                    if (top5.size() >= 20) break; // ✅ 5 -> 20 으로 변경
+                    if (top5.size() >= 20) break;
 
                     Object idObj = m.get("id");
-                    if (idObj != null) {
-                        m.put("tmdbId", String.valueOf(idObj));
-                    } else {
-                        m.put("tmdbId", "");
-                    }
+                    m.put("tmdbId", idObj == null ? "" : String.valueOf(idObj));
 
                     Object posterPathObj = m.get("poster_path");
                     String posterPath = (posterPathObj == null) ? null : posterPathObj.toString();
+                    m.put("posterUrl", (posterPath == null || posterPath.trim().isEmpty() || "null".equals(posterPath))
+                            ? "" : IMG_URL + posterPath);
 
-                    if (posterPath == null || posterPath.trim().isEmpty() || "null".equals(posterPath)) {
-                        m.put("posterUrl", "");
-                    } else {
-                        m.put("posterUrl", IMG_URL + posterPath);
-                    }
-
-                    // JSP에서 m.title 사용 중이라 title 키 보장
                     Object titleObj = m.get("title");
                     if (titleObj == null) {
                         Object nameObj = m.get("name");
@@ -69,7 +68,6 @@ public class MainPageController {
                 }
             }
 
-            // ✅ 이름 유지: top5
             model.addAttribute("top5", top5);
             model.addAttribute("top5Size", top5.size());
             model.addAttribute("error", "");
@@ -81,5 +79,12 @@ public class MainPageController {
         }
 
         return "mainpage/mainPage";
+    }
+
+    @ResponseBody
+    @RequestMapping(value="/reviewGet", method=RequestMethod.GET, produces="application/json; charset=UTF-8")
+    public List<Review> reviewGet() {
+        List<Review> list = service.reviewGet();
+        return list;
     }
 }

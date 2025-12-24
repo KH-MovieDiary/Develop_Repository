@@ -154,10 +154,14 @@
  
  <select id="selectList" parameterType="int" resultType="ReviewComment">
  	SELECT NICKNAME
- 		  ,CONTENT
- 		  ,R.CREATE_DATE
- 	FROM REVIEW_COMMENT R
- 	JOIN MEMBER M USING(USER_ID)
+ 		  ,RC.CONTENT
+ 		  ,RC.CREATE_DATE
+ 		  ,RC.USER_ID "USER_ID"
+ 		  ,R.USER_ID "REVIEW_USER_ID"
+ 		  ,PRIVATE_YN
+ 	FROM REVIEW_COMMENT RC
+ 	JOIN MEMBER M ON(RC.USER_ID=M.USER_ID)
+ 	JOIN REVIEW R USING(REVIEW_ID)
  	WHERE REVIEW_ID = #{reviewId}
  	ORDER BY R.CREATE_DATE DESC
  </select>
@@ -169,15 +173,58 @@
         UPDATE_DATE,
         CONTENT,
         REVIEW_ID,
-        USER_ID)
+        USER_ID,
+        PRIVATE_YN)
     VALUES(
         SEQ_RCNO.NEXTVAL,
         SYSDATE,
         SYSDATE,
         #{content},
         #{reviewId},
-        #{userId})
+        #{userId},
+        #{privateYn})
  </insert>
 
+
+ <select id="countByMovieId" parameterType="int" resultType="int">
+	    SELECT COUNT(*)
+	    FROM MOVIE
+	    WHERE MOVIE_ID = #{movieId}
+	</select>
+
+   <insert id="insertMovie" parameterType="Movie">
+    INSERT INTO MOVIE(
+          MOVIE_ID
+        , MOVIE_TITLE
+        , CATEGORY
+        , DIRECTOR
+        , ADULT
+        , RELEASE_DATE
+        , POPULARITY
+        , RATING_SCORE
+        , REVIEW_COUNT
+        , LIKE_COUNT
+        , DISLIKE_COUNT
+        , CONTENT
+    )
+    VALUES (
+          #{movieId}
+        , #{movieTitle}
+        , #{category}
+        , #{director}
+        , #{adult}
+        , CASE
+            WHEN #{releaseDateStr} IS NULL OR #{releaseDateStr} = ''
+            THEN NULL
+            ELSE TO_DATE(#{releaseDateStr}, 'YYYY-MM-DD')
+          END
+        , #{popularity}
+        , #{ratingScore}
+        , #{reviewCount}
+        , #{likeCount}
+        , #{dislikeCount}
+        , #{content}
+    )
+	</insert>
 </mapper>
 

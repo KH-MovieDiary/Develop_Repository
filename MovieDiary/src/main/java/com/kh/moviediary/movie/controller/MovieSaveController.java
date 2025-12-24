@@ -48,7 +48,6 @@ public class MovieSaveController {
             }
 
             String director = fetchDirectorFromTmdbCredits(tmdbId);
-            System.out.println("director = " + director);
 
             Movie movie = Movie.builder()
                     .movieId(tmdbId)

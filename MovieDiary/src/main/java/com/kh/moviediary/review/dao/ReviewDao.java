@@ -4,6 +4,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.kh.moviediary.movie.vo.Movie;
 import com.kh.moviediary.review.model.vo.Review;
 
 @Repository
@@ -28,6 +29,17 @@ public class ReviewDao {
 	public int reviewDelete(int rno, SqlSessionTemplate sqlSession) {
 		return sqlSession.delete("reviewMapper.reviewDelete", rno);
 	}
+
+	public int countByMovieId(int movieId, SqlSessionTemplate sqlSession) {
+		
+		return sqlSession.selectOne("reviewMapper.countByMovieId",movieId);
+	}
+
+	public int insertMovie(Movie m, SqlSessionTemplate sqlSession) {
+
+		return sqlSession.insert("reviewMapper.insertMovie",m);
+	}
+
 
 	
 
