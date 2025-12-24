@@ -14,6 +14,7 @@ public class Note {
 	private String sendId;
 	private String receiveId;
 	private String time;
-	private String nContent;
+	private String noteContent;
+	private String status;
 
 }
