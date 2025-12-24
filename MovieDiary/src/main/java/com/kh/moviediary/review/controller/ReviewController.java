@@ -50,8 +50,6 @@ public class ReviewController {
 			session.setAttribute("alertMsg", "감상문 등록에 실패하였습니다");
 		}
 		
-		System.out.println(result);
-		
 		return "redirect:/reviewList.bo";
 	}
 	
