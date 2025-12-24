@@ -13,12 +13,14 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ReviewComment {
 	
-	private int reviewCommentId;	//	REVIEW_COMMENT_ID	NUMBER
-	private Date createDate;	//	CREATE_DATE	DATE
-	private Date updateDate;	//	UPDATE_DATE	DATE
-	private String content;	//	CONTENT	VARCHAR2(4000 BYTE)
-	private int reviewId;	//	REVIEW_ID	NUMBER
-	private String userId;	//	USER_ID	VARCHAR2(30 BYTE)
+	private int reviewCommentId;
+	private Date createDate;
+	private Date updateDate;
+	private String content;	
+	private int reviewId;	
+	private String userId;	//댓글 작성자
+	private String reviewUserId;  //감상평 작성자(공개 범위 설정용)
 	private String nickname;
+	private String privateYn;
 
 }

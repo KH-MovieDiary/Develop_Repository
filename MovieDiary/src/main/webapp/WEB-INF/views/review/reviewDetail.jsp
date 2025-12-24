@@ -58,6 +58,55 @@
         	height: 40px;
         	resize: none;
 		}
+		
+		.replyArea{
+			width: 100%;
+		}
+		
+		.replyArea tbody td {
+		    padding: 10px;
+		    vertical-align: top;
+		    font-size: 14px;
+		}
+		
+		.replyArea tbody td:first-child {
+		    width: 100px;
+		    max-width: 100px;
+		    font-weight: bold;
+		    white-space: nowrap;
+		    overflow: hidden;
+		    text-overflow: ellipsis;
+		}
+		
+		.replyArea tbody td:nth-child(2) {
+		    background-color: #f8f9fa;
+		    border-radius: 6px;
+		    line-height: 1.5;
+		    white-space: pre-wrap;
+		}
+		
+		.replyArea tbody td:last-child {
+		    width: 120px;
+		    font-size: 12px;
+		    color: #999;
+		    text-align: right;
+		    white-space: nowrap;
+		    padding: 0;
+		}
+		
+		#replyContent {
+		    width: 100%;
+		    min-height: 80px;
+		    resize: none;
+		    padding: 10px;
+		    box-sizing: border-box;
+		    font-size: 14px;
+		}
+		
+		.replyArea tbody tr {
+		    border-bottom: 1px solid lightgrey;
+		}
+		
 
     </style>
 </head>
@@ -128,10 +177,13 @@
 				<input type="hidden" id="uid" value="${loginUser.userId }">
     
 			<br>
-			댓글 : <span id="rCount"></span>
+			
 			<table class="replyArea">
 				<thead>
 					<tr>
+						<th>
+							댓글(<span id="rCount"></span>)
+						</th>
 						<th>
 							<c:choose>
 								
@@ -140,9 +192,15 @@
 								</c:when>
 									
 								<c:otherwise>
-									<textarea id="replyContent" placeholder="댓글을 작성하세요."></textarea>
+								<div class="replyOption">
+									<label>
+										<input type="checkbox" id="privateReply" value="Y">
+										작성자에게만 표시
+									</label>
+								</div>	
+								<textarea id="replyContent" placeholder="댓글을 작성하세요."></textarea>
 								</c:otherwise>
-									
+								
 							</c:choose>
 						</th>
 						<th>
@@ -240,8 +298,22 @@
 					}else{
 						for(let r of list){
 							let tr =$("<tr>");
+							
+							const loginId = "${loginUser.userId}";
+							
+							let privateYn = (r.privateYn === "N");
+							let writer = (r.userId === loginId || r.reviewUserId === loginId);
+							
+							let content;
+							
+							if(privateYn || writer){
+								content = r.content;
+							}else{
+								content = "비밀 댓글입니다."
+							}
+							
 							tr.append($("<td>").text(r.nickname)
-									 ,$("<td>").text(r.content)
+									 ,$("<td>").text(content)
 									 ,$("<td>").text(r.createDate));
 							$(".replyArea tbody").append(tr);
 						}
@@ -265,7 +337,8 @@
     				data : {
     					content : $("#replyContent").val(),
     					userId : "${loginUser.userId}",
-    					reviewId : ${review.reviewId}
+    					reviewId : ${review.reviewId},
+    					privateYn : $("#privateReply").is(":checked") ? "Y" : "N"
     				},
     				success : function(result){
     					if(result>0){

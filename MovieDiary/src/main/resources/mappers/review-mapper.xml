@@ -154,10 +154,14 @@
  
  <select id="selectList" parameterType="int" resultType="ReviewComment">
  	SELECT NICKNAME
- 		  ,CONTENT
- 		  ,R.CREATE_DATE
- 	FROM REVIEW_COMMENT R
- 	JOIN MEMBER M USING(USER_ID)
+ 		  ,RC.CONTENT
+ 		  ,RC.CREATE_DATE
+ 		  ,RC.USER_ID "USER_ID"
+ 		  ,R.USER_ID "REVIEW_USER_ID"
+ 		  ,PRIVATE_YN
+ 	FROM REVIEW_COMMENT RC
+ 	JOIN MEMBER M ON(RC.USER_ID=M.USER_ID)
+ 	JOIN REVIEW R USING(REVIEW_ID)
  	WHERE REVIEW_ID = #{reviewId}
  	ORDER BY R.CREATE_DATE DESC
  </select>
@@ -169,14 +173,16 @@
         UPDATE_DATE,
         CONTENT,
         REVIEW_ID,
-        USER_ID)
+        USER_ID,
+        PRIVATE_YN)
     VALUES(
         SEQ_RCNO.NEXTVAL,
         SYSDATE,
         SYSDATE,
         #{content},
         #{reviewId},
-        #{userId})
+        #{userId},
+        #{privateYn})
  </insert>
 
 </mapper>
