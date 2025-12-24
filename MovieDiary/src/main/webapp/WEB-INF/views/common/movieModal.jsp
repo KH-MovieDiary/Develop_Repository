@@ -23,7 +23,7 @@
         }
         .modal-box{
             width: min(900px, 95vw);
-            height: min(720px, 92vh);
+            height: min(860px, 94vh);
             background:#fff;
             border-radius: 18px;
             overflow:hidden;
@@ -58,7 +58,7 @@
         }
 
         .modal-movie-area{
-            height: 52%;
+            height: 46%;
             border-bottom: 1px solid #eee;
             display:flex;
             gap: 18px;
@@ -66,8 +66,9 @@
             box-sizing:border-box;
         }
         .modal-poster{
-            width: 32%;
-            min-width: 220px;
+            width: 30%;
+            min-width: 240px;
+            height:100%;
             background:#f3f4f6;
             border-radius: 14px;
             overflow:hidden;
@@ -359,6 +360,337 @@
         .rating-pill b{
             font-size:13px;
         }
+        .modal-backdrop{
+		    background:
+		        radial-gradient(1200px 600px at 20% 0%, rgba(125,211,252,0.22), transparent 55%),
+		        radial-gradient(900px 500px at 90% 10%, rgba(167,139,250,0.18), transparent 55%),
+		        radial-gradient(900px 500px at 50% 100%, rgba(52,211,153,0.12), transparent 55%),
+		        rgba(0,0,0,.62);
+		    backdrop-filter: blur(10px);
+		    -webkit-backdrop-filter: blur(10px);
+		}
+		
+		.modal-box{
+		    background: rgba(255,255,255,.92);
+		    border: 1px solid rgba(255,255,255,.35);
+		    border-radius: 22px;
+		    box-shadow: 0 30px 90px rgba(0,0,0,.42);
+		    backdrop-filter: blur(14px);
+		    -webkit-backdrop-filter: blur(14px);
+		    overflow: hidden;
+		    transform: translateY(6px) scale(.995);
+		    animation: modalPop .18s ease-out;
+		}
+		@keyframes modalPop{
+		    from { transform: translateY(14px) scale(.985); opacity: 0; }
+		    to   { transform: translateY(6px)  scale(.995); opacity: 1; }
+		}
+		
+		.modal-top{
+		    background: linear-gradient(180deg, rgba(255,255,255,.95), rgba(255,255,255,.75));
+		    border-bottom: 1px solid rgba(0,0,0,.06);
+		}
+		
+		#modalTitle{
+		    font-weight: 900;
+		    letter-spacing: -0.2px;
+		}
+		
+		.modal-close{
+		    background: linear-gradient(180deg,#111827,#0b1220);
+		    border: 1px solid rgba(255,255,255,.10);
+		    box-shadow: 0 12px 24px rgba(0,0,0,.22);
+		    transition: transform .12s ease, opacity .12s ease;
+		}
+		.modal-close:hover{ transform: translateY(-1px); opacity:.95; }
+		.modal-close:active{ transform: translateY(0) scale(.99); }
+		
+		.modal-main{
+		    background: transparent;
+		}
+		
+		.modal-movie-area{
+		    background: linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,255,255,.64));
+		    border-bottom: 1px solid rgba(0,0,0,.06);
+		}
+		
+		.modal-poster{
+		    background: linear-gradient(135deg, rgba(125,211,252,0.14), rgba(167,139,250,0.12));
+		    border: 1px solid rgba(0,0,0,.06);
+		    box-shadow: 0 18px 46px rgba(0,0,0,.16);
+		    position: relative;
+		}
+		.modal-poster:before{
+		    content:"";
+		    position:absolute;
+		    inset:-2px;
+		    border-radius: 16px;
+		    background:
+		        radial-gradient(520px 160px at 15% 0%, rgba(125,211,252,0.26), transparent 60%),
+		        radial-gradient(520px 180px at 85% 0%, rgba(167,139,250,0.22), transparent 60%);
+		    pointer-events:none;
+		    opacity:.9;
+		}
+		.modal-poster img{
+		    transform: scale(1.02);
+		    transition: transform .25s ease;
+		}
+		.modal-poster:hover img{
+		    transform: scale(1.06);
+		}
+		
+		.modal-info{
+		    gap: 12px;
+		}
+		
+		.modal-title{
+		    font-size: 24px;
+		    font-weight: 950;
+		    letter-spacing: -0.35px;
+		    line-height: 1.25;
+		    margin-bottom: 4px;
+		    display:flex;
+		    align-items:center;
+		    gap:10px;
+		}
+		.modal-title:after{
+		    content:"";
+		    width:10px;
+		    height:10px;
+		    border-radius:999px;
+		    background: radial-gradient(circle at 30% 30%, #34d399, #7dd3fc);
+		    box-shadow: 0 0 0 6px rgba(125,211,252,0.12);
+		}
+		
+		.info-label{
+		    color: rgba(17,24,39,.86);
+		    letter-spacing: -0.15px;
+		}
+		
+		.info-value{
+		    background: rgba(255,255,255,.76);
+		    border: 1px solid rgba(15,23,42,.08);
+		    box-shadow: 0 10px 22px rgba(2,6,23,.06);
+		    transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+		}
+		.info-value:hover{
+		    transform: translateY(-1px);
+		    border-color: rgba(125,211,252,0.35);
+		    box-shadow: 0 16px 30px rgba(2,6,23,.08);
+		}
+		
+		.chip{
+		    background: rgba(255,255,255,.82);
+		    border: 1px solid rgba(0,0,0,.06);
+		    box-shadow: 0 10px 18px rgba(2,6,23,.05);
+		}
+		
+		.loading{
+		    background: rgba(255,255,255,.82);
+		    border: 1px solid rgba(125,211,252,0.28);
+		    box-shadow: 0 12px 22px rgba(2,6,23,.06);
+		}
+		
+		#button_area{
+		    gap: 10px;
+		    margin-top: 6px;
+		}
+		
+		#button_area button{
+		    background: linear-gradient(180deg, rgba(255,255,255,.95), rgba(248,250,252,.95));
+		    border: 1px solid rgba(0,0,0,.08);
+		    box-shadow: 0 12px 24px rgba(2,6,23,.06);
+		    transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease, opacity .12s ease;
+		}
+		#button_area button:hover{
+		    transform: translateY(-1px);
+		    border-color: rgba(125,211,252,0.35);
+		    box-shadow: 0 18px 36px rgba(2,6,23,.08);
+		}
+		#button_area button:active{
+		    transform: translateY(0) scale(.99);
+		}
+		
+		#btnLike.active{
+		    background: linear-gradient(180deg,#06b6d4,#0891b2);
+		    border-color:#06b6d4;
+		    color:#fff;
+		    box-shadow: 0 18px 40px rgba(6,182,212,.22);
+		}
+		#btnDislike.active{
+		    background: linear-gradient(180deg,#fb7185,#ef4444);
+		    border-color:#fb7185;
+		    color:#fff;
+		    box-shadow: 0 18px 40px rgba(251,113,133,.22);
+		}
+		
+		.rating-mini-wrap{
+		    background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(248,250,252,.92));
+		    border: 1px solid rgba(0,0,0,.08);
+		    box-shadow: 0 14px 30px rgba(2,6,23,.07);
+		}
+		
+		.rating-star{
+		    border: 1px solid rgba(0,0,0,.08);
+		    box-shadow: 0 8px 16px rgba(2,6,23,.05);
+		}
+		.rating-star:hover{
+		    border-color: rgba(245,158,11,.45);
+		    box-shadow: 0 14px 22px rgba(245,158,11,.12);
+		}
+		.rating-star.active{
+		    box-shadow: 0 16px 30px rgba(245,158,11,.18);
+		}
+		
+		.modal-review-area{
+		    background: transparent;
+		}
+		
+		.modal-review-box{
+		    background: rgba(255,255,255,.78);
+		    border: 1px solid rgba(0,0,0,.06);
+		    box-shadow: 0 22px 52px rgba(2,6,23,.10);
+		    border-radius: 16px;
+		    position: relative;
+		    overflow: hidden;
+		}
+		.modal-review-box:before{
+		    content:"";
+		    position:absolute;
+		    inset:-60px;
+		    background:
+		        radial-gradient(600px 240px at 20% 20%, rgba(125,211,252,0.22), transparent 60%),
+		        radial-gradient(520px 220px at 80% 30%, rgba(167,139,250,0.20), transparent 60%),
+		        radial-gradient(520px 240px at 45% 95%, rgba(52,211,153,0.16), transparent 60%);
+		    filter: blur(2px);
+		    opacity:.9;
+		    animation: glowMove 9s ease-in-out infinite alternate;
+		    pointer-events:none;
+		}
+		@keyframes glowMove{
+		    0%   { transform: translate3d(-12px, -10px, 0) scale(1.02); }
+		    100% { transform: translate3d(14px,  12px, 0) scale(1.05); }
+		}
+		.modal-review-box > *{
+		    position: relative;
+		    z-index: 1;
+		}
+		
+		.review-header{
+		    padding: 10px 10px 8px 10px;
+		    border-bottom: 1px solid rgba(0,0,0,.06);
+		    margin-bottom: 10px;
+		}
+		
+		.review-count{
+		    background: rgba(255,255,255,.76);
+		    border: 1px solid rgba(0,0,0,.06);
+		    padding: 6px 10px;
+		    border-radius: 999px;
+		    box-shadow: 0 10px 18px rgba(2,6,23,.06);
+		}
+		
+		.review-list{
+		    padding-right: 8px;
+		}
+		.review-list::-webkit-scrollbar{ width: 8px; }
+		.review-list::-webkit-scrollbar-thumb{ background: rgba(15,23,42,.18); border-radius: 999px; }
+		.review-list::-webkit-scrollbar-track{ background: rgba(15,23,42,.06); border-radius: 999px; }
+		
+		.review-item{
+		    background: rgba(255,255,255,.86);
+		    border: 1px solid rgba(0,0,0,.07);
+		    box-shadow: 0 14px 26px rgba(2,6,23,.06);
+		    transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+		}
+		.review-item:hover{
+		    transform: translateY(-1px);
+		    border-color: rgba(125,211,252,0.35);
+		    box-shadow: 0 20px 36px rgba(2,6,23,.08);
+		}
+		
+		.review-top b{
+		    color: rgba(17,24,39,.92);
+		}
+		.review-top span{
+		    color: rgba(17,24,39,.55);
+		}
+		
+		.review-content{
+		    color: rgba(17,24,39,.88);
+		}
+		
+		.review-actions button{
+		    cursor: not-allowed;
+		    opacity: .78;
+		    border: 1px solid rgba(0,0,0,.10);
+		    background: rgba(255,255,255,.85);
+		}
+		
+		.btnCommentDelete{
+		    cursor: pointer !important;
+		    opacity: 1 !important;
+		    border: 1px solid rgba(0,0,0,.10);
+		    background: rgba(255,255,255,.90);
+		    box-shadow: 0 10px 18px rgba(2,6,23,.06);
+		    transition: transform .12s ease, border-color .12s ease, background .12s ease;
+		}
+		.btnCommentDelete:hover{
+		    transform: translateY(-1px);
+		    border-color: rgba(244,63,94,.30);
+		    background: rgba(255,241,242,.92);
+		}
+		
+		#commentInput{
+		    background: rgba(255,255,255,.90);
+		    border: 1px solid rgba(0,0,0,.10);
+		    box-shadow: 0 12px 24px rgba(2,6,23,.06);
+		    transition: border-color .12s ease, box-shadow .12s ease;
+		}
+		#commentInput:focus{
+		    border-color: rgba(125,211,252,0.42);
+		    box-shadow: 0 18px 34px rgba(125,211,252,0.14);
+		}
+		
+		#btnCommentSubmit{
+		    background: linear-gradient(180deg,#111827,#0b1220);
+		    box-shadow: 0 16px 34px rgba(2,6,23,.20);
+		    transition: transform .12s ease, opacity .12s ease;
+		}
+		#btnCommentSubmit:hover{ transform: translateY(-1px); opacity:.95; }
+		#btnCommentSubmit:active{ transform: translateY(0) scale(.99); }
+		       	.modal-review-area{
+		    padding: 14px 18px 18px;
+		}
+		
+		.modal-review-box{
+		    height: 100%;
+		}
+		
+		.review-list{
+		    flex: 1;
+		    min-height: 0;
+		}
+		#button_area{
+		    display: flex;
+		    align-items: center;
+		    gap: 10px;
+		    flex-wrap: nowrap;
+		}
+		
+		#btnWriteReview{
+		    margin-right: 4px;
+		}
+		
+		#ratingWrap{
+		    margin-left: 0;
+		}
+		
+		@media (max-width: 860px){
+		    #button_area{
+		        flex-wrap: wrap;
+		    }
+		}
     </style>
 </head>
 <body>
@@ -411,7 +743,6 @@
                         <div class="info-value" id="modalPopularity">-</div>
                     </div>
 
-                    <!-- ✅ 평균 별점 표시 -->
                     <div class="info-row">
                         <div class="info-label">평점</div>
                         <div class="info-value" id="modalUserScore">
@@ -430,7 +761,7 @@
                         <button id="btnDislike" type="button">👎 싫어요(3)</button>
                         <button id="btnWriteReview" type="button">✍️ 감상문 쓰기</button>
 
-                        <!-- ⭐ 별점 입력/등록 -->
+  
                         <div class="rating-mini-wrap" id="ratingWrap">
                             <div class="rating-stars" id="ratingStars">
                                 <span class="rating-star" data-score="1">★</span>
