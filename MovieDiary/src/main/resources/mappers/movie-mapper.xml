@@ -129,5 +129,43 @@
 	     WHERE MOVIE_ID = #{movieId}
 	       AND USER_ID  = #{userId}
 	</delete>
+	
+	<select id="selectAvgScore" parameterType="int" resultType="double">
+        SELECT NVL(AVG(SCORE), 0)
+        FROM RATING
+        WHERE MOVIE_ID = #{movieId}
+    </select>
+
+    <!-- 개수 -->
+    <select id="selectRatingCount" parameterType="int" resultType="int">
+        SELECT NVL(COUNT(*), 0)
+        FROM RATING
+        WHERE MOVIE_ID = #{movieId}
+    </select>
+
+    <!-- 내 점수 -->
+    <select id="selectMyScore" parameterType="map" resultType="int">
+        SELECT NVL(MAX(SCORE), 0)
+        FROM RATING
+        WHERE MOVIE_ID = #{movieId}
+          AND USER_ID  = #{userId}
+    </select>
+
+    <update id="upsertRating" parameterType="map">
+    MERGE INTO RATING T
+    USING (
+        SELECT #{movieId} AS MOVIE_ID,
+               #{userId}  AS USER_ID,
+               #{score}   AS SCORE
+        FROM DUAL
+    ) S
+    ON (T.MOVIE_ID = S.MOVIE_ID AND T.USER_ID = S.USER_ID)
+    WHEN MATCHED THEN
+        UPDATE SET
+            T.SCORE = S.SCORE
+    WHEN NOT MATCHED THEN
+        INSERT (RATING_ID, MOVIE_ID, USER_ID, SCORE, CREATE_DATE)
+        VALUES (SEQ_RANO.NEXTVAL, S.MOVIE_ID, S.USER_ID, S.SCORE, SYSDATE)
+</update>
 
 </mapper>

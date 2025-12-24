@@ -161,7 +161,7 @@
             align-items:center;
             justify-content:flex-start;
             margin-top: 8px;
-            flex-wrap:wrap; /* 추가해도 기존 기능 영향 없음(줄바꿈만) */
+            flex-wrap:wrap;
         }
         #button_area button{
             border:1px solid #e5e7eb;
@@ -281,9 +281,7 @@
             color:#fff;
         }
 
-        /* ========================= */
-        /* ⭐ 별점 UI (추가) */
-        /* ========================= */
+        /* ⭐ 별점 UI */
         .rating-mini-wrap{
             display:flex;
             align-items:center;
@@ -328,7 +326,7 @@
             font-size:12px;
             font-weight:900;
             color:#111;
-            min-width:44px;
+            min-width:52px;
             text-align:center;
         }
         .btnRatingSubmit{
@@ -348,565 +346,677 @@
             opacity:.5;
             cursor:not-allowed !important;
         }
+        .rating-pill{
+            display:inline-flex;
+            align-items:center;
+            gap:6px;
+            padding:6px 10px;
+            border-radius:999px;
+            border:1px solid #e5e7eb;
+            background:#fff;
+            font-size:12px;
+            font-weight:900;
+        }
+        .rating-pill b{
+            font-size:13px;
+        }
     </style>
 </head>
 <body>
 
-    <!-- 로그인 유저 아이디 JSP로 변수화 -->
-    <c:set var="loginUserId" value="${empty loginUser ? '' : loginUser.userId}" />
+<c:set var="loginUserId" value="${empty loginUser ? '' : loginUser.userId}" />
 
-    <div id="movieModal" class="modal-backdrop" onclick="backdropClose(event)">
-        <div class="modal-box">
-            <div class="modal-top">
-                <span id="modalTitle">영화 상세</span>
-                <button class="modal-close" type="button" onclick="closeModal()">닫기</button>
-            </div>
+<div id="movieModal" class="modal-backdrop" onclick="backdropClose(event)">
+    <div class="modal-box">
+        <div class="modal-top">
+            <span id="modalTitle">영화 상세</span>
+            <button class="modal-close" type="button" onclick="closeModal()">닫기</button>
+        </div>
 
-            <div class="modal-main" style="overflow-y:auto;">
-                <div class="modal-movie-area">
-                    <div class="modal-poster" id="modalPosterWrap">포스터</div>
+        <div class="modal-main" style="overflow-y:auto;">
+            <div class="modal-movie-area">
+                <div class="modal-poster" id="modalPosterWrap">포스터</div>
 
-                    <div class="modal-info" style="overflow-y:auto;">
-                        <div id="modalLoading" class="loading" style="display:none;">불러오는 중...</div>
+                <div class="modal-info" style="overflow-y:auto;">
+                    <div id="modalLoading" class="loading" style="display:none;">불러오는 중...</div>
 
-                        <div class="modal-title" id="modalMovieName">영화 이름</div>
+                    <div class="modal-title" id="modalMovieName">영화 이름</div>
 
-                        <div class="info-row">
-                            <div class="info-label">개봉일</div>
-                            <div class="info-value" id="modalReleaseDate">-</div>
+                    <div class="info-row">
+                        <div class="info-label">개봉일</div>
+                        <div class="info-value" id="modalReleaseDate">-</div>
+                    </div>
+
+                    <div class="info-row" style="align-items:flex-start;">
+                        <div class="info-label">영화 장르</div>
+                        <div class="info-value" id="modalGenres">-</div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-label">감독</div>
+                        <div class="info-value" id="modalDirector">-</div>
+                    </div>
+
+                    <div class="info-row" style="align-items:flex-start;">
+                        <div class="info-label">배우</div>
+                        <div class="info-value" id="modalActors">-</div>
+                    </div>
+
+                    <div class="info-row" style="align-items:flex-start;">
+                        <div class="info-label">줄거리</div>
+                        <div class="info-value" id="modalContent">-</div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-label">인기도</div>
+                        <div class="info-value" id="modalPopularity">-</div>
+                    </div>
+
+                    <!-- ✅ 평균 별점 표시 -->
+                    <div class="info-row">
+                        <div class="info-label">평점</div>
+                        <div class="info-value" id="modalUserScore">
+                            <span class="rating-pill">
+                                ⭐ 평균 <b id="avgScoreText">-</b>
+                                <span style="opacity:.7;">(</span><span id="ratingCountText">0</span><span style="opacity:.7;">명)</span>
+                            </span>
+                            <span style="margin-left:10px; font-size:12px; font-weight:900; color:#111;">
+                                내 별점: <span id="myScoreText">-</span>
+                            </span>
                         </div>
+                    </div>
 
-                        <div class="info-row" style="align-items:flex-start;">
-                            <div class="info-label">영화 장르</div>
-                            <div class="info-value" id="modalGenres">-</div>
-                        </div>
+                    <div id="button_area">
+                        <button id="btnLike" type="button">👍 좋아요(20)</button>
+                        <button id="btnDislike" type="button">👎 싫어요(3)</button>
+                        <button id="btnWriteReview" type="button">✍️ 감상문 쓰기</button>
 
-                        <div class="info-row">
-                            <div class="info-label">감독</div>
-                            <div class="info-value" id="modalDirector">-</div>
-                        </div>
-
-                        <div class="info-row" style="align-items:flex-start;">
-                            <div class="info-label">배우</div>
-                            <div class="info-value" id="modalActors">-</div>
-                        </div>
-
-                        <div class="info-row" style="align-items:flex-start;">
-                            <div class="info-label">줄거리</div>
-                            <div class="info-value" id="modalContent">-</div>
-                        </div>
-
-                        <div class="info-row">
-                            <div class="info-label">인기도</div>
-                            <div class="info-value" id="modalPopularity">-</div>
-                        </div>
-
-                        <div class="info-row">
-                            <div class="info-label">평점</div>
-                            <div class="info-value" id="modalUserScore">평점(유저가 매긴 점수)</div>
-                        </div>
-
-                        <div id="button_area">
-                            <button id="btnLike" type="button">👍 좋아요(20)</button>
-                            <button id="btnDislike" type="button">👎 싫어요(3)</button>
-                            <button id="btnWriteReview" type="button">✍️ 감상문 쓰기</button>
-
-                            <!-- ⭐ 별점 UI 추가: 감상문 버튼 오른쪽 (다른 기능 영향 없음) -->
-                            <div class="rating-mini-wrap" id="ratingWrap">
-                                <div class="rating-stars" id="ratingStars">
-                                    <span class="rating-star" data-score="1">★</span>
-                                    <span class="rating-star" data-score="2">★</span>
-                                    <span class="rating-star" data-score="3">★</span>
-                                    <span class="rating-star" data-score="4">★</span>
-                                    <span class="rating-star" data-score="5">★</span>
-                                </div>
-                                <div class="rating-text" id="ratingText">0/5</div>
-                                <button id="btnRatingSubmit" class="btnRatingSubmit" type="button">별점등록</button>
+                        <!-- ⭐ 별점 입력/등록 -->
+                        <div class="rating-mini-wrap" id="ratingWrap">
+                            <div class="rating-stars" id="ratingStars">
+                                <span class="rating-star" data-score="1">★</span>
+                                <span class="rating-star" data-score="2">★</span>
+                                <span class="rating-star" data-score="3">★</span>
+                                <span class="rating-star" data-score="4">★</span>
+                                <span class="rating-star" data-score="5">★</span>
                             </div>
+                            <div class="rating-text" id="ratingText">0/5</div>
+                            <button id="btnRatingSubmit" class="btnRatingSubmit" type="button">별점등록</button>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="modal-review-area" style="overflow-y:auto;">
-                    <div class="modal-review-box">
+            <div class="modal-review-area" style="overflow-y:auto;">
+                <div class="modal-review-box">
 
-                        <div class="review-header">
-                            <div>리뷰</div>
-                            <div id="commentCount" class="review-count">0개</div>
-                        </div>
-
-                        <div id="commentList" class="review-list"></div>
-
-                        <div class="review-input-wrap">
-                            <c:choose>
-                                <c:when test="${empty loginUser}">
-                                    <textarea id="commentInput" placeholder="로그인 후 입력 가능합니다." disabled></textarea>
-                                </c:when>
-                                <c:otherwise>
-                                    <textarea id="commentInput" placeholder="리뷰를 입력하세요"></textarea>
-                                </c:otherwise>
-                            </c:choose>
-
-                            <button id="btnCommentSubmit" type="button" onclick="submitComment()">등록</button>
-                        </div>
-
+                    <div class="review-header">
+                        <div>리뷰</div>
+                        <div id="commentCount" class="review-count">0개</div>
                     </div>
+
+                    <div id="commentList" class="review-list"></div>
+
+                    <div class="review-input-wrap">
+                        <c:choose>
+                            <c:when test="${empty loginUser}">
+                                <textarea id="commentInput" placeholder="로그인 후 입력 가능합니다." disabled></textarea>
+                            </c:when>
+                            <c:otherwise>
+                                <textarea id="commentInput" placeholder="리뷰를 입력하세요"></textarea>
+                            </c:otherwise>
+                        </c:choose>
+
+                        <button id="btnCommentSubmit" type="button" onclick="submitComment()">등록</button>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        const LOGIN_USER_ID = "${loginUserId}";
-    </script>
+<script>
+    const LOGIN_USER_ID = "${loginUserId}";
+</script>
 
-    <script>
-        const TMDB_DETAIL_URL  = "<c:url value='/tmdb/movieDetail.mo'/>";
-        const TMDB_CREDITS_URL = "<c:url value='/tmdb/movieCredits.mo'/>";
-        const MOVIE_SAVE_URL   = "<c:url value='/movie/saveFromTmdb.mo'/>";
+<script>
+    const TMDB_DETAIL_URL  = "<c:url value='/tmdb/movieDetail.mo'/>";
+    const TMDB_CREDITS_URL = "<c:url value='/tmdb/movieCredits.mo'/>";
+    const MOVIE_SAVE_URL   = "<c:url value='/movie/saveFromTmdb.mo'/>";
 
-        const COMMENT_LIST_URL   = "<c:url value='/comment/list.mo'/>";
-        const COMMENT_INSERT_URL = "<c:url value='/comment/insert.mo'/>";
-        const COMMENT_DELETE_URL = "<c:url value='/comment/delete.mo'/>";
-        const LIKE_STATUS_URL = "<c:url value='/like/status.mo'/>";
-        const LIKE_TOGGLE_URL = "<c:url value='/like/toggle.mo'/>";
+    const COMMENT_LIST_URL   = "<c:url value='/comment/list.mo'/>";
+    const COMMENT_INSERT_URL = "<c:url value='/comment/insert.mo'/>";
+    const COMMENT_DELETE_URL = "<c:url value='/comment/delete.mo'/>";
+    const LIKE_STATUS_URL = "<c:url value='/like/status.mo'/>";
+    const LIKE_TOGGLE_URL = "<c:url value='/like/toggle.mo'/>";
 
-        let CURRENT_MOVIE_ID = null;
+    /* ✅ 별점 API (서버 연동) */
+    const RATING_STATUS_URL = "<c:url value='/rating/status.mo'/>";
+    const RATING_UPSERT_URL = "<c:url value='/rating/upsert.mo'/>";
 
-        function openModal(tmdbId){
-            var modal = document.getElementById("movieModal");
-            if(!modal) return;
+    let CURRENT_MOVIE_ID = null;
 
-            modal.style.display = "flex";
+    function openModal(tmdbId){
+        var modal = document.getElementById("movieModal");
+        if(!modal) return;
 
-            setLoading(true);
-            setPoster("");
+        modal.style.display = "flex";
 
-            document.getElementById("modalTitle").innerText = "영화 상세";
-            document.getElementById("modalMovieName").innerText = "영화 이름";
-            document.getElementById("modalReleaseDate").innerText = "-";
-            document.getElementById("modalGenres").innerHTML = "-";
-            document.getElementById("modalPopularity").innerText = "-";
-            document.getElementById("modalDirector").innerText = "-";
-            document.getElementById("modalActors").innerHTML = "-";
-            document.getElementById("modalContent").innerText = "-";
+        setLoading(true);
+        setPoster("");
 
-            CURRENT_MOVIE_ID = parseInt(tmdbId, 10);
-            loadLikeState(CURRENT_MOVIE_ID);
+        document.getElementById("modalTitle").innerText = "영화 상세";
+        document.getElementById("modalMovieName").innerText = "영화 이름";
+        document.getElementById("modalReleaseDate").innerText = "-";
+        document.getElementById("modalGenres").innerHTML = "-";
+        document.getElementById("modalPopularity").innerText = "-";
+        document.getElementById("modalDirector").innerText = "-";
+        document.getElementById("modalActors").innerHTML = "-";
+        document.getElementById("modalContent").innerText = "-";
 
-            loadComments(CURRENT_MOVIE_ID);
+        CURRENT_MOVIE_ID = parseInt(tmdbId, 10);
 
-            // ⭐ 별점 UI 초기화(기존 기능 영향 없음)
-            resetRatingUI();
+        loadLikeState(CURRENT_MOVIE_ID);
+        loadComments(CURRENT_MOVIE_ID);
 
-            var url = TMDB_DETAIL_URL + "?tmdbId=" + encodeURIComponent(tmdbId);
+        /* ✅ 별점: 초기화 + 상태 로딩 */
+        resetRatingUI();
+        loadRatingStatus(CURRENT_MOVIE_ID);
 
-            fetch(url, { method: "GET" })
-              .then(resp => resp.json())
-              .then(data => {
-                  if(!data || data.ok !== true){
-                      throw new Error((data && data.message) ? data.message : "detail fetch failed");
-                  }
+        var url = TMDB_DETAIL_URL + "?tmdbId=" + encodeURIComponent(tmdbId);
 
-                  var title = data.title || data.original_title || "제목 없음";
-                  document.getElementById("modalTitle").innerText = title;
-                  document.getElementById("modalMovieName").innerText = title;
+        fetch(url, { method: "GET" })
+          .then(resp => resp.json())
+          .then(data => {
+              if(!data || data.ok !== true){
+                  throw new Error((data && data.message) ? data.message : "detail fetch failed");
+              }
 
-                  var btn = document.getElementById("btnWriteReview");
-                  var ctx = "${pageContext.request.contextPath}";
-                  btn.setAttribute("onclick","location.href='" + ctx + "/insert.review?movieTitle=" + encodeURIComponent(title) + "&tmdbId=" +parseInt(tmdbId) + "'");
+              var title = data.title || data.original_title || "제목 없음";
+              document.getElementById("modalTitle").innerText = title;
+              document.getElementById("modalMovieName").innerText = title;
 
-               
-                  document.getElementById("modalReleaseDate").innerText = data.release_date || "-";
+              var btn = document.getElementById("btnWriteReview");
+              var ctx = "${pageContext.request.contextPath}";
+              btn.setAttribute("onclick","location.href='" + ctx + "/insert.review?movieTitle=" + encodeURIComponent(title) + "&tmdbId=" +parseInt(tmdbId) + "'");
 
-                  document.getElementById("modalPopularity").innerText =
-                      (data.popularity !== undefined && data.popularity !== null) ? data.popularity : "-";
+              document.getElementById("modalReleaseDate").innerText = data.release_date || "-";
 
-                  var genres = data.genres || [];
-                  if(Array.isArray(genres) && genres.length > 0){
-                      var html = "";
-                      genres.forEach(g => {
-                          html += "<span class='chip'>" + escapeHtml(g.name) + "</span>";
-                      });
-                      document.getElementById("modalGenres").innerHTML = html;
-                  } else {
-                      document.getElementById("modalGenres").innerHTML = "-";
-                  }
+              document.getElementById("modalPopularity").innerText =
+                  (data.popularity !== undefined && data.popularity !== null) ? data.popularity : "-";
 
-                  document.getElementById("modalContent").innerText =
-                      (data.overview !== undefined && data.overview !== null && String(data.overview).trim() !== "")
-                      ? data.overview
-                      : "-";
-
-                  setPoster(data.posterUrl || "");
-                  setLoading(false);
-
-                  fetchCreditsAndRender(tmdbId);
-
-                  saveMovieToDb(tmdbId, data);
-              })
-              .catch(err => {
-                  setLoading(false);
-                  document.getElementById("modalMovieName").innerText = "불러오기 실패";
-              });
-        }
-
-        function saveMovieToDb(tmdbId, detail){
-            var payload = {
-                tmdbId: tmdbId,
-                title: detail.title || detail.original_title || "",
-                adult: (detail.adult === true || detail.adult === "true") ? "Y" : "N",
-                releaseDate: detail.release_date || "",
-                popularity: (detail.popularity !== undefined && detail.popularity !== null) ? detail.popularity : 0,
-                category: (Array.isArray(detail.genres) && detail.genres.length > 0) ? detail.genres[0].name : "",
-                content: detail.overview || ""
-            };
-
-            fetch(MOVIE_SAVE_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
-            })
-            .then(resp => resp.json())
-            .then(r => {})
-            .catch(e => {});
-        }
-
-        function fetchCreditsAndRender(tmdbId){
-            var url = TMDB_CREDITS_URL + "?tmdbId=" + encodeURIComponent(tmdbId);
-
-            fetch(url, { method: "GET" })
-              .then(resp => resp.json())
-              .then(data => {
-                  if(!data || data.ok !== true){
-                      throw new Error((data && data.message) ? data.message : "credits fetch failed");
-                  }
-
-                  document.getElementById("modalDirector").innerText = data.director || "-";
-
-                  var actors = data.actors || [];
-                  if(Array.isArray(actors) && actors.length > 0){
-                      var html = "";
-                      actors.forEach(name => {
-                          html += "<span class='chip'>" + escapeHtml(name) + "</span>";
-                      });
-                      document.getElementById("modalActors").innerHTML = html;
-                  } else {
-                      document.getElementById("modalActors").innerHTML = "-";
-                  }
-              })
-              .catch(err => {
-                  document.getElementById("modalDirector").innerText = "-";
-                  document.getElementById("modalActors").innerHTML = "-";
-              });
-        }
-
-        function loadComments(movieId){
-            if(!movieId) return;
-
-            fetch(COMMENT_LIST_URL + "?movidId=" + encodeURIComponent(movieId))
-              .then(resp => resp.json())
-              .then(list => {
-                  list = Array.isArray(list) ? list : [];
-
-                  document.getElementById("commentCount").innerText = list.length + "개";
-
+              var genres = data.genres || [];
+              if(Array.isArray(genres) && genres.length > 0){
                   var html = "";
-                  for(var i=0; i<list.length; i++){
-                      var c = list[i];
+                  genres.forEach(g => {
+                      html += "<span class='chip'>" + escapeHtml(g.name) + "</span>";
+                  });
+                  document.getElementById("modalGenres").innerHTML = html;
+              } else {
+                  document.getElementById("modalGenres").innerHTML = "-";
+              }
 
-                      var commentId = c.commentId || c.id || "";
-                      var userId = c.userId ? c.userId : "익명";
-                      var content = c.content ? c.content : "";
-                      var dateStr = c.createDate ? String(c.createDate).substring(0,10) : "";
+              document.getElementById("modalContent").innerText =
+                  (data.overview !== undefined && data.overview !== null && String(data.overview).trim() !== "")
+                  ? data.overview
+                  : "-";
 
-                      var canDelete = (LOGIN_USER_ID && String(LOGIN_USER_ID) === String(userId));
+              setPoster(data.posterUrl || "");
+              setLoading(false);
 
-                      var deleteBtnHtml = "";
-                      if(canDelete){
-                          deleteBtnHtml =
-                              "<button type='button' class='btnCommentDelete' data-comment-id='" + escapeHtml(commentId) + "'>"
-                            + "  🗑️ 삭제하기"
-                            + "</button>";
-                      }
+              fetchCreditsAndRender(tmdbId);
+              saveMovieToDb(tmdbId, data);
+          })
+          .catch(err => {
+              setLoading(false);
+              document.getElementById("modalMovieName").innerText = "불러오기 실패";
+          });
+    }
 
-                      html += ""
-                        + "<div class='review-item'>"
-                        + "  <div class='review-top'>"
-                        + "    <b>[" + escapeHtml(userId) + "]</b>"
-                        + "    <span>" + escapeHtml(dateStr) + "</span>"
-                        + "  </div>"
-                        + "  <div class='review-content'>" + escapeHtml(content) + "</div>"
-                        + "  <div class='review-actions'>"
-                        + "    <button type='button' disabled>👍 좋아요</button>"
-                        +      deleteBtnHtml
-                        + "  </div>"
-                        + "</div>";
+    function saveMovieToDb(tmdbId, detail){
+        var payload = {
+            tmdbId: tmdbId,
+            title: detail.title || detail.original_title || "",
+            adult: (detail.adult === true || detail.adult === "true") ? "Y" : "N",
+            releaseDate: detail.release_date || "",
+            popularity: (detail.popularity !== undefined && detail.popularity !== null) ? detail.popularity : 0,
+            category: (Array.isArray(detail.genres) && detail.genres.length > 0) ? detail.genres[0].name : "",
+            content: detail.overview || ""
+        };
+
+        fetch(MOVIE_SAVE_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        })
+        .then(resp => resp.json())
+        .then(r => {})
+        .catch(e => {});
+    }
+
+    function fetchCreditsAndRender(tmdbId){
+        var url = TMDB_CREDITS_URL + "?tmdbId=" + encodeURIComponent(tmdbId);
+
+        fetch(url, { method: "GET" })
+          .then(resp => resp.json())
+          .then(data => {
+              if(!data || data.ok !== true){
+                  throw new Error((data && data.message) ? data.message : "credits fetch failed");
+              }
+
+              document.getElementById("modalDirector").innerText = data.director || "-";
+
+              var actors = data.actors || [];
+              if(Array.isArray(actors) && actors.length > 0){
+                  var html = "";
+                  actors.forEach(name => {
+                      html += "<span class='chip'>" + escapeHtml(name) + "</span>";
+                  });
+                  document.getElementById("modalActors").innerHTML = html;
+              } else {
+                  document.getElementById("modalActors").innerHTML = "-";
+              }
+          })
+          .catch(err => {
+              document.getElementById("modalDirector").innerText = "-";
+              document.getElementById("modalActors").innerHTML = "-";
+          });
+    }
+
+    function loadComments(movieId){
+        if(!movieId) return;
+
+        fetch(COMMENT_LIST_URL + "?movidId=" + encodeURIComponent(movieId))
+          .then(resp => resp.json())
+          .then(list => {
+              list = Array.isArray(list) ? list : [];
+
+              document.getElementById("commentCount").innerText = list.length + "개";
+
+              var html = "";
+              for(var i=0; i<list.length; i++){
+                  var c = list[i];
+
+                  var commentId = c.commentId || c.id || "";
+                  var userId = c.userId ? c.userId : "익명";
+                  var content = c.content ? c.content : "";
+                  var dateStr = c.createDate ? String(c.createDate).substring(0,10) : "";
+
+                  var canDelete = (LOGIN_USER_ID && String(LOGIN_USER_ID) === String(userId));
+
+                  var deleteBtnHtml = "";
+                  if(canDelete){
+                      deleteBtnHtml =
+                          "<button type='button' class='btnCommentDelete' data-comment-id='" + escapeHtml(commentId) + "'>"
+                        + "  🗑️ 삭제하기"
+                        + "</button>";
                   }
 
-                  if(list.length === 0){
-                      html = "<div style='color:#333; font-weight:800; font-size:13px;'>아직 리뷰가 없습니다</div>";
-                  }
+                  html += ""
+                    + "<div class='review-item'>"
+                    + "  <div class='review-top'>"
+                    + "    <b>[" + escapeHtml(userId) + "]</b>"
+                    + "    <span>" + escapeHtml(dateStr) + "</span>"
+                    + "  </div>"
+                    + "  <div class='review-content'>" + escapeHtml(content) + "</div>"
+                    + "  <div class='review-actions'>"
+                    + "    <button type='button' disabled>👍 좋아요</button>"
+                    +      deleteBtnHtml
+                    + "  </div>"
+                    + "</div>";
+              }
 
-                  document.getElementById("commentList").innerHTML = html;
-              })
-              .catch(err => {
-                  console.error(err);
-                  document.getElementById("commentList").innerHTML =
-                    "<div style='color:red; font-weight:900;'>리뷰 불러오기 실패</div>";
-              });
+              if(list.length === 0){
+                  html = "<div style='color:#333; font-weight:800; font-size:13px;'>아직 리뷰가 없습니다</div>";
+              }
+
+              document.getElementById("commentList").innerHTML = html;
+          })
+          .catch(err => {
+              console.error(err);
+              document.getElementById("commentList").innerHTML =
+                "<div style='color:red; font-weight:900;'>리뷰 불러오기 실패</div>";
+          });
+    }
+
+    function submitComment(){
+        if(!CURRENT_MOVIE_ID){
+            alert("영화 ID가 없습니다");
+            return;
         }
 
-        function submitComment(){
-            if(!CURRENT_MOVIE_ID){
-                alert("영화 ID가 없습니다");
-                return;
-            }
+        var content = document.getElementById("commentInput").value.trim();
+        if(content === ""){
+            alert("내용을 입력하세요");
+            return;
+        }
 
-            var content = document.getElementById("commentInput").value.trim();
-            if(content === ""){
-                alert("내용을 입력하세요");
-                return;
-            }
+        const params = new URLSearchParams();
+        params.append("movieId", CURRENT_MOVIE_ID);
+        params.append("content", content);
+        if(LOGIN_USER_ID){
+            params.append("userId", LOGIN_USER_ID);
+        }
 
-            const params = new URLSearchParams();
-            params.append("movieId", CURRENT_MOVIE_ID);
-            params.append("content", content);
-            if(LOGIN_USER_ID){
-                params.append("userId", LOGIN_USER_ID);
-            }
-
-            fetch(COMMENT_INSERT_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
-                body: params.toString()
-            })
-            .then(resp => resp.text())
-            .then(txt => {
-                const result = parseInt(txt, 10) || 0;
-                if(result <= 0){
-                    alert("리뷰 등록 실패");
-                    return;
-                }
-                document.getElementById("commentInput").value = "";
-                loadComments(CURRENT_MOVIE_ID);
-            })
-            .catch(err => {
-                console.error(err);
+        fetch(COMMENT_INSERT_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
+            body: params.toString()
+        })
+        .then(resp => resp.text())
+        .then(txt => {
+            const result = parseInt(txt, 10) || 0;
+            if(result <= 0){
                 alert("리뷰 등록 실패");
-            });
-        }
-
-        function closeModal(){
-            var modal = document.getElementById("movieModal");
-            if(modal) modal.style.display = "none";
-        }
-
-        function backdropClose(e){
-            if(e && e.target && e.target.id === "movieModal"){
-                closeModal();
-            }
-        }
-
-        function setLoading(isLoading){
-            var el = document.getElementById("modalLoading");
-            if(!el) return;
-            el.style.display = isLoading ? "block" : "none";
-        }
-
-        function setPoster(url){
-            var wrap = document.getElementById("modalPosterWrap");
-            if(!wrap) return;
-
-            if(url){
-                wrap.innerHTML = "<img src='" + url + "' alt='poster'/>";
-            }else{
-                wrap.innerHTML = "포스터";
-            }
-        }
-
-        function escapeHtml(str){
-            if(str === null || str === undefined) return "";
-            return String(str)
-              .replaceAll("&","&amp;")
-              .replaceAll("<","&lt;")
-              .replaceAll(">","&gt;")
-              .replaceAll("\"","&quot;")
-              .replaceAll("'","&#039;");
-        }
-
-        document.addEventListener("click", function(e){
-            const btn = e.target.closest(".btnCommentDelete");
-            if(!btn) return;
-
-            const commentId = btn.dataset.commentId;
-            if(!commentId){
-                alert("commentId가 없습니다");
                 return;
             }
-
-            if(!confirm("정말 삭제할까요?")) return;
-
-            deleteComment(commentId);
+            document.getElementById("commentInput").value = "";
+            loadComments(CURRENT_MOVIE_ID);
+        })
+        .catch(err => {
+            console.error(err);
+            alert("리뷰 등록 실패");
         });
+    }
 
-        function deleteComment(commentId){
-            const url = COMMENT_DELETE_URL + "?commentId=" + encodeURIComponent(commentId);
+    function closeModal(){
+        var modal = document.getElementById("movieModal");
+        if(modal) modal.style.display = "none";
+    }
 
-            fetch(url, { method: "GET" })
-              .then(resp => resp.text())
-              .then(txt => {
-                  console.log("delete resp:", txt);
-                  loadComments(CURRENT_MOVIE_ID);
-              })
-              .catch(err => {
-                  console.error(err);
-                  alert("삭제 실패");
-              });
+    function backdropClose(e){
+        if(e && e.target && e.target.id === "movieModal"){
+            closeModal();
+        }
+    }
+
+    function setLoading(isLoading){
+        var el = document.getElementById("modalLoading");
+        if(!el) return;
+        el.style.display = isLoading ? "block" : "none";
+    }
+
+    function setPoster(url){
+        var wrap = document.getElementById("modalPosterWrap");
+        if(!wrap) return;
+
+        if(url){
+            wrap.innerHTML = "<img src='" + url + "' alt='poster'/>";
+        }else{
+            wrap.innerHTML = "포스터";
+        }
+    }
+
+    function escapeHtml(str){
+        if(str === null || str === undefined) return "";
+        return String(str)
+          .replaceAll("&","&amp;")
+          .replaceAll("<","&lt;")
+          .replaceAll(">","&gt;")
+          .replaceAll("\"","&quot;")
+          .replaceAll("'","&#039;");
+    }
+
+    document.addEventListener("click", function(e){
+        const btn = e.target.closest(".btnCommentDelete");
+        if(!btn) return;
+
+        const commentId = btn.dataset.commentId;
+        if(!commentId){
+            alert("commentId가 없습니다");
+            return;
         }
 
-        function loadLikeState(movieId){
-            fetch(LIKE_STATUS_URL + "?movieId=" + encodeURIComponent(movieId))
-              .then(r => r.text())
-              .then(txt => {
-                  const parts = String(txt || "").split(",");
-                  const myChoice = (parts[0] || "").trim();
-                  const likeCount = parseInt(parts[1], 10) || 0;
-                  const dislikeCount = parseInt(parts[2], 10) || 0;
-                  applyLikeUI(likeCount, dislikeCount, myChoice);
-              })
-              .catch(e => console.error(e));
+        if(!confirm("정말 삭제할까요?")) return;
+
+        deleteComment(commentId);
+    });
+
+    function deleteComment(commentId){
+        const url = COMMENT_DELETE_URL + "?commentId=" + encodeURIComponent(commentId);
+
+        fetch(url, { method: "GET" })
+          .then(resp => resp.text())
+          .then(txt => {
+              console.log("delete resp:", txt);
+              loadComments(CURRENT_MOVIE_ID);
+          })
+          .catch(err => {
+              console.error(err);
+              alert("삭제 실패");
+          });
+    }
+
+    function loadLikeState(movieId){
+        fetch(LIKE_STATUS_URL + "?movieId=" + encodeURIComponent(movieId))
+          .then(r => r.text())
+          .then(txt => {
+              const parts = String(txt || "").split(",");
+              const myChoice = (parts[0] || "").trim();
+              const likeCount = parseInt(parts[1], 10) || 0;
+              const dislikeCount = parseInt(parts[2], 10) || 0;
+              applyLikeUI(likeCount, dislikeCount, myChoice);
+          })
+          .catch(e => console.error(e));
+    }
+
+    function applyLikeUI(likeCount, dislikeCount, myChoice){
+        const btnLike = document.getElementById("btnLike");
+        const btnDislike = document.getElementById("btnDislike");
+        if(!btnLike || !btnDislike) return;
+
+        btnLike.textContent = "👍 좋아요(" + likeCount + ")";
+        btnDislike.textContent = "👎 싫어요(" + dislikeCount + ")";
+
+        btnLike.classList.remove("active");
+        btnDislike.classList.remove("active");
+
+        if(String(myChoice).toUpperCase() === "LIKE") btnLike.classList.add("active");
+        if(String(myChoice).toUpperCase() === "DISLIKE") btnDislike.classList.add("active");
+
+        if(!LOGIN_USER_ID){
+            btnLike.style.opacity = "0.6";
+            btnDislike.style.opacity = "0.6";
+        }else{
+            btnLike.style.opacity = "1";
+            btnDislike.style.opacity = "1";
+        }
+    }
+
+    document.getElementById("btnLike")?.addEventListener("click", function(){
+        if(!CURRENT_MOVIE_ID) return;
+        toggleLike("LIKE");
+    });
+    document.getElementById("btnDislike")?.addEventListener("click", function(){
+        if(!CURRENT_MOVIE_ID) return;
+        toggleLike("DISLIKE");
+    });
+
+    function toggleLike(action){
+        if(!LOGIN_USER_ID){
+            alert("로그인 후 이용 가능합니다.");
+            return;
         }
 
-        function applyLikeUI(likeCount, dislikeCount, myChoice){
-            const btnLike = document.getElementById("btnLike");
-            const btnDislike = document.getElementById("btnDislike");
-            if(!btnLike || !btnDislike) return;
+        const params = new URLSearchParams();
+        params.append("movieId", CURRENT_MOVIE_ID);
+        params.append("action", action);
 
-            btnLike.textContent = "👍 좋아요(" + likeCount + ")";
-            btnDislike.textContent = "👎 싫어요(" + dislikeCount + ")";
-
-            btnLike.classList.remove("active");
-            btnDislike.classList.remove("active");
-
-            if(String(myChoice).toUpperCase() === "LIKE") btnLike.classList.add("active");
-            if(String(myChoice).toUpperCase() === "DISLIKE") btnDislike.classList.add("active");
-
-            if(!LOGIN_USER_ID){
-                btnLike.style.opacity = "0.6";
-                btnDislike.style.opacity = "0.6";
-            }else{
-                btnLike.style.opacity = "1";
-                btnDislike.style.opacity = "1";
+        fetch(LIKE_TOGGLE_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
+            body: params.toString()
+        })
+        .then(r => r.text())
+        .then(txt => {
+            if(txt === "LOGIN"){
+                alert("로그인 후 이용 가능합니다.");
+                return;
             }
+            if(txt === "BAD"){
+                alert("요청이 올바르지 않습니다.");
+                return;
+            }
+            const parts = String(txt || "").split(",");
+            const myChoice = (parts[0] || "").trim();
+            const likeCount = parseInt(parts[1], 10) || 0;
+            const dislikeCount = parseInt(parts[2], 10) || 0;
+
+            applyLikeUI(likeCount, dislikeCount, myChoice);
+        })
+        .catch(e => {
+            console.error(e);
+            alert("처리 실패");
+        });
+    }
+
+    /* ========================= */
+    /* ⭐ 별점 UI + 서버 연동 */
+    /* ========================= */
+    let RATING_SCORE = 0;
+
+    function resetRatingUI(){
+        RATING_SCORE = 0;
+        document.getElementById("ratingText").innerText = "0/5";
+        document.querySelectorAll("#ratingStars .rating-star").forEach(s => s.classList.remove("active"));
+
+        const btn = document.getElementById("btnRatingSubmit");
+        if(btn){
+            btn.disabled = !LOGIN_USER_ID;
+            btn.textContent = "별점등록";
         }
 
-        document.getElementById("btnLike")?.addEventListener("click", function(){
-            if(!CURRENT_MOVIE_ID) return;
-            toggleLike("LIKE");
-        });
-        document.getElementById("btnDislike")?.addEventListener("click", function(){
-            if(!CURRENT_MOVIE_ID) return;
-            toggleLike("DISLIKE");
-        });
+        document.getElementById("avgScoreText").innerText = "-";
+        document.getElementById("ratingCountText").innerText = "0";
+        document.getElementById("myScoreText").innerText = "-";
+    }
 
-        function toggleLike(action){
+    function applyStarActive(score){
+        document.querySelectorAll("#ratingStars .rating-star").forEach(s=>{
+            const v = parseInt(s.dataset.score, 10) || 0;
+            s.classList.toggle("active", v <= score);
+        });
+    }
+
+    /* ✅ status 응답: "avg,count,myScore" (text/plain) */
+    function loadRatingStatus(movieId){
+        if(!movieId) return;
+
+        const url =
+            RATING_STATUS_URL
+            + "?movieId=" + encodeURIComponent(movieId)
+            + "&userId=" + encodeURIComponent(LOGIN_USER_ID || "");
+
+        fetch(url)
+          .then(r => r.text())   // ✅ text로 받아야 함
+          .then(txt => {
+              const parts = String(txt || "").split(",");
+              const avg = parseFloat(parts[0]) || 0;
+              const count = parseInt(parts[1], 10) || 0;
+              const my = parseInt(parts[2], 10) || 0;
+
+              document.getElementById("avgScoreText").innerText = (count > 0 ? avg.toFixed(1) : "-");
+              document.getElementById("ratingCountText").innerText = String(count);
+              document.getElementById("myScoreText").innerText = (LOGIN_USER_ID ? (my > 0 ? (my + "/5") : "-") : "-");
+
+              if(LOGIN_USER_ID && my > 0){
+                  RATING_SCORE = my;
+                  applyStarActive(my);
+                  document.getElementById("ratingText").innerText = my + "/5";
+                  document.getElementById("btnRatingSubmit").textContent = "별점수정";
+              }
+          })
+          .catch(e => console.error(e));
+    }
+
+    // 별 클릭
+    document.querySelectorAll("#ratingStars .rating-star").forEach(star=>{
+        star.addEventListener("click", ()=>{
             if(!LOGIN_USER_ID){
                 alert("로그인 후 이용 가능합니다.");
                 return;
             }
+            RATING_SCORE = parseInt(star.dataset.score, 10) || 0;
+            applyStarActive(RATING_SCORE);
+            document.getElementById("ratingText").innerText = RATING_SCORE + "/5";
+        });
+    });
 
-            const params = new URLSearchParams();
-            params.append("movieId", CURRENT_MOVIE_ID);
-            params.append("action", action);
-
-            fetch(LIKE_TOGGLE_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
-                body: params.toString()
-            })
-            .then(r => r.text())
-            .then(txt => {
-                if(txt === "LOGIN"){
-                    alert("로그인 후 이용 가능합니다.");
-                    return;
-                }
-                if(txt === "BAD"){
-                    alert("요청이 올바르지 않습니다.");
-                    return;
-                }
-                const parts = String(txt || "").split(",");
-                const myChoice = (parts[0] || "").trim();
-                const likeCount = parseInt(parts[1], 10) || 0;
-                const dislikeCount = parseInt(parts[2], 10) || 0;
-
-                applyLikeUI(likeCount, dislikeCount, myChoice);
-            })
-            .catch(e => {
-                console.error(e);
-                alert("처리 실패");
-            });
+    /* ✅ upsert 응답: "avg,count,myScore" 또는 "LOGIN"/"BAD" (text/plain) */
+    document.getElementById("btnRatingSubmit")?.addEventListener("click", ()=>{
+        if(!LOGIN_USER_ID){
+            alert("로그인 후 이용 가능합니다.");
+            return;
+        }
+        if(!CURRENT_MOVIE_ID){
+            alert("영화 ID가 없습니다");
+            return;
+        }
+        if(RATING_SCORE <= 0){
+            alert("별점을 선택하세요");
+            return;
         }
 
-        /* ========================= */
-        /* ⭐ 별점 UI 로직 (추가) */
-        /* ========================= */
-        let RATING_SCORE = 0;
+        const params = new URLSearchParams();
+        params.append("movieId", CURRENT_MOVIE_ID);
+        params.append("userId", LOGIN_USER_ID); // ✅ 컨트롤러가 userId 받음
+        params.append("score", RATING_SCORE);
 
-        function resetRatingUI(){
-            RATING_SCORE = 0;
-            const txt = document.getElementById("ratingText");
-            if(txt) txt.innerText = "0/5";
+        const btn = document.getElementById("btnRatingSubmit");
+        if(btn){
+            btn.disabled = true;
+            btn.textContent = "등록중...";
+        }
 
-            document.querySelectorAll("#ratingStars .rating-star").forEach(s=>{
-                s.classList.remove("active");
-            });
-
-            const btn = document.getElementById("btnRatingSubmit");
+        fetch(RATING_UPSERT_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
+            body: params.toString()
+        })
+        .then(r => r.text()) // ✅ text
+        .then(txt => {
             if(btn){
-                btn.disabled = !LOGIN_USER_ID;
+                btn.disabled = false;
                 btn.textContent = "별점등록";
             }
-        }
 
-        // 별 클릭(선택)
-        document.querySelectorAll("#ratingStars .rating-star").forEach(star=>{
-            star.addEventListener("click", ()=>{
-                if(!LOGIN_USER_ID){
-                    alert("로그인 후 이용 가능합니다.");
-                    return;
-                }
-                RATING_SCORE = parseInt(star.dataset.score, 10) || 0;
-
-                document.querySelectorAll("#ratingStars .rating-star").forEach(s=>{
-                    const v = parseInt(s.dataset.score, 10) || 0;
-                    s.classList.toggle("active", v <= RATING_SCORE);
-                });
-
-                const txt = document.getElementById("ratingText");
-                if(txt) txt.innerText = RATING_SCORE + "/5";
-            });
-        });
-
-        // 별점등록 버튼(확정) - 아직 서버 연동 X (다른 기능 영향 없음)
-        document.getElementById("btnRatingSubmit")?.addEventListener("click", ()=>{
-            if(!LOGIN_USER_ID){
+            if(txt === "LOGIN"){
                 alert("로그인 후 이용 가능합니다.");
                 return;
             }
-            if(!CURRENT_MOVIE_ID){
-                alert("영화 ID가 없습니다");
-                return;
-            }
-            if(RATING_SCORE <= 0){
-                alert("별점을 선택하세요");
+            if(txt === "BAD"){
+                alert("요청이 올바르지 않습니다.");
                 return;
             }
 
-            // 서버 아직 안 붙임 → 콘솔/알림만
-            alert("별점 " + RATING_SCORE + "점 등록(서버 연동 전)");
-            console.log("RATING_SUBMIT", { movieId: CURRENT_MOVIE_ID, score: RATING_SCORE });
+            // txt: "avg,count,myScore"
+            const parts = String(txt || "").split(",");
+            const avg = parseFloat(parts[0]) || 0;
+            const count = parseInt(parts[1], 10) || 0;
+            const my = parseInt(parts[2], 10) || 0;
+
+            document.getElementById("avgScoreText").innerText = (count > 0 ? avg.toFixed(1) : "-");
+            document.getElementById("ratingCountText").innerText = String(count);
+            document.getElementById("myScoreText").innerText = (my > 0 ? (my + "/5") : "-");
+
+            if(my > 0){
+                RATING_SCORE = my;
+                applyStarActive(my);
+                document.getElementById("ratingText").innerText = my + "/5";
+                if(btn) btn.textContent = "별점수정";
+            }
+        })
+        .catch(e => {
+            console.error(e);
+            if(btn){
+                btn.disabled = false;
+                btn.textContent = "별점등록";
+            }
+            alert("처리 실패");
         });
-    </script>
+    });
+</script>
+
 </body>
 </html>
