@@ -79,6 +79,14 @@
     cursor: pointer;
 }
 
+.board-table tbody tr {
+    cursor: pointer;-
+}
+
+.board-table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
 .paging{
 	display: flex;
 	justify-content: center;
