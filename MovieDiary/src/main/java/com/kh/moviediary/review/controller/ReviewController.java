@@ -1,5 +1,8 @@
 package com.kh.moviediary.review.controller;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -10,8 +13,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 
 import com.kh.moviediary.member.vo.Member;
+import com.kh.moviediary.movie.vo.Movie;
 import com.kh.moviediary.review.model.vo.Review;
 import com.kh.moviediary.review.service.ReviewService;
 import com.kh.moviediary.reviewLike.model.vo.Reviewlike;
@@ -42,6 +47,61 @@ public class ReviewController {
 	
 	@PostMapping("/insert.review")
 	public String reviewInsert(Review r, HttpSession session) {
+		
+		int count = service.countByMovieId(r.getMovieId());
+		
+		if(count == 0) { 			
+			try {
+				String apiKey = "7c6e7a1753d67ca027fa6776c3dbba6f";
+				
+				String url = "https://api.themoviedb.org/3/movie/" + r.getMovieId()
+						   + "?api_key=" + apiKey + "&language=ko-KR";
+				
+				RestTemplate rt = new RestTemplate();
+				Map<String, Object> map = rt.getForObject(url, Map.class);
+				
+				Movie m = new Movie();
+				m.setMovieId(r.getMovieId());
+				m.setMovieTitle((String)map.get("title"));
+				
+				String releaseDate = (String)map.get("release_date");
+				m.setReleaseDateStr(releaseDate != null ? releaseDate : "");
+
+				String overview = (String)map.get("overview");
+				m.setContent(overview != null ? overview : "");
+
+				
+				String content = (map.get("overview") == null) ? "" : String.valueOf(map.get("overview"));
+				m.setContent(content);
+
+				float popularity = 0f;
+				if (map.get("popularity") != null && !"".equals(String.valueOf(map.get("popularity")))) {
+					popularity = Float.parseFloat(String.valueOf(map.get("popularity")));
+				}
+				m.setPopularity(popularity);
+				
+				Boolean adult = (Boolean)map.get("adult");
+				m.setAdult(adult != null && adult ? "Y" : "N");
+
+				List<Map<String, Object>> genres = (List<Map<String, Object>>) map.get("genres");
+				if(genres != null && !genres.isEmpty()) {
+					m.setCategory(String.valueOf(genres.get(0).get("name")));
+				} else {
+					m.setCategory("기타");
+				}
+
+				String director = getDirectorFromTmdb(r.getMovieId());
+				m.setDirector(director);
+				
+				service.insertMovie(m);
+				
+			} catch(Exception e) {
+				e.printStackTrace();
+				session.setAttribute("alertMsg", "영화 정보를 불러오는데 실패했습니다.");
+				return "redirect:/reviewList.bo";
+			}
+		}
+		
 		int result = service.reviewInsert(r);
 		
 		if(result>0) {
@@ -123,5 +183,50 @@ public class ReviewController {
 			return "redirect:/reviewList.bo";
 		}
 		
+	}
+	
+	private String getDirectorFromTmdb(int tmdbId) {
+		if (tmdbId <= 0) return "정보없음";
+
+		try {
+			String apiKey = "7c6e7a1753d67ca027fa6776c3dbba6f";
+			String url = "https://api.themoviedb.org/3/movie/" + tmdbId + "/credits"
+					   + "?api_key=" + apiKey
+					   + "&language=ko-KR";
+
+			RestTemplate rt = new RestTemplate();
+			Map<String, Object> credits = rt.getForObject(url, Map.class);
+
+			if (credits == null) return "정보없음";
+
+			List<Map<String, Object>> crew = (List<Map<String, Object>>) credits.get("crew");
+			if (crew == null) return "정보없음";
+			
+			StringBuilder directors = new StringBuilder();
+
+			for (Map<String, Object> c : crew) {
+				if (c == null) continue;
+
+				Object jobObj = c.get("job");
+				if (jobObj == null) continue;
+
+				String job = String.valueOf(jobObj);
+				// 직업이 'Director'인 사람만 찾음
+				if (!"Director".equalsIgnoreCase(job)) continue;
+
+				String name = (c.get("name") == null) ? "" : String.valueOf(c.get("name"));
+				if (name.trim().isEmpty()) continue;
+
+				if (directors.length() > 0) directors.append(", ");
+				directors.append(name);
+			}
+			
+			String result = directors.toString();
+			return result.isEmpty() ? "정보없음" : result;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "정보없음";
+		}
 	}
 }

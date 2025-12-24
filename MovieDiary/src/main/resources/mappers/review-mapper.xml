@@ -179,5 +179,46 @@
         #{userId})
  </insert>
 
+
+ <select id="countByMovieId" parameterType="int" resultType="int">
+	    SELECT COUNT(*)
+	    FROM MOVIE
+	    WHERE MOVIE_ID = #{movieId}
+	</select>
+
+   <insert id="insertMovie" parameterType="Movie">
+    INSERT INTO MOVIE(
+          MOVIE_ID
+        , MOVIE_TITLE
+        , CATEGORY
+        , DIRECTOR
+        , ADULT
+        , RELEASE_DATE
+        , POPULARITY
+        , RATING_SCORE
+        , REVIEW_COUNT
+        , LIKE_COUNT
+        , DISLIKE_COUNT
+        , CONTENT
+    )
+    VALUES (
+          #{movieId}
+        , #{movieTitle}
+        , #{category}
+        , #{director}
+        , #{adult}
+        , CASE
+            WHEN #{releaseDateStr} IS NULL OR #{releaseDateStr} = ''
+            THEN NULL
+            ELSE TO_DATE(#{releaseDateStr}, 'YYYY-MM-DD')
+          END
+        , #{popularity}
+        , #{ratingScore}
+        , #{reviewCount}
+        , #{likeCount}
+        , #{dislikeCount}
+        , #{content}
+    )
+	</insert>
 </mapper>
 

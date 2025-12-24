@@ -92,7 +92,7 @@
 			       			</c:when>
 							<c:otherwise>
 			            		 <input type="text" id="movieTitle" class="form-control" name="movieTitle" placeholder="영화를 검색하세요" onclick="openSearchModal()" required>
-       							 <input type="hidden" name="tmdbId" value="${tmdbId}">
+       							 <input type="hidden" name="movieId" value="${movieId}">
 			            	</c:otherwise>
 			        </c:choose>
                 </div>
@@ -272,7 +272,7 @@ function searchMovieAjax() {
 function selectMovie(id, title) {
 
  $("input[name='movieTitle']").val(title);
- $("input[name='tmdbId']").val(id);
+ $("input[name='movieId']").val(id);
  closeSearchModal();
 }
 
