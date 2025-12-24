@@ -161,6 +161,7 @@
             align-items:center;
             justify-content:flex-start;
             margin-top: 8px;
+            flex-wrap:wrap; /* 추가해도 기존 기능 영향 없음(줄바꿈만) */
         }
         #button_area button{
             border:1px solid #e5e7eb;
@@ -260,26 +261,93 @@
             font-weight:900;
             cursor:pointer;
         }
-		#btnLike, #btnDislike{
-		    cursor:pointer !important;
-		    border: 1px solid #e5e7eb;
-		    background:#fff;
-		    transition: all .15s ease;
-		}
-		#btnLike:hover{ background:#ecfeff; border-color:#06b6d4; }
-		#btnDislike:hover{ background:#fff1f2; border-color:#fb7185; }
-		
-		#btnLike.active{
-		    background:#06b6d4;
-		    border-color:#06b6d4;
-		    color:#fff;
-		}
-		#btnDislike.active{
-		    background:#fb7185;
-		    border-color:#fb7185;
-		    color:#fff;
-		}
-        
+        #btnLike, #btnDislike{
+            cursor:pointer !important;
+            border: 1px solid #e5e7eb;
+            background:#fff;
+            transition: all .15s ease;
+        }
+        #btnLike:hover{ background:#ecfeff; border-color:#06b6d4; }
+        #btnDislike:hover{ background:#fff1f2; border-color:#fb7185; }
+
+        #btnLike.active{
+            background:#06b6d4;
+            border-color:#06b6d4;
+            color:#fff;
+        }
+        #btnDislike.active{
+            background:#fb7185;
+            border-color:#fb7185;
+            color:#fff;
+        }
+
+        /* ========================= */
+        /* ⭐ 별점 UI (추가) */
+        /* ========================= */
+        .rating-mini-wrap{
+            display:flex;
+            align-items:center;
+            gap:8px;
+            padding:6px 8px;
+            border:1px solid #e5e7eb;
+            border-radius:12px;
+            background:linear-gradient(180deg,#ffffff,#f8fafc);
+            box-shadow: 0 6px 14px rgba(0,0,0,.06);
+        }
+        .rating-stars{
+            display:flex;
+            align-items:center;
+            gap:2px;
+        }
+        .rating-star{
+            width:22px;
+            height:22px;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            border-radius:8px;
+            border:1px solid #e5e7eb;
+            background:#fff;
+            cursor:pointer;
+            user-select:none;
+            font-size:14px;
+            line-height:1;
+            transition: transform .08s ease, background .12s ease, border-color .12s ease;
+        }
+        .rating-star:hover{
+            transform: translateY(-1px);
+            border-color:#f59e0b;
+            background:#fffbeb;
+        }
+        .rating-star.active{
+            border-color:#f59e0b;
+            background:#f59e0b;
+            color:#fff;
+        }
+        .rating-text{
+            font-size:12px;
+            font-weight:900;
+            color:#111;
+            min-width:44px;
+            text-align:center;
+        }
+        .btnRatingSubmit{
+            border:none !important;
+            background:#111 !important;
+            color:#fff !important;
+            padding:8px 10px !important;
+            border-radius:10px !important;
+            font-weight:900 !important;
+            font-size:12px !important;
+            cursor:pointer !important;
+        }
+        .btnRatingSubmit:hover{
+            opacity:.9;
+        }
+        .btnRatingSubmit:disabled{
+            opacity:.5;
+            cursor:not-allowed !important;
+        }
     </style>
 </head>
 <body>
@@ -342,6 +410,19 @@
                             <button id="btnLike" type="button">👍 좋아요(20)</button>
                             <button id="btnDislike" type="button">👎 싫어요(3)</button>
                             <button id="btnWriteReview" type="button">✍️ 감상문 쓰기</button>
+
+                            <!-- ⭐ 별점 UI 추가: 감상문 버튼 오른쪽 (다른 기능 영향 없음) -->
+                            <div class="rating-mini-wrap" id="ratingWrap">
+                                <div class="rating-stars" id="ratingStars">
+                                    <span class="rating-star" data-score="1">★</span>
+                                    <span class="rating-star" data-score="2">★</span>
+                                    <span class="rating-star" data-score="3">★</span>
+                                    <span class="rating-star" data-score="4">★</span>
+                                    <span class="rating-star" data-score="5">★</span>
+                                </div>
+                                <div class="rating-text" id="ratingText">0/5</div>
+                                <button id="btnRatingSubmit" class="btnRatingSubmit" type="button">별점등록</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -390,7 +471,6 @@
         const LIKE_STATUS_URL = "<c:url value='/like/status.mo'/>";
         const LIKE_TOGGLE_URL = "<c:url value='/like/toggle.mo'/>";
 
-
         let CURRENT_MOVIE_ID = null;
 
         function openModal(tmdbId){
@@ -415,6 +495,9 @@
             loadLikeState(CURRENT_MOVIE_ID);
 
             loadComments(CURRENT_MOVIE_ID);
+
+            // ⭐ 별점 UI 초기화(기존 기능 영향 없음)
+            resetRatingUI();
 
             var url = TMDB_DETAIL_URL + "?tmdbId=" + encodeURIComponent(tmdbId);
 
@@ -527,7 +610,7 @@
                   for(var i=0; i<list.length; i++){
                       var c = list[i];
 
-                      var commentId = c.commentId || c.id || ""; 
+                      var commentId = c.commentId || c.id || "";
                       var userId = c.userId ? c.userId : "익명";
                       var content = c.content ? c.content : "";
                       var dateStr = c.createDate ? String(c.createDate).substring(0,10) : "";
@@ -647,7 +730,6 @@
               .replaceAll("'","&#039;");
         }
 
-
         document.addEventListener("click", function(e){
             const btn = e.target.closest(".btnCommentDelete");
             if(!btn) return;
@@ -677,13 +759,13 @@
                   alert("삭제 실패");
               });
         }
+
         function loadLikeState(movieId){
             fetch(LIKE_STATUS_URL + "?movieId=" + encodeURIComponent(movieId))
               .then(r => r.text())
               .then(txt => {
-                  // txt: "LIKE,3,1" / "DISLIKE,3,1" / ",3,1"
                   const parts = String(txt || "").split(",");
-                  const myChoice = (parts[0] || "").trim(); // LIKE/DISLIKE/""
+                  const myChoice = (parts[0] || "").trim();
                   const likeCount = parseInt(parts[1], 10) || 0;
                   const dislikeCount = parseInt(parts[2], 10) || 0;
                   applyLikeUI(likeCount, dislikeCount, myChoice);
@@ -705,7 +787,6 @@
             if(String(myChoice).toUpperCase() === "LIKE") btnLike.classList.add("active");
             if(String(myChoice).toUpperCase() === "DISLIKE") btnDislike.classList.add("active");
 
-            // 로그인 안 했으면 클릭 막기(보이긴 보이되)
             if(!LOGIN_USER_ID){
                 btnLike.style.opacity = "0.6";
                 btnDislike.style.opacity = "0.6";
@@ -761,6 +842,66 @@
                 alert("처리 실패");
             });
         }
+
+        /* ========================= */
+        /* ⭐ 별점 UI 로직 (추가) */
+        /* ========================= */
+        let RATING_SCORE = 0;
+
+        function resetRatingUI(){
+            RATING_SCORE = 0;
+            const txt = document.getElementById("ratingText");
+            if(txt) txt.innerText = "0/5";
+
+            document.querySelectorAll("#ratingStars .rating-star").forEach(s=>{
+                s.classList.remove("active");
+            });
+
+            const btn = document.getElementById("btnRatingSubmit");
+            if(btn){
+                btn.disabled = !LOGIN_USER_ID;
+                btn.textContent = "별점등록";
+            }
+        }
+
+        // 별 클릭(선택)
+        document.querySelectorAll("#ratingStars .rating-star").forEach(star=>{
+            star.addEventListener("click", ()=>{
+                if(!LOGIN_USER_ID){
+                    alert("로그인 후 이용 가능합니다.");
+                    return;
+                }
+                RATING_SCORE = parseInt(star.dataset.score, 10) || 0;
+
+                document.querySelectorAll("#ratingStars .rating-star").forEach(s=>{
+                    const v = parseInt(s.dataset.score, 10) || 0;
+                    s.classList.toggle("active", v <= RATING_SCORE);
+                });
+
+                const txt = document.getElementById("ratingText");
+                if(txt) txt.innerText = RATING_SCORE + "/5";
+            });
+        });
+
+        // 별점등록 버튼(확정) - 아직 서버 연동 X (다른 기능 영향 없음)
+        document.getElementById("btnRatingSubmit")?.addEventListener("click", ()=>{
+            if(!LOGIN_USER_ID){
+                alert("로그인 후 이용 가능합니다.");
+                return;
+            }
+            if(!CURRENT_MOVIE_ID){
+                alert("영화 ID가 없습니다");
+                return;
+            }
+            if(RATING_SCORE <= 0){
+                alert("별점을 선택하세요");
+                return;
+            }
+
+            // 서버 아직 안 붙임 → 콘솔/알림만
+            alert("별점 " + RATING_SCORE + "점 등록(서버 연동 전)");
+            console.log("RATING_SUBMIT", { movieId: CURRENT_MOVIE_ID, score: RATING_SCORE });
+        });
     </script>
 </body>
 </html>
