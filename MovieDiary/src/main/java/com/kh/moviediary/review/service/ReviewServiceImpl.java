@@ -4,6 +4,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.moviediary.movie.vo.Movie;
 import com.kh.moviediary.review.dao.ReviewDao;
 import com.kh.moviediary.review.model.vo.Review;
 
@@ -44,6 +45,16 @@ public class ReviewServiceImpl implements ReviewService{
 	@Override
 	public int reviewDelete(int rno) {
 		return dao.reviewDelete(rno,sqlSession);
+	}
+
+	public int countByMovieId(int movieId) {
+
+		return dao.countByMovieId(movieId,sqlSession);
+	}
+
+	public int insertMovie(Movie m) {
+		
+		return dao.insertMovie(m,sqlSession);
 	}
 
 	

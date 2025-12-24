@@ -145,11 +145,11 @@
                 </tr>
                 <tr>
                     <th>조회수</th>
-                    <td>${review.viewCount}</td>
-                    <c:if test="${not empty review.updateDate}">
-                    <th>수정일</th>
-                    <td>${review.updateDate}</td>
-                    </c:if>
+					<td>${review.viewCount}</td>
+				<th>수정일</th>
+					<td>
+					    <c:out value="${review.updateDate}" default="-" />
+					</td>
                 </tr>
                 <tr>
                     <th>내용</th>

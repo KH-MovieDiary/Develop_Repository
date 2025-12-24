@@ -1,5 +1,6 @@
 package com.kh.moviediary.review.service;
 
+import com.kh.moviediary.movie.vo.Movie;
 import com.kh.moviediary.review.model.vo.Review;
 
 public interface ReviewService {
@@ -13,6 +14,10 @@ public interface ReviewService {
 	int reviewUpdate(Review r);
 
 	int reviewDelete(int rno);
+
+	int countByMovieId(int movieId);
+
+	int insertMovie(Movie m);
 
 	
 
