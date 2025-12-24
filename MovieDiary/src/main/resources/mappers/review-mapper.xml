@@ -154,6 +154,7 @@
  
  <select id="selectList" parameterType="int" resultType="ReviewComment">
  	SELECT NICKNAME
+ 		  ,REVIEW_COMMENT_ID
  		  ,RC.CONTENT
  		  ,RC.CREATE_DATE
  		  ,RC.USER_ID "USER_ID"
@@ -163,7 +164,7 @@
  	JOIN MEMBER M ON(RC.USER_ID=M.USER_ID)
  	JOIN REVIEW R USING(REVIEW_ID)
  	WHERE REVIEW_ID = #{reviewId}
- 	ORDER BY R.CREATE_DATE DESC
+ 	ORDER BY RC.CREATE_DATE DESC
  </select>
    
  <insert id="insertReply" parameterType="ReviewComment">
@@ -226,5 +227,11 @@
         , #{content}
     )
 	</insert>
+	
+	<delete id="deleteReply" parameterType="_int">
+		DELETE FROM REVIEW_COMMENT
+		WHERE REVIEW_COMMENT_ID = #{value}
+	</delete>
+	
 </mapper>
 

@@ -184,5 +184,33 @@
 		ORDER BY R.CREATE_DATE DESC
 		FETCH FIRST 5 ROWS ONLY
 	</select>
+	 <select id="exists" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM COMMENT_LIKE
+        WHERE COMMENT_ID = #{commentId}
+          AND USER_ID = #{userId}
+    </select>
 
+    <select id="countLikes" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM COMMENT_LIKE
+        WHERE COMMENT_ID = #{commentId}
+    </select>
+
+    <insert id="commenInsertLike" parameterType="map">
+        INSERT INTO COMMENT_LIKE (COMMENT_ID, USER_ID, LIKE_TYPE)
+        VALUES (#{commentId}, #{userId}, 1)
+    </insert>
+
+    <delete id="commentDeleteLike" parameterType="map">
+        DELETE FROM COMMENT_LIKE
+        WHERE COMMENT_ID = #{commentId}
+          AND USER_ID = #{userId}
+    </delete>
+
+    <update id="updateCommentLikeCount" parameterType="map">
+        UPDATE MOVIE_COMMENT
+        SET LIKE_COUNT = #{likeCount}
+        WHERE COMMENT_ID = #{commentId}
+    </update>
 </mapper>

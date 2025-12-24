@@ -18,4 +18,8 @@ public class ReviewCommentDao {
 		return sqlSession.selectList("reviewMapper.selectList",reviewId);
 	}
 
+	public int deleteReply(SqlSessionTemplate sqlSession, int rcId) {
+		return sqlSession.delete("reviewMapper.deleteReply",rcId);
+	}
+
 }

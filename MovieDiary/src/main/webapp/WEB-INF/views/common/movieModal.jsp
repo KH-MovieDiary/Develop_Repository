@@ -691,6 +691,43 @@
 		        flex-wrap: wrap;
 		    }
 		}
+		
+		.review-actions .btnCommentLike{
+		    cursor: pointer !important;          
+		    opacity: 1 !important;
+		    border: 1px solid rgba(0,0,0,.10) !important;
+		    background: rgba(255,255,255,.90) !important;
+		    box-shadow: 0 10px 18px rgba(2,6,23,.06) !important;
+		    transition: transform .12s ease, border-color .12s ease, background .12s ease, box-shadow .12s ease, opacity .12s ease;
+		}
+		
+		.review-actions .btnCommentLike:hover{
+		    transform: translateY(-1px);
+		    border-color: rgba(6,182,212,.35) !important;
+		    background: rgba(236,254,255,.95) !important;
+		    box-shadow: 0 18px 36px rgba(2,6,23,.08) !important;
+		}
+		
+		.review-actions .btnCommentLike.active{
+		    background: linear-gradient(180deg,#06b6d4,#0891b2) !important;
+		    border-color: #06b6d4 !important;
+		    color: #fff !important;
+		    box-shadow: 0 18px 40px rgba(6,182,212,.22) !important;
+		}
+		
+		
+		.review-actions .btnCommentLike.active:hover{
+		    transform: translateY(-1px);
+		    filter: brightness(1.02);
+		}
+		
+		
+		.review-actions .btnCommentLike.disabled{
+		    opacity: .55 !important;
+		    cursor: not-allowed !important;
+		    filter: grayscale(.15);
+		}
+		
     </style>
 </head>
 <body>
@@ -823,6 +860,10 @@
 
     const RATING_STATUS_URL = "<c:url value='/rating/status.mo'/>";
     const RATING_UPSERT_URL = "<c:url value='/rating/upsert.mo'/>";
+    
+    const COMMENT_LIKE_STATUS_URL = "<c:url value='/commentLike/status.mo'/>";
+    const COMMENT_LIKE_TOGGLE_URL = "<c:url value='/commentLike/toggle.mo'/>";
+
 
     let CURRENT_MOVIE_ID = null;
 
@@ -989,7 +1030,7 @@
                     + "  </div>"
                     + "  <div class='review-content'>" + escapeHtml(content) + "</div>"
                     + "  <div class='review-actions'>"
-                    + "    <button type='button' disabled>👍 좋아요</button>"
+                    + "    <button type='button' class='btnCommentLike' data-comment-id='" + escapeHtml(commentId) + "'>👍 좋아요(" + (c.likeCount ? c.likeCount : 0) + ")</button>"
                     +      deleteBtnHtml
                     + "  </div>"
                     + "</div>";
@@ -1000,6 +1041,7 @@
               }
 
               document.getElementById("commentList").innerHTML = html;
+              hydrateCommentLikeButtons();
           })
           .catch(err => {
               console.error(err);
@@ -1337,6 +1379,80 @@
             alert("처리 실패");
         });
     });
+    function hydrateCommentLikeButtons(){
+        const btns = document.querySelectorAll(".btnCommentLike");
+        btns.forEach(btn => {
+            const commentId = btn.dataset.commentId;
+            if(!commentId) return;
+            loadCommentLikeState(commentId, btn);
+        });
+    }
+
+    function loadCommentLikeState(commentId, btn){
+        fetch(COMMENT_LIKE_STATUS_URL + "?commentId=" + encodeURIComponent(commentId))
+          .then(r => r.text())
+          .then(txt => {
+              const parts = String(txt || "").split(",");
+              const myChoice = (parts[0] || "").trim();
+              const likeCount = parseInt(parts[1], 10) || 0;
+
+              btn.textContent = "👍 좋아요(" + likeCount + ")";
+              btn.classList.remove("active");
+              if(String(myChoice).toUpperCase() === "LIKE") btn.classList.add("active");
+
+              if(!LOGIN_USER_ID){
+                  btn.style.opacity = "0.6";
+              }else{
+                  btn.style.opacity = "1";
+              }
+          })
+          .catch(e => console.error(e));
+    }
+
+    document.addEventListener("click", function(e){
+        const btn = e.target.closest(".btnCommentLike");
+        if(!btn) return;
+
+        const commentId = btn.dataset.commentId;
+        if(!commentId) return;
+
+        if(!LOGIN_USER_ID){
+            alert("로그인 후 이용 가능합니다.");
+            return;
+        }
+
+        toggleCommentLike(commentId, btn);
+    });
+
+    function toggleCommentLike(commentId, btn){
+        const params = new URLSearchParams();
+        params.append("commentId", commentId);
+
+        fetch(COMMENT_LIKE_TOGGLE_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
+            body: params.toString()
+        })
+        .then(r => r.text())
+        .then(txt => {
+            if(txt === "LOGIN"){
+                alert("로그인 후 이용 가능합니다.");
+                return;
+            }
+            const parts = String(txt || "").split(",");
+            const myChoice = (parts[0] || "").trim();
+            const likeCount = parseInt(parts[1], 10) || 0;
+
+            btn.textContent = "👍 좋아요(" + likeCount + ")";
+            btn.classList.remove("active");
+            if(String(myChoice).toUpperCase() === "LIKE") btn.classList.add("active");
+        })
+        .catch(e => {
+            console.error(e);
+            alert("처리 실패");
+        });
+    }
+
 </script>
 
 </body>

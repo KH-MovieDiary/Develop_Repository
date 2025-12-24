@@ -34,9 +34,18 @@ public class ReviewController {
 	@GetMapping("/insert.review")
 	public String reviewInsertForm(@RequestParam(value="movieTitle", required=false) String movieTitle,
 								   @RequestParam(value="tmdbId", required=false) String movieId,
+								   HttpSession session,
+								   HttpServletRequest request,
 								   Model model){
 		
-	
+		Member loginUser = (Member) session.getAttribute("loginUser");
+		
+        if(loginUser == null) {
+            session.setAttribute("alertMsg", "로그인 후 이용가능합니다.");
+            String referer = request.getHeader("Referer"); 
+            return "redirect:" + referer ; 
+        }
+        
 		if(movieTitle != null && movieId != null) {
 			model.addAttribute("movieTitle",movieTitle);
 			model.addAttribute("movieId",movieId);
