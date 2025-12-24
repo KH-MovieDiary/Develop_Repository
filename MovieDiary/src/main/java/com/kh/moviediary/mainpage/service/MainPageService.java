@@ -1,5 +1,13 @@
 package com.kh.moviediary.mainpage.service;
 
-public class MainPageService {
+import java.util.List;
+
+
+import com.kh.moviediary.review.model.vo.Review;
+
+
+public interface MainPageService {
+
+	List<Review> reviewGet();
 
 }

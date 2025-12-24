@@ -281,7 +281,6 @@
             color:#fff;
         }
 
-        /* ⭐ 별점 UI */
         .rating-mini-wrap{
             display:flex;
             align-items:center;
@@ -491,7 +490,6 @@
     const LIKE_STATUS_URL = "<c:url value='/like/status.mo'/>";
     const LIKE_TOGGLE_URL = "<c:url value='/like/toggle.mo'/>";
 
-    /* ✅ 별점 API (서버 연동) */
     const RATING_STATUS_URL = "<c:url value='/rating/status.mo'/>";
     const RATING_UPSERT_URL = "<c:url value='/rating/upsert.mo'/>";
 
@@ -520,7 +518,6 @@
         loadLikeState(CURRENT_MOVIE_ID);
         loadComments(CURRENT_MOVIE_ID);
 
-        /* ✅ 별점: 초기화 + 상태 로딩 */
         resetRatingUI();
         loadRatingStatus(CURRENT_MOVIE_ID);
 
@@ -871,9 +868,6 @@
         });
     }
 
-    /* ========================= */
-    /* ⭐ 별점 UI + 서버 연동 */
-    /* ========================= */
     let RATING_SCORE = 0;
 
     function resetRatingUI(){
@@ -899,7 +893,6 @@
         });
     }
 
-    /* ✅ status 응답: "avg,count,myScore" (text/plain) */
     function loadRatingStatus(movieId){
         if(!movieId) return;
 
@@ -909,7 +902,7 @@
             + "&userId=" + encodeURIComponent(LOGIN_USER_ID || "");
 
         fetch(url)
-          .then(r => r.text())   // ✅ text로 받아야 함
+          .then(r => r.text())    
           .then(txt => {
               const parts = String(txt || "").split(",");
               const avg = parseFloat(parts[0]) || 0;
@@ -930,7 +923,6 @@
           .catch(e => console.error(e));
     }
 
-    // 별 클릭
     document.querySelectorAll("#ratingStars .rating-star").forEach(star=>{
         star.addEventListener("click", ()=>{
             if(!LOGIN_USER_ID){
@@ -943,7 +935,6 @@
         });
     });
 
-    /* ✅ upsert 응답: "avg,count,myScore" 또는 "LOGIN"/"BAD" (text/plain) */
     document.getElementById("btnRatingSubmit")?.addEventListener("click", ()=>{
         if(!LOGIN_USER_ID){
             alert("로그인 후 이용 가능합니다.");
@@ -960,7 +951,7 @@
 
         const params = new URLSearchParams();
         params.append("movieId", CURRENT_MOVIE_ID);
-        params.append("userId", LOGIN_USER_ID); // ✅ 컨트롤러가 userId 받음
+        params.append("userId", LOGIN_USER_ID); 
         params.append("score", RATING_SCORE);
 
         const btn = document.getElementById("btnRatingSubmit");
@@ -974,7 +965,7 @@
             headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
             body: params.toString()
         })
-        .then(r => r.text()) // ✅ text
+        .then(r => r.text()) 
         .then(txt => {
             if(btn){
                 btn.disabled = false;
@@ -990,7 +981,6 @@
                 return;
             }
 
-            // txt: "avg,count,myScore"
             const parts = String(txt || "").split(",");
             const avg = parseFloat(parts[0]) || 0;
             const count = parseInt(parts[1], 10) || 0;

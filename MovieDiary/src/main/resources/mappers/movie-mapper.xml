@@ -168,4 +168,21 @@
         VALUES (SEQ_RANO.NEXTVAL, S.MOVIE_ID, S.USER_ID, S.SCORE, SYSDATE)
 </update>
 
+	<select id="reviewGet" resultType="com.kh.moviediary.review.model.vo.Review">
+		    SELECT
+		  R.REVIEW_TITLE AS reviewTitle,
+		  R.CONTENT      AS content,
+		  R.VIEW_COUNT   AS viewCount,
+		  R.LIKE_COUNT   AS likeCount,
+		  R.CREATE_DATE  AS createDate,
+		  R.USER_ID      AS userId,
+		  M.NICKNAME     AS nickname,
+		  M.MOVIE_TITLE  AS movieTitle
+		FROM REVIEW R
+		JOIN MOVIE M ON M.MOVIE_ID = R.MOVIE_ID
+		LEFT JOIN MEMBER M ON M.USER_ID = R.USER_ID
+		ORDER BY R.CREATE_DATE DESC
+		FETCH FIRST 5 ROWS ONLY
+	</select>
+
 </mapper>

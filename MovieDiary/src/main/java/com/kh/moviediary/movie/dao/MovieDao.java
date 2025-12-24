@@ -9,7 +9,6 @@ import com.kh.moviediary.movie.vo.Movie;
 public class MovieDao {
 	
 	public int insertMovie(SqlSessionTemplate sqlSession, Movie movie) {
-		System.out.println("insertMovie");
 		return sqlSession.insert("movieMapper.insertMovie", movie);
 	}
 	public int insertMovieIfNotExists(SqlSessionTemplate sqlSession, int movieId) {
