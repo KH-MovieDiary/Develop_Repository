@@ -32,10 +32,10 @@
         .innerOuter {
             width: 100%;
             padding: 50px 60px;
-            background-color: #ffffff;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            border-radius: 20px;
-            border: none;
+            border-radius: 18px;
+            border: 1px solid var;
+            background: rgba(255,255,255,0.05);
+            box-shadow: 0 18px 60px rgba(0,0,0,0.25);
         }
         
         .comment-area{
@@ -111,15 +111,55 @@
 		    border-bottom: 1px solid lightgrey;
 		}
 		
-		.btn-area {
-  		position: relative; 
+	.btn-area{
+        position: relative; 
         display: flex;
-        justify-content: center;
         align-items: center;
         width: 100%;
         height: 50px;    
-        margin-top: 30px;
-        gap: 15px;           
+        margin-top: 30px;   
+        justify-content: space-between;     
+    }
+    
+    .right-btns {
+        display: flex;
+        gap: 15px;
+    }
+    
+    .btn-area button {
+        padding: 10px 30px;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+        
+        background: linear-gradient(180deg, rgba(255,255,255,.95), rgba(248,250,252,.95));
+        border: 1px solid rgba(0,0,0,.08);
+        box-shadow: 0 12px 24px rgba(2,6,23,.06);
+        transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease, opacity .12s ease;
+    }
+    
+    .btn-area button:hover {
+        transform: translateY(-1px);
+        border-color: rgba(125,211,252,0.35);
+        box-shadow: 0 18px 36px rgba(2,6,23,.08);
+    }
+    
+    .btn-area button:active {
+        transform: translateY(0) scale(.99);
+    }
+    
+    .submit {
+        background: linear-gradient(180deg,#06b6d4,#0891b2) !important;
+        border-color: #06b6d4 !important;
+        color: #fff !important;
+        box-shadow: 0 18px 40px rgba(6,182,212,.22);
+    }
+    
+    .reset {
+        background: linear-gradient(180deg,#fb7185,#ef4444) !important;
+        border-color: #fb7185 !important;
+        color: #fff !important;
+        box-shadow: 0 18px 40px rgba(251,113,133,.22);
     }
 		
     #likeBtn {
@@ -136,9 +176,7 @@
         align-items: center;
         gap: 5px;
         outline: none; 
-        
-        position: absolute; 
-        left: 0;
+
     }
 
     #likeBtn:hover {
@@ -210,19 +248,18 @@
                 </tr>
             </table>
 				
-	         <div class="btn-area">
-	              <c:if test="${review.userId eq loginUser.userId }">
-	              <button type="button" id="updateBtn" class="btn">수정하기</button>
-	              <button type="button" id= "deleteBtn" class="btn">삭제하기</button>
-	         </c:if>
-	                    
+	         <div class="btn-area">          
 				   <button type="button" id="likeBtn" class="${likeYn == 'Y' ? 'y' : ''}">
 				   <span class="heart-icon">♥</span> <span id="likeCount">${review.likeCount }</span>
-					</button>
+				   </button>
+				   
+				   <div class="right-btns">
+				        <c:if test="${review.userId eq loginUser.userId }">
+				            <button type="button" id="updateBtn" class="submit">수정하기</button>
+				            <button type="button" id="deleteBtn" class="reset">삭제하기</button>
+				        </c:if>
+				   </div>
 	         </div>
-				
-				
-				
 				
 				<input type="hidden" id="rno" value="${review.reviewId }">
 				<input type="hidden" id="uid" value="${loginUser.userId }">
