@@ -107,8 +107,53 @@
 		    border-bottom: 1px solid lightgrey;
 		}
 		
+		.btn-area {
+  		position: relative; 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 50px;    
+        margin-top: 30px;
+        gap: 15px;           
+    }
+		
+    #likeBtn {
+        background-color: white; 
+        border: 2px solid #ddd;  
+        color: #888;             
+        padding: 10px 20px;      
+        border-radius: 30px; 
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        outline: none; 
+        
+        position: absolute; 
+        left: 0;
+    }
 
-    </style>
+    #likeBtn:hover {
+        background-color: #f9f9f9;
+        border-color: #ccc;
+    }
+
+    #likeBtn.y {
+        border-color: #ff4757; 
+        color: #ff4757;        
+        background-color: #fff0f1; 
+    }
+    
+    #likeBtn.y .heart-icon {
+        transform: scale(1.1); 
+        display: inline-block;
+    }
+</style>
+
 </head>
 <body>
 	
@@ -161,23 +206,21 @@
                 </tr>
             </table>
 				
-				<c:if test="${review.userId eq loginUser.userId }">
-	                <div class="btn-area">
-	                    <button type="button" id="updateBtn" class="btn">수정하기</button>
-	                    <button type="button" id= "deleteBtn" class="btn">삭제하기</button>
-	                </div>
-				</c:if>
+	         <div class="btn-area">
+	              <c:if test="${review.userId eq loginUser.userId }">
+	              <button type="button" id="updateBtn" class="btn">수정하기</button>
+	              <button type="button" id= "deleteBtn" class="btn">삭제하기</button>
+	         </c:if>
+	                    
+	              <c:if test= "${not empty loginUser }">
+				   <button type="button" id="likeBtn" class="${likeYn == 'Y' ? 'y' : ''}">
+				    <span class="heart-icon">♥</span> <span id="likeCount">${review.likeCount }</span>
+					</button>
+				  </c:if>
+	         </div>
 				
-				<c:if test= "${not empty loginUser }">
-					<button type="button" id="likeBtn" class="${likeYn == 'Y' ? 'y' : ''}">좋아요</button><br>
-					<style>
-						.y {
-      						 color: red;
-      						 font-weight: bold;
-      						}
-					</style>
-				</c:if>
-				좋아요 수 : <span id="likeCount">${review.likeCount }</span>
+				
+				
 				
 				<input type="hidden" id="rno" value="${review.reviewId }">
 				<input type="hidden" id="uid" value="${loginUser.userId }">

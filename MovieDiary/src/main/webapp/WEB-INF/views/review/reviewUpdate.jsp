@@ -64,6 +64,19 @@
             border-color: #ff9fb3;
             box-shadow: 0 0 0 3px rgba(255, 143, 171, 0.2);
         }
+        
+       .btn-area {
+  		position: relative; 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 50px;    
+        margin-top: 30px;
+        gap: 15px;           
+    }
+        
+    
     </style>
 </head>
 <body>
@@ -78,12 +91,13 @@
    				<input type="hidden" name="reviewId" value="${review.reviewId }">
                 	<div class="form-group">
                     <label for="movieTitle">감상문 제목</label>
-                    <textarea id="reviewTitle" class="form-control" row="1" name="reviewTitle"  style="resize:none";>${review.reviewTitle}</textarea>
+                    <input type="text" id="reviewTitle" class="form-control" name ="reviewTitle" style="resize:none" value="${review.reviewTitle}">	
                 </div>
                 
                 <div class="form-group">
                     <label for="writer">작성자</label>
-                    <input type="text" id="writer" class="form-control" value="${review.userId}" name="userId" readonly>
+                    <input type="text" id="writer" class="form-control" value="${review.nickname}" readonly>			
+					<input type="hidden" name="userId" value="${review.userId}">
                 </div>
 
                 <div class="form-group">
@@ -92,8 +106,8 @@
                 </div>
 
                 <div class="btn-area">
-                    <button type="submit" class="btn btn-pink">수정하기</button>
-                    <button type="reset" class="btn btn-gray">취소하기</button>
+                    <button type="submit" class="">수정하기</button>
+                    <button type="reset" class="" onclick="javascript:history.go(-1);">취소하기</button>
                 </div>
 
             </form>
