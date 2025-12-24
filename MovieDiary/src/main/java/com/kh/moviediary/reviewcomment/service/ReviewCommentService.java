@@ -10,4 +10,6 @@ public interface ReviewCommentService {
 
 	List<ReviewComment> selectList(int reviewId);
 
+	int deleteReply(int rcId);
+
 }

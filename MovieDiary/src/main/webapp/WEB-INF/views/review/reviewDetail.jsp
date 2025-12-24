@@ -85,12 +85,16 @@
 		    white-space: pre-wrap;
 		}
 		
+		.replyArea tbody td:nth-child(3) {
+			width: 120px;
+			text-align: right;
+		    border-radius: 6px;
+		    line-height: 1.5;
+		    white-space: pre-wrap;
+		}
+		
 		.replyArea tbody td:last-child {
-		    width: 120px;
-		    font-size: 12px;
-		    color: #999;
-		    text-align: right;
-		    white-space: nowrap;
+			width:40px;
 		    padding: 0;
 		}
 		
@@ -231,7 +235,7 @@
 						<th>
 							댓글(<span id="rCount"></span>)
 						</th>
-						<th>
+						<th colspan="2">
 							<c:choose>
 								
 								<c:when	test="${empty loginUser}">
@@ -333,7 +337,7 @@
     });
     	
     	
-		function replyList(){
+function replyList(){
     		
 			$.ajax({
 				
@@ -367,6 +371,22 @@
 							tr.append($("<td>").text(r.nickname)
 									 ,$("<td>").text(content)
 									 ,$("<td>").text(r.createDate));
+							
+							if(loginId !== "" && r.userId === loginId){
+
+		                        let delBtn = $("<button>")
+		                            .addClass("delBtn")
+		                            .text("삭제")
+		                            .data("rcno", r.reviewCommentId);
+
+		                        tr.append(
+		                            $("<td>").append(delBtn)
+		                        );
+
+		                    } else {
+		                        tr.append($("<td>")); // 버튼 없는 자리 맞추기
+		                    }
+							
 							$(".replyArea tbody").append(tr);
 						}
 						$("#rCount").text(list.length);
@@ -407,6 +427,32 @@
     			});
     		});
     	});
+		
+		$(function(){
+			$(document).on("click", ".delBtn", function () {
+
+			    if (!confirm("댓글을 삭제하시겠습니까?")) return;
+
+			    const rcno = $(this).data("rcno");
+
+			    $.ajax({
+			        url: "deleteReply.re",
+			        data: { rcId : rcno },
+			        success: function (result) {
+			        	if(result>0){
+			        		alert("댓글이 삭제되었습니다.");
+			            	replyList();
+			        	}else{
+			        		alert("댓글 삭제 실패");
+			        	}
+			        },
+			        error: function(){
+			        	console.log(rcId);
+			        	alert("댓글 삭제 실패");
+			        }
+			    });
+			});
+		});
     </script>
     
     <jsp:include page="/WEB-INF/views/common/footer.jsp" />
