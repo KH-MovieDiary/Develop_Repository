@@ -205,7 +205,7 @@
 	                <%-- ✅ 로그인 후 --%>
 	                <c:otherwise>
 	                    <label>${loginUser.nickName}님 환영합니다</label>
-	                    <a href="${contextRoot }/websocket/noteHandler">쪽지함</a>
+	                    <a href="${contextRoot }/websocket/noteList">쪽지함</a>
 	                    <a href="${contextRoot }/logout.me">로그아웃</a>
 	                </c:otherwise>
 	            </c:choose>
@@ -263,6 +263,7 @@
 		</script>
 		<c:remove var="alertMsg" scope="session" />
 	</c:if>
+	
 	
 </body>
 </html>

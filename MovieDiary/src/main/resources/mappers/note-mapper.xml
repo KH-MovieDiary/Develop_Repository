@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="noteMapper">
+
+	<resultMap id="noteResultSet" type="Note">
+        <id column="NOTE_NO" property="noteNo"/>
+        <result column="SEND_ID" property="sendId"/>
+        <result column="RECEIVE_ID" property="receiveId"/>
+        <result column="NCONTENT" property="nContent"/>
+        <result column="CREATE_DATE" property="createDate"/>
+        <result column="STATUS" property="status"/>
+    </resultMap>
+
+	<insert id="insertNote">
+	    INSERT INTO NOTE (
+ 				  NOTE_NO
+ 				, SEND_ID
+ 				, RECEIVE_ID
+ 				, NCONTENT
+ 				, STATUS)
+	    VALUES (SEQ_NNO.NEXTVAL
+	    	, #{sendId}
+	    	, #{receiveId}
+	    	, #{nContent}
+	    	, 'Y')
+	</insert>
+	
+	
+</mapper>

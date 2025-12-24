@@ -6,17 +6,17 @@
  <mapper namespace="reviewMapper">
  
  <insert id="reviewInsert" parameterType="Review">
- 	INSERT INTO REVIEW
- 	VALUES(SEQ_RENO.NEXTVAL
- 		   ,#{content}
- 		   ,SYSDATE
- 		   ,NULL
- 		   ,0
- 		   ,0
- 		   ,#{movieId}
-		   ,#{userId}
-		   ,#{reviewTitle}
-		   )
+ 	INSERT INTO REVIEW (
+        REVIEW_ID, CONTENT, CREATE_DATE,  VIEW_COUNT, LIKE_COUNT, MOVIE_ID,  USER_ID,  REVIEW_TITLE) 
+    VALUES (
+        SEQ_RENO.NEXTVAL,
+        #{content},
+        SYSDATE,
+        0,
+        0,
+        #{movieId},
+        #{userId},
+        #{reviewTitle})
  </insert>
  
  <update id="increaseCount">

@@ -42,7 +42,10 @@ public class ReviewController {
 	
 	@PostMapping("/insert.review")
 	public String reviewInsert(Review r, HttpSession session) {
+		System.out.println("등록하려는 영화 번호: " + r.getMovieId());
+		
 		int result = service.reviewInsert(r);
+		
 		
 		if(result>0) {
 			session.setAttribute("alertMsg","성공적으로 작성되었습니다!");
