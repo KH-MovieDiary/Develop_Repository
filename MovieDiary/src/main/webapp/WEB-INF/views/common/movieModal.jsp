@@ -433,6 +433,7 @@
                   var ctx = "${pageContext.request.contextPath}";
                   btn.setAttribute("onclick","location.href='" + ctx + "/insert.review?movieTitle=" + encodeURIComponent(title) + "&tmdbId=" +parseInt(tmdbId) + "'");
 
+               
                   document.getElementById("modalReleaseDate").innerText = data.release_date || "-";
 
                   document.getElementById("modalPopularity").innerText =
