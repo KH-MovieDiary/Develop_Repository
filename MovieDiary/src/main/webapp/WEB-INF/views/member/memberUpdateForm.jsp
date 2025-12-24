@@ -34,7 +34,26 @@
         display: flex;
         align-items: center;
         gap: 10px;
+        width : 100%;
     }
+    
+    /* 버튼과 함께 있는 인풋의 너비 조절 */
+	.id-wrapper .form-control {
+	    flex: 1; /* 버튼을 제외한 나머지 공간을 모두 차지 */
+	}
+	
+	/* 버튼 너비 고정 (너비가 들쭉날쭉하지 않게) */
+	.id-wrapper .custom-btn {
+	    width: 110px; /* 모든 확인 버튼 너비 통일 */
+	    flex-shrink: 0; /* 너비가 줄어들지 않게 설정 */
+	}
+	
+	/* 일반 단독 인풋(생년월일, 비밀번호 등) */
+	.form-group > .form-control {
+	    width: 100%; 
+	    box-sizing: border-box; /* 패딩 포함 너비 계산 */
+	}
+
     #inputId {
         flex: 1;
         max-width: 75%; /* 버튼 공간 확보를 위해 너비 조절 */
@@ -186,12 +205,7 @@
 	    font-weight: 600;
 	    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
 	}
-    
-    
-    
-    
-    
-
+ 
     /* 6. 프로필 사진 및 파일 선택 */
     #titleImgArea {
         width: 150px;
@@ -265,7 +279,7 @@
 	
 	<div class="content">
 		<div class="innerOuter">
-			<h2>회원가입</h2>
+			<h2>회원정보수정</h2>
 			<br>
 			
 			<form action="update.me" method="post" enctype="multipart/form-data">
@@ -317,28 +331,24 @@
 					<br>
 				        
 			        <div class="form-group">
-				    <label>선호 장르 (최대 5개 선택 가능)</label>
-				    <div class="genre-grid">
-				        <input type="checkbox" name="favoriteGenre" id="family" value="10751" ${fn:contains(loginUser.favoriteGenre, '10751') ? 'checked' : ''}><label for="family">가족</label>
-				        <input type="checkbox" name="favoriteGenre" id="horror" value="27" ${fn:contains(loginUser.favoriteGenre, '27') ? 'checked' : ''}><label for="horror">공포</label>
-				        <input type="checkbox" name="favoriteGenre" id="mystery" value="9648" ${fn:contains(loginUser.favoriteGenre, '9648') ? 'checked' : ''}><label for="mystery">미스터리</label>
-				        <input type="checkbox" name="favoriteGenre" id="adventure" value="12" ${fn:contains(loginUser.favoriteGenre, '12') ? 'checked' : ''}><label for="adventure">모험</label>
-				        <input type="checkbox" name="favoriteGenre" id="music" value="10402" ${fn:contains(loginUser.favoriteGenre, '10402') ? 'checked' : ''}><label for="music">음악</label>
-				        <input type="checkbox" name="favoriteGenre" id="tvMovie" value="10770" ${fn:contains(loginUser.favoriteGenre, '10770') ? 'checked' : ''}><label for="tvMovie">TV영화</label>
-				        <input type="checkbox" name="favoriteGenre" id="documentary" value="99" ${fn:contains(loginUser.favoriteGenre, '99') ? 'checked' : ''}><label for="documentary">다큐멘터리</label>
-				        <input type="checkbox" name="favoriteGenre" id="drama" value="18" ${fn:contains(loginUser.favoriteGenre, '18') ? 'checked' : ''}><label for="drama">드라마</label>
-				        <input type="checkbox" name="favoriteGenre" id="romance" value="10749" ${fn:contains(loginUser.favoriteGenre, '10749') ? 'checked' : ''}><label for="romance">로맨스</label>
-				        <input type="checkbox" name="favoriteGenre" id="crime" value="80" ${fn:contains(loginUser.favoriteGenre, '80') ? 'checked' : ''}><label for="crime">범죄</label>
-				        <input type="checkbox" name="favoriteGenre" id="war" value="10752" ${fn:contains(loginUser.favoriteGenre, '10752') ? 'checked' : ''}><label for="war">전쟁</label>
-				        <input type="checkbox" name="favoriteGenre" id="history" value="36" ${fn:contains(loginUser.favoriteGenre, '36') ? 'checked' : ''}><label for="history">역사</label>
-				        <input type="checkbox" name="favoriteGenre" id="western" value="37" ${fn:contains(loginUser.favoriteGenre, '37') ? 'checked' : ''}><label for="western">서부</label>
-				        <input type="checkbox" name="favoriteGenre" id="thriller" value="53" ${fn:contains(loginUser.favoriteGenre, '53') ? 'checked' : ''}><label for="thriller">스릴러</label>
-				        <input type="checkbox" name="favoriteGenre" id="sf" value="878" ${fn:contains(loginUser.favoriteGenre, '878') ? 'checked' : ''}><label for="sf">SF</label>
-				        <input type="checkbox" name="favoriteGenre" id="animation" value="16" ${fn:contains(loginUser.favoriteGenre, '16') ? 'checked' : ''}><label for="animation">애니메이션</label>
-				        <input type="checkbox" name="favoriteGenre" id="comedy" value="35" ${fn:contains(loginUser.favoriteGenre, '35') ? 'checked' : ''}><label for="comedy">코미디</label>
-				        <input type="checkbox" name="favoriteGenre" id="fantasy" value="14" ${fn:contains(loginUser.favoriteGenre, '14') ? 'checked' : ''}><label for="fantasy">판타지</label>
-				    </div>
-				</div>
+					    <label>선호 장르 (최대 5개 선택 가능)</label>
+					    <div class="genre-grid">
+					        <c:set var="allGenres" value="가족:10751,공포:27,미스터리:9648,모험:12,음악:10402,TV영화:10770,다큐멘터리:99,드라마:18,로맨스:10749,범죄:80,전쟁:10752,역사:36,서부:37,스릴러:53,SF:878,애니메이션:16,코미디:35,판타지:14" />
+					        
+					        <c:forTokens items="${allGenres}" delims="," var="genreItem">
+					            <c:set var="g" value="${fn:split(genreItem, ':')}" /> <c:set var="isChecked" value="false" />
+					            <c:forEach var="selected" items="${genreList}">
+					                <c:if test="${selected eq g[1]}">
+					                    <c:set var="isChecked" value="true" />
+					                </c:if>
+					            </c:forEach>
+					
+					            <input type="checkbox" name="favoriteGenre" id="genre_${g[1]}" value="${g[1]}" 
+					                   ${isChecked ? 'checked' : ''}>
+					            <label for="genre_${g[1]}">${g[0]}</label>
+					        </c:forTokens>
+					    </div>
+					</div>
 					
 					<br><br>
 					

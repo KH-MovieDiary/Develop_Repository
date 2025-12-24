@@ -259,7 +259,7 @@
 
 <body>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
-
+<br>
 <div class="wrap">
 
     <!-- content1 -->
@@ -455,8 +455,6 @@
 	    const userPwd = $("#deleteUserPwd").val();
 	    const $errorMsg = $("#pwdErrorMsg");
 	    const $confirmBtn = $("#pwdCheckModal .btn-primary-custom");
-	
-	    console.log("입력도니 비번 : "+userPwd);
 	    
 	    if(userPwd.trim() === "") {
 	        return; // 빈 값일 때는 실행 방지
