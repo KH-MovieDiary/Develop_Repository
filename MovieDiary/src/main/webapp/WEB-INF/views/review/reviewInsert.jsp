@@ -129,7 +129,7 @@
             <input type="text" id="modalSearchKeyword" placeholder="영화 제목을 입력하세요" 
                    style="width:100%; padding:8px; border:1px solid #ccc;"
                    onkeyup="if(window.event.keyCode==13){searchMovieAjax()}">
-            <button type="button" onclick="searchMovieAjax()" style="padding:8px 15px;">검색</button>
+            <button type="button" onclick="searchMovieAjax()" style="padding:8px 15px; class="modal-search-btn">검색</button>
         </div>
 
         <div id="searchResultArea" style="height:300px; overflow-y:auto; border:1px solid #eee;">
@@ -140,7 +140,7 @@
 <style>
     .simple-modal-overlay, #movieSearchModal.modal-backdrop {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0, 0, 0, 0.5); /* 그냥 어두운 반투명 */
+        background: rgba(0, 0, 0, 0.5);
         display: none;
         justify-content: center;
         align-items: center;
@@ -175,13 +175,15 @@
         gap: 5px; 
         margin-bottom: 15px;
     }
+    
     #modalSearchKeyword {
         flex: 1;
         padding: 10px;
         border: 1px solid #ccc;
         outline: none;
     }
-    .search-btn {
+    
+    .modal-search-btn {
         padding: 10px 20px;
         background: #333; 
         color: white; 
