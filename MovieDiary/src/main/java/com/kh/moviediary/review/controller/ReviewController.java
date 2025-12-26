@@ -109,8 +109,10 @@ public class ReviewController {
 				return "redirect:/reviewList.bo";
 			}
 		}
+
 		
 		int result = service.reviewInsert(r);
+		
 		
 		if(result>0) {
 			session.setAttribute("alertMsg","성공적으로 작성되었습니다!");

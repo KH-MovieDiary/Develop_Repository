@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="noteMapper">
+
+	<resultMap id="noteResultMap" type="Note">
+        <id column="NOTE_NO" property="noteNo"/>
+        <result column="SEND_ID" property="sendId"/>
+        <result column="RECEIVE_ID" property="receiveId"/>
+        <result column="NCONTENT" property="noteContent"/>
+        <result column="CREATE_DATE" property="time"/>
+        <result column="STATUS" property="status"/>
+    </resultMap>
+
+	<insert id="insertNote">
+	    INSERT INTO NOTE (
+ 				  NOTE_NO
+ 				, SEND_ID
+ 				, RECEIVE_ID
+ 				, NCONTENT
+ 				, STATUS)
+	    VALUES (SEQ_NNO.NEXTVAL
+	    	, #{sendId}
+	    	, #{receiveId}
+	    	, #{noteContent}
+	    	, 'Y')
+	</insert>
+	
+	<select id="selectReceivedNoteList" resultMap="noteResultMap">
+	    SELECT *
+	    FROM NOTE
+	    WHERE RECEIVE_ID = #{userId}
+	      AND STATUS = 'Y'
+	    ORDER BY NOTE_NO DESC
+	</select>
+	
+	<select id="selectSentNoteList" resultMap="noteResultMap">
+	    SELECT *
+	    FROM NOTE
+	    WHERE SEND_ID = #{userId}
+	      AND STATUS = 'Y'
+	    ORDER BY NOTE_NO DESC
+	</select>
+	
+	<select id="selectListCount" resultType="_int">
+	    SELECT COUNT(*)
+	    FROM NOTE
+	    WHERE RECEIVE_ID = #{userId} AND STATUS = 'Y'
+	</select>
+	
+	<select id="selectSentListCount" resultType="_int">
+	    SELECT COUNT(*) FROM NOTE WHERE SEND_ID = #{userId} AND STATUS = 'Y'
+	</select>
+
+	<select id="selectNoteList" resultMap="noteResultMap">
+	    SELECT *
+	    FROM NOTE
+	    WHERE RECEIVE_ID = #{userId} 
+	      AND STATUS = 'Y'
+	    ORDER BY NOTE_NO DESC
+	</select>
+	
+	
+	
+	
+	
+	
+</mapper>

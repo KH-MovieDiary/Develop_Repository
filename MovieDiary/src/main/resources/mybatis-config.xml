@@ -16,6 +16,7 @@
  		<typeAlias type="com.kh.moviediary.member.vo.Member" alias="Member"/>
  		<typeAlias type="com.kh.moviediary.movie.vo.Movie" alias="Movie"/>
  		<typeAlias type="com.kh.moviediary.reviewcomment.vo.ReviewComment" alias="ReviewComment"/>
+ 		<typeAlias type="com.kh.moviediary.websocket.model.vo.Note" alias="Note"/>
  	</typeAliases>
  	
 </configuration>
