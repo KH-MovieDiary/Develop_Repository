@@ -78,7 +78,6 @@ public class ReviewController {
 
 				String overview = (String)map.get("overview");
 				m.setContent(overview != null ? overview : "");
-
 				
 				String content = (map.get("overview") == null) ? "" : String.valueOf(map.get("overview"));
 				m.setContent(content);
@@ -218,7 +217,6 @@ public class ReviewController {
 				if (jobObj == null) continue;
 
 				String job = String.valueOf(jobObj);
-				// 직업이 'Director'인 사람만 찾음
 				if (!"Director".equalsIgnoreCase(job)) continue;
 
 				String name = (c.get("name") == null) ? "" : String.valueOf(c.get("name"));
