@@ -64,6 +64,7 @@
 		    border-radius: 6px;
 		    line-height: 1.5;
 		    white-space: pre-wrap;
+		    
 		}
 		
 		.replyArea tbody td:last-child {
@@ -142,6 +143,7 @@
 	        font-weight: bold;
 	        display: flex;
 	        align-items: center;
+	        
 		}
 		
 		#replyBtn2:hover{
@@ -189,14 +191,12 @@
         background: linear-gradient(180deg,#06b6d4,#0891b2) !important;
         border-color: #06b6d4 !important;
         color: #fff !important;
-        box-shadow: 0 18px 40px rgba(6,182,212,.22);
     }
     
     .reset {
         background: linear-gradient(180deg,#fb7185,#ef4444) !important;
         border-color: #fb7185 !important;
         color: #fff !important;
-        box-shadow: 0 18px 40px rgba(251,113,133,.22);
     }
 		
     #likeBtn {
@@ -236,6 +236,7 @@
 	label {
 	    cursor: pointer;
 	}
+	
 </style>
 
 </head>
@@ -318,7 +319,7 @@
 						<c:choose>
 									
 							<c:when	test="${empty loginUser}">
-								<textarea id="replyContent1" placeholder="로그인 후 이용가능합니다." readonly></textarea>
+								<textarea id="replyContent1" placeholder="로그인 후 이용가능합니다." disabled></textarea>
 							</c:when>
 													
 							<c:otherwise>
@@ -333,6 +334,9 @@
 												
 						</c:choose>
 										
+						
+					</th>
+					<th>
 						<div id="replyBtnArea">
 							<c:choose>
 								<c:when test="${empty loginUser}">
@@ -343,8 +347,6 @@
 								</c:otherwise>
 							</c:choose>
 						</div>
-					</th>
-					<th>
 					</th>
 					<th>
 					</th>
