@@ -49,6 +49,11 @@ public class NoteServiceImpl implements NoteService {
 		return Dao.selectNoteDetail(sqlSession, nno);
 	}
 
+	@Override
+	public int deleteNote(int nno) {
+		return Dao.deleteNote(sqlSession, nno);
+	}
+
 
 	
 

@@ -81,16 +81,15 @@
 				            
 				            if (pSocket && pSocket.readyState === WebSocket.OPEN) {
 				                pSocket.send(target + "|" + content); 
-				                console.log("부모 창 소켓을 통해 신호를 쐈습니다.");
-				            } else {
-				                console.error("부모 창의 소켓을 사용할 수 없습니다.");
 				            }
 				        } catch (e) {
 				            console.error("웹소켓 발송 중 스크립트 에러: " + e);
 				        }
 				
 			        alert("쪽지를 보냈습니다.");
-			        window.close();}
+			        location.href = "${contextRoot}/reviewList.bo";
+			        
+			        }
 					},
 					
 		        error: function() { 

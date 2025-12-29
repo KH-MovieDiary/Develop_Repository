@@ -37,4 +37,8 @@ public class NoteDao {
 	public Note selectNoteDetail(SqlSessionTemplate sqlSession, int nno) {
 		return sqlSession.selectOne("noteMapper.selectNoteDetail", nno);
 	}
+
+	public int deleteNote(SqlSessionTemplate sqlSession, int nno) {
+		return sqlSession.update("noteMapper.deleteNote",nno);
+	}
 }
