@@ -7,44 +7,69 @@
 <head>
 <meta charset="UTF-8">
 <title>게시판</title>
-
 <style>
-/* 전체 레이아웃 */
+body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color:#f4f6f9;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      }
+      
 .board-wrap {
     width: 70%;
     height: 100vh;
     margin: 0 auto;
+    padding: 50px;
+    border: 1px solid var;
+    background: rgba(255,255,255,0.05);
+    border-radius: 18px;
+	box-shadow: 0 18px 60px rgba(0,0,0,0.1);
 }
-
-/* 상단 검색 영역 */
+        
 .board-top {
     display: flex;
-    justify-content: space-between; /* 좌우로 벌림 */
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
 }
 
+.custom-select {
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+        color: #555;
+        outline: none;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+.custom-select:hover, .custom-select:focus {
+        border-color: #333;
+    }
+    
 .board-top-left,
 .board-top-right {
     display: flex;
     gap: 8px;
 }
 
-/* 테이블 */
 .board-table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.board-table th, .board-table td {
-    border-bottom: 1px solid #ddd;
-    padding: 12px 8px;
+.board-table th {
+    background-color: #f8f9fa;
+    color: #555;
+    font-weight: 600;
     text-align: center;
 }
 
-.board-table th {
-    background-color: #f9f9f9;
-    font-weight: bold;
+.board-table td {
+    border-bottom: 1px solid #ddd;
+    padding: 12px 8px;
+    text-align: center;
 }
 
 .paging {
@@ -91,6 +116,64 @@
 	display: flex;
 	justify-content: center;
 }
+
+    .search-area {
+        display: flex;
+        justify-content: center;
+        align-items: center;  
+        margin-top: 40px;
+        gap: 8px;
+        width: 100%;         
+    }
+    
+    .search-area .custom-select {
+        width: 100px;       
+        height: 45px;        
+        padding: 0 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+        color: #555;
+        outline: none;
+        cursor: pointer;
+    }
+
+    .search-area input[type="text"] {
+        width: 300px;      
+        height: 45px;      
+        padding: 0 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        outline: none;
+        font-size: 14px;
+        box-sizing: border-box; 
+        transition: border-color 0.2s;
+    }
+    .search-area input[type="text"]:focus {
+        border-color: #333;
+    }
+
+    .btn-search {
+        height: 45px;    
+        padding: 0 25px;    
+        background-color: #333;
+        color: white;           
+        border: none;
+        border-radius: 5px;
+        font-size: 15px;   
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .btn-search:hover {
+        background-color: #111; 
+    }
+    
+	#sortOption,
+	#searchOption{
+		cursor: pointer; 
+	}
+		
 </style>
 </head>
 
@@ -100,7 +183,7 @@
 
 <div class="board-wrap">
 
-    <h2>게시판</h2>
+    <h3>감상평 게시판</h3>
 
     <div class="board-top">
 	    <form id="listSort" action="${empty map ? 'reviewList.bo' : 'searchList.bo' }" method="get">
@@ -111,7 +194,7 @@
 			</c:if>
 			
            <div class="board-top-left">
-                <select name="sort" onchange="changeSort()">
+                <select name="sort" onchange="changeSort()" class="custom-select">
                     <option value="date" ${sort eq 'date' ? 'selected' : ''}>작성일순</option>
                     <option value="count" ${sort eq 'count' ? 'selected' : ''}>조회수순</option>
                     <option value="like" ${sort eq 'like' ? 'selected' : '' }>좋아요순</option>
@@ -219,16 +302,15 @@
         </ul>
     </div>
 		
-	<form action="${contextRoot}/searchList.bo" method="get" align="center">
-			<select name="condition">
+	<form action="${contextRoot}/searchList.bo" method="get" class="search-area">
+			<select name="condition" class="custom-select">
 				<option value="title">제목</option>
 				<option value="writer">작성자</option>
 			</select>
 		
 	        <input type="text" name="keyword" value="${map.keyword}" placeholder="검색어 입력">
-			<button type="submit">검색</button>
+			<button type="submit" class="btn-search">검색</button>
 	</form>	
-	
 </div>
 
 	<jsp:include page="/WEB-INF/views/common/footer.jsp"/>

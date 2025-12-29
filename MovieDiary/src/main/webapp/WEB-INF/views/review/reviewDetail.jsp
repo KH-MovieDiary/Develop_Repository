@@ -16,51 +16,25 @@
     <style>
         body {
             font-family: 'Noto Sans KR', sans-serif;
-            background-color: #f8f9fa;
+		    background-color:#f4f6f9;
+		    color: #333;
+		    margin: 0;
+		    padding: 0;
         }
 
-        .movie-register-wrapper {
+         .movie-register-wrapper {
             width: 70%;
-            min-height: 100vh;
-            margin: 0 auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 50px 0;
-        }
-
-        .innerOuter {
-            width: 100%;
-            padding: 50px 60px;
-            border-radius: 18px;
-            border: 1px solid var;
-            background: rgba(255,255,255,0.05);
-            box-shadow: 0 18px 60px rgba(0,0,0,0.25);
-        }
-        
-        .comment-area{
-        	width:70%;
-        	margin: 0 auto;
-        	display: flex;
-        	justify-content: center;
-        	align-items: center;
-        }
-        
-        .comment-input{
-        	width: 100%;
-        	display: flex;
-        	justify-content: center;
-        	gap: 5px;
-        }
-
-		#commentContent{
-			width: 70%;
-        	height: 40px;
-        	resize: none;
-		}
+		    margin: 0 auto;
+		    padding: 50px;
+		    border: 1px solid var;
+		    background: rgba(255,255,255,0.05);
+		    border-radius: 18px;
+			box-shadow: 0 18px 60px rgba(0,0,0,0.1);
+        } 
 		
 		.replyArea{
 			width: 100%;
+			table-layout: fixed;
 		}
 		
 		.replyArea tbody td {
@@ -70,15 +44,14 @@
 		}
 		
 		.replyArea tbody td:first-child {
-		    width: 100px;
-		    max-width: 100px;
+		    width: 160px;
 		    font-weight: bold;
-		    white-space: nowrap;
 		    overflow: hidden;
 		    text-overflow: ellipsis;
 		}
 		
 		.replyArea tbody td:nth-child(2) {
+			width: auto;
 		    background-color: #f8f9fa;
 		    border-radius: 6px;
 		    line-height: 1.5;
@@ -96,19 +69,87 @@
 		.replyArea tbody td:last-child {
 			width:40px;
 		    padding: 0;
+		    text-align: center;
+		    vertical-align: middle;
 		}
 		
-		#replyContent {
+		#replyContent1,
+		#replyContent2 {
 		    width: 100%;
 		    min-height: 80px;
 		    resize: none;
 		    padding: 10px;
 		    box-sizing: border-box;
 		    font-size: 14px;
+		    border: 1px solid #ddd;
+        	border-radius: 5px;
+		}
+		
+		.replyArea thead th{
+			padding: 10px;
+			box-sizing: border-box;
+			font-size: 14px;
+		}
+		
+		.replyArea thead th:first-child{
+			width: 160px;
+		}
+		
+		.replyArea thead th:nth-child(2){
+			width: auto;
+			padding: 0;
+		}
+		
+		.replyArea thead th:nth-child(3){
+			width: 120px;		
+		}
+		
+		.replyArea thead th:last-child{
+			width: 40px;
 		}
 		
 		.replyArea tbody tr {
 		    border-bottom: 1px solid lightgrey;
+		}
+		
+		.replyArea tbody td.noReply {
+		    font-size: 20px;
+		    text-align: center;
+		    color: #666;
+		    padding: 20px 0;
+		}
+		
+		.delBtn {
+		    background: none;
+		    border: none;
+		    padding: 0;
+		}
+		
+		#replyBtnArea {
+			width: 100%;
+		    margin: 8px 0;
+		    display: flex;
+		    justify-content: flex-end;
+		}
+		
+		#replyBtn1,
+		#replyBtn2{
+			background-color: white; 
+	        border: 1px solid #ddd;  
+	        padding: 10px 20px;      
+	        border-radius: 20px; 
+	        font-size: 12px;
+	        font-weight: bold;
+	        display: flex;
+	        align-items: center;
+		}
+		
+		#replyBtn2:hover{
+			border: 1px solid #757575;
+		}
+		
+		#privateOption{
+			cursor: pointer; 		
 		}
 		
 	.btn-area{
@@ -130,18 +171,14 @@
         padding: 10px 30px;
         border-radius: 5px;
         font-weight: bold;
-        cursor: pointer;
-        
         background: linear-gradient(180deg, rgba(255,255,255,.95), rgba(248,250,252,.95));
         border: 1px solid rgba(0,0,0,.08);
-        box-shadow: 0 12px 24px rgba(2,6,23,.06);
         transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease, opacity .12s ease;
     }
     
     .btn-area button:hover {
         transform: translateY(-1px);
         border-color: rgba(125,211,252,0.35);
-        box-shadow: 0 18px 36px rgba(2,6,23,.08);
     }
     
     .btn-area button:active {
@@ -170,7 +207,6 @@
         border-radius: 30px; 
         font-size: 16px;
         font-weight: bold;
-        cursor: pointer;
         transition: all 0.3s ease;
         display: flex;
         align-items: center;
@@ -194,6 +230,12 @@
         transform: scale(1.1); 
         display: inline-block;
     }
+    
+    button,
+	.delBtn,
+	label {
+	    cursor: pointer;
+	}
 </style>
 
 </head>
@@ -202,15 +244,15 @@
     <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
     <div class="movie-register-wrapper">
-        <div class="innerOuter">
-            <h2 class="form-title">감상평 상세보기</h2>
-			<br> 
+        <h3>감상평 상세보기</h3>
+		<br> 
 			<div style="float: right; display: flex; gap: 10px;">
-			    <a class="listBtn" id="sendNoteBtn" 
-			       href="${contextRoot}/websocket/noteHandler?targetId=${review.nickname}">쪽지 보내기</a>
-			    
-			    <a class="listBtn" id="listBtn" 
-			       href="${contextRoot}/reviewList.bo">목록으로</a>
+			    <c:if test="${not empty loginUser and review.userId ne loginUser.userId}">
+			        <a class="listBtn" id="sendNoteBtn" 
+			           href="${contextRoot}/websocket/noteHandler?targetId=${review.nickname}">쪽지 보내기</a>
+			    </c:if>
+			
+			    <a class="listBtn" id="listBtn" href="${contextRoot}/reviewList.bo">목록으로</a>
 			</div>
 			<br><br>
             
@@ -248,60 +290,73 @@
                 </tr>
             </table>
 				
-	         <div class="btn-area">          
-				   <button type="button" id="likeBtn" class="${likeYn == 'Y' ? 'y' : ''}">
-				   <span class="heart-icon">♥</span> <span id="likeCount">${review.likeCount }</span>
-				   </button>
+	     <div class="btn-area">          
+			<button type="button" id="likeBtn" class="${likeYn == 'Y' ? 'y' : ''}">
+					<span class="heart-icon">♥</span> <span id="likeCount">${review.likeCount }</span>
+			</button>
 				   
-				   <div class="right-btns">
-				        <c:if test="${review.userId eq loginUser.userId }">
-				            <button type="button" id="updateBtn" class="submit">수정하기</button>
-				            <button type="button" id="deleteBtn" class="reset">삭제하기</button>
-				        </c:if>
-				   </div>
-	         </div>
+			<div class="right-btns">
+				<c:if test="${review.userId eq loginUser.userId }">
+				    <button type="button" id="updateBtn" class="submit">수정하기</button>
+				    <button type="button" id="deleteBtn" class="reset">삭제하기</button>
+				</c:if>
+			</div>
+	     </div>
 				
-				<input type="hidden" id="rno" value="${review.reviewId }">
-				<input type="hidden" id="uid" value="${loginUser.userId }">
+			<input type="hidden" id="rno" value="${review.reviewId }">
+			<input type="hidden" id="uid" value="${loginUser.userId }">
     
-			<br>
+		<br>
 			
-			<table class="replyArea">
-				<thead>
-					<tr>
-						<th>
-							댓글(<span id="rCount"></span>)
-						</th>
-						<th colspan="2">
-							<c:choose>
-								
-								<c:when	test="${empty loginUser}">
-									<textarea id="replyContent" placeholder="로그인 후 이용가능합니다." readonly></textarea>
-								</c:when>
+		<table class="replyArea">
+			<thead>
+				<tr>
+					<th>
+						댓글(<span id="rCount"></span>)
+					</th>
+					<th>
+						<c:choose>
 									
-								<c:otherwise>
+							<c:when	test="${empty loginUser}">
+								<textarea id="replyContent1" placeholder="로그인 후 이용가능합니다." readonly></textarea>
+							</c:when>
+													
+							<c:otherwise>
 								<div class="replyOption">
-									<label>
+									<label id="privateOption">
 										<input type="checkbox" id="privateReply" value="Y">
 										작성자에게만 표시
 									</label>
 								</div>	
-								<textarea id="replyContent" placeholder="댓글을 작성하세요."></textarea>
+								<textarea id="replyContent2" placeholder="댓글을 작성하세요."></textarea>
+							</c:otherwise>
+												
+						</c:choose>
+										
+						<div id="replyBtnArea">
+							<c:choose>
+								<c:when test="${empty loginUser}">
+									<button type="button" id="replyBtn1" disabled>댓글 등록</button>
+								</c:when>
+								<c:otherwise>
+									<button type="button" id="replyBtn2">댓글 등록</button>
 								</c:otherwise>
-								
 							</c:choose>
-						</th>
-						<th>
-							<button id="replyBtn">등록</button>
-						</th>
-					</tr>
-				</thead>
-				<tbody>
+						</div>
+					</th>
+					<th>
+					</th>
+					<th>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
 				    
-				</tbody>
-			</table>
-		</div>
+			</tbody>
+		</table>
 	</div>
+	
+	<jsp:include page="/WEB-INF/views/common/footer.jsp" />
     
     <script>
     	
@@ -386,7 +441,10 @@ function replyList(){
 					$(".replyArea tbody").html("");
 					if(list.length === 0){
 						let tr = $("<tr>");
-						tr.append($("<td>").attr("colspan", 2).text("조회된 댓글이 없습니다"));
+						tr.append($("<td>")
+								.attr("colspan", 4)
+								.addClass("noReply")
+								.text("조회된 댓글이 없습니다"));
 						$(".replyArea tbody").append(tr);
 					}else{
 						for(let r of list){
@@ -413,7 +471,7 @@ function replyList(){
 
 		                        let delBtn = $("<button>")
 		                            .addClass("delBtn")
-		                            .text("삭제")
+		                            .text("🗑️")
 		                            .data("rcno", r.reviewCommentId);
 
 		                        tr.append(
@@ -438,13 +496,13 @@ function replyList(){
     	
 		$(function(){
     		
-    		$("#replyBtn").click(function(){
+    		$("#replyBtn2").click(function(){
     			
     			$.ajax({
     				
     				url : "insertReply.re",
     				data : {
-    					content : $("#replyContent").val(),
+    					content : $("#replyContent2").val(),
     					userId : "${loginUser.userId}",
     					reviewId : ${review.reviewId},
     					privateYn : $("#privateReply").is(":checked") ? "Y" : "N"
@@ -459,7 +517,7 @@ function replyList(){
     					}
     				},
     				error : function(){
-    					alert("통신 오류");
+    					alert("댓글을 입력 후 등록하세요");
     				}
     			});
     		});
@@ -492,7 +550,6 @@ function replyList(){
 		});
     </script>
     
-    <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
 </body>
 </html>

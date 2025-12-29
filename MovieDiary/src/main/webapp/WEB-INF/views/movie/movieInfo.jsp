@@ -9,95 +9,209 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie Info</title>
 
-    <style>
-        #wrap{
-            width : 80%;
-            height: 200vh;
-            margin : auto;
-            border : 2px solid red;
-            display: flex;
-            flex-direction: column;
-            gap:10px;
-        }
-        #button_header{
-            width : 100%;
-            height : 5%;
-            display: flex;
-            order : between;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .movie_content{
-            width: 100%;
-            height:30%;
-            border : 2px dashed purple;
-            display: flex;
-            gap:10px;
-        }
-        #pageinfo_area{
-            width : 100%;
-            height : 10%;
-            border : 2px dashed blue;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            gap:6px;
-        }
-        .movie_item{
-            width:15%;
-            height: 90%;
-            border : 2px dashed green;
-            flex : 1;
-            margin:15px;
-            display:flex;
-            flex-direction:column;
-            overflow:hidden;
-            cursor:pointer;
-            transition: transform .15s ease, box-shadow .15s ease;
-            background:#fff;
-        }
-        .movie_item:hover{
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(0,0,0,.12);
-        }
-        .poster_box{
-            width:100%;
-            height:75%;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            background:#f2f2f2;
-        }
-        .poster_box img{
-            width:100%;
-            height:100%;
-            object-fit:cover;
-        }
-        .title_box{
-            width:100%;
-            height:25%;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            text-align:center;
-            padding:6px;
-            box-sizing:border-box;
-            font-size:14px;
-            font-weight:600;
-        }
-        .pageBtn{
-            padding:6px 10px;
-            border:1px solid #333;
-            background:#fff;
-            cursor:pointer;
-            text-decoration:none;
-            color:#333;
-        }
-        .pageBtn.active{
-            background:#333;
-            color:#fff;
-        }
-    </style>
+<style>
+    :root{
+        --bg: #0b1220;
+        --panel: rgba(255,255,255,0.06);
+        --panel2: rgba(255,255,255,0.08);
+        --text: rgba(255,255,255,0.92);
+        --muted: rgba(255,255,255,0.65);
+        --line: rgba(255,255,255,0.10);
+        --accent: #7dd3fc;
+    }
+
+    body{
+        margin: 0;
+        background:
+            radial-gradient(1200px 600px at 20% 0%, rgba(125,211,252,0.20), transparent 55%),
+            radial-gradient(900px 500px at 90% 10%, rgba(167,139,250,0.18), transparent 55%),
+            radial-gradient(900px 500px at 50% 100%, rgba(52,211,153,0.12), transparent 55%),
+            var(--bg);
+        color: var(--text);
+    }
+
+    #wrap{
+        width : 80%;
+        height: 200vh;
+        margin : auto;
+        display: flex;
+        flex-direction: column;
+        gap:10px;    
+        padding: 18px;
+        box-sizing: border-box;
+
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.04));
+        box-shadow: 0 18px 60px rgba(0,0,0,0.35);
+    }
+
+    #button_header{
+        width : 100%;
+        height : 5%;  
+        display: flex;
+        order : between;  
+        justify-content: space-between;
+        align-items: center;
+
+        padding: 14px 16px;
+        box-sizing: border-box;
+        border-radius: 14px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    #button_header label{
+        font-size: 12px;
+        font-weight: 800;
+        color: var(--muted);
+        margin: 0;
+    }
+
+    #button_header select{
+        margin-top: 6px;
+        height: 38px;
+        padding: 0 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,0.15);
+        background: rgba(255,255,255,0.06);
+        color: var(--text);
+        outline: none;
+    }
+
+    #button_header select:focus{
+        border-color: rgba(125,211,252,0.55);
+        box-shadow: 0 0 0 3px rgba(125,211,252,0.18);
+    }
+
+    .movie_content{
+        width: 100%;
+        height:30%;  
+        display: flex;
+        gap:10px; 
+        border: none;   
+    }
+
+    #pageinfo_area{
+        width : 100%;
+        height : 10%;   
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        gap:6px;  
+
+        border: none;           
+        padding-bottom: 6px;
+        box-sizing: border-box;
+    }
+
+    .movie_item{
+        width:15%;
+        height: 90%;        
+        flex : 1;
+        margin:15px;               
+        display:flex;
+        flex-direction:column;
+        overflow:hidden;
+        cursor:pointer;
+        transition: transform .15s ease, box-shadow .15s ease;
+        background: rgba(255,255,255,0.06);
+
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 16px;
+        box-shadow: 0 14px 40px rgba(0,0,0,0.22);
+    }
+
+    .movie_item:hover{
+        transform: translateY(-2px);
+        box-shadow: 0 20px 52px rgba(0,0,0,.32);
+    }
+
+    .poster_box{
+        width:100%;
+        height:75%;          
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        background: rgba(255,255,255,0.04);
+        position: relative;
+    }
+
+    .poster_box::after{
+        content:"";
+        position:absolute;
+        inset:0;
+        background: linear-gradient(to top, rgba(0,0,0,0.52), transparent 60%);
+        pointer-events:none;
+    }
+
+    .poster_box img{
+        width:100%;
+        height:100%;
+        object-fit:cover;
+        display:block;
+    }
+
+    .title_box{
+        width:100%;
+        height:25%;             
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        text-align:center;
+        padding:6px;               
+        box-sizing:border-box;
+        font-size:14px;        
+        font-weight:800;
+
+        background: rgba(0,0,0,0.18);
+        /* color: rgba(255,255,255,0.92); */
+		color : black;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .pageBtn{
+        padding:6px 10px;   
+        border:1px solid rgba(255,255,255,0.15);
+        background: rgba(255,255,255,0.06);
+        cursor:pointer;
+        text-decoration:none;
+        color: rgba(255,255,255,0.85);
+        border-radius: 12px;
+        font-weight: 800;
+        transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+        color : black;
+    }
+
+    .pageBtn:hover{
+        transform: translateY(-1px);
+        box-shadow: 0 10px 22px rgba(0,0,0,0.25);
+        background: rgba(255,255,255,0.08);
+    }
+
+    .pageBtn.active{
+        background: linear-gradient(180deg, rgba(125,211,252,0.26), rgba(125,211,252,0.10));
+        border-color: rgba(125,211,252,0.55);
+        color:black;
+    }
+    #button_header label{
+    color: black;
+	}
+
+	#button_header select{
+	    color: black;
+	}
+	
+	/* select 내부 option */
+	#button_header select option{
+	    color:black;
+	}
+	    
+	</style>
+
 </head>
 <body>
 

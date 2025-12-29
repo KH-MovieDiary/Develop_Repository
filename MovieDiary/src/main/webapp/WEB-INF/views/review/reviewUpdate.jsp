@@ -126,8 +126,13 @@
             <form id="enrollForm" method="post" action="${contextRoot}/update.review">
    				<input type="hidden" name="reviewId" value="${review.reviewId }">
                 	<div class="form-group">
-                    <label for="movieTitle">감상문 제목</label>
+                    <label for="reviewTitle">감상문 제목</label>
                     <input type="text" id="reviewTitle" class="form-control" name ="reviewTitle" style="resize:none" value="${review.reviewTitle}">	
+                </div>
+                
+                <div class="form-group">
+                    <label for="movieTitle">영화 제목</label>
+                    <input type="text" id="movieTitle" class="form-control" value="${review.movieTitle}" readonly>			
                 </div>
                 
                 <div class="form-group">

@@ -1,6 +1,7 @@
 package com.kh.moviediary.websocket.controller;
 
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.kh.moviediary.common.template.Pagination;
 import com.kh.moviediary.common.vo.ReviewPageInfo;
 import com.kh.moviediary.member.vo.Member;
@@ -22,11 +25,26 @@ import com.kh.moviediary.websocket.model.vo.Note;
 @RequestMapping("/websocket")
 public class NoteController {
 	
+	
+	// NoteController.java
 	@GetMapping("/noteHandler")
-    public String noteHandlerPage(@RequestParam(value="targetId", required=false) String targetId, Model model) {
-		model.addAttribute("targetId", targetId);
-        return "websocket/noteHandler";
-    }
+	public String noteHandlerPage(@RequestParam(value="targetId", required=false) String targetId, 
+	                             HttpSession session, RedirectAttributes ra, HttpServletRequest request, Model model) {
+	    
+	    // 1. 세션에서 loginUser 객체 확인
+	    Member loginUser = (Member)session.getAttribute("loginUser");
+	    
+	    // 2. 비로그인 시 NullPointerException 방지를 위해 차단
+	    if(loginUser == null) {
+	        String referer = request.getHeader("Referer"); 
+	        ra.addFlashAttribute("alertMsg", "로그인 후 이용 가능한 서비스입니다.");
+	        return "redirect:" + (referer != null ? referer : "/");
+	    }
+	    
+	    model.addAttribute("targetId", targetId);
+	    return "websocket/noteHandler"; 
+	}
+
 	
 	@Autowired
 	private NoteService noteService;
@@ -38,21 +56,29 @@ public class NoteController {
 	public String insertNote(Note n, HttpSession session) {
 
 	    Member loginUser = (Member)session.getAttribute("loginUser");
-	    if(loginUser == null) return "fail";
 
-	    n.setSendNickName(loginUser.getNickName());
-	    int result = noteService.insertNote(n);
+	 // [방어 코드 추가] 로그인 세션이 만료되었거나 비로그인인 경우
+        if(loginUser == null) {
+            return "fail"; // AJAX success에서 알림 처리 가능
+        }
+        
+        // 1. 발신자 정보 설정 (로그인 유저의 정보 사용)
+        n.setSendNickName(loginUser.getNickName()); // 닉네임 필드도 있다면 추가
+        
+        // 2. DB 저장 실행
+        int result = noteService.insertNote(n);
 
-	    if(result > 0) {
-	        try {
-	            WebsocketHandler.sendNoteAlarm(n.getReceiveNickName());
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-	        return "success";
-	    }
-	    return "fail";
-	}
+        if(result > 0) {
+            try {
+                // 실시간 알림 전송
+                WebsocketHandler.sendNoteAlarm(n.getReceiveNickName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return "success";
+        }
+        return "fail";
+    }
 	
 
 	

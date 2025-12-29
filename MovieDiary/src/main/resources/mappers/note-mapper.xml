@@ -84,4 +84,13 @@
 	      AND N.STATUS = 'Y'
 	</select>
 
+	<select id="selectNoteList" resultMap="noteResultMap">
+	    SELECT *
+	    FROM NOTE
+	    WHERE RECEIVE_ID = #{userId} 
+	      AND STATUS = 'Y'
+	    ORDER BY NOTE_NO DESC
+	</select>
+	
+
 </mapper>
