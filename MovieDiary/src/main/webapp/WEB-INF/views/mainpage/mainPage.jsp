@@ -49,7 +49,6 @@
 	        gap: 22px;
 	    }
 	
-	    /* ================= 현재 상영작 ================= */
 	
 	    #movieRank{
 	        width: 100%;
@@ -207,9 +206,7 @@
 	        text-align:center;
 	        background: rgba(0,0,0,0.25);
 	    }
-	
-	    /* ================= 감상문 영역 ================= */
-	
+
 	    #live_comment,
 	    #popular_review{
 	        border-radius:18px;
@@ -435,15 +432,30 @@
         }
     });
 
+    
     function formatDate(v){
         if(!v) return "";
-        try{
-            var s = String(v);
-            if(s.length >= 10) return s.substring(0,10);
-            return s;
-        }catch(e){
-            return "";
+
+        var nums = String(v).match(/\d+/g);
+
+        // 예: ["12","29","20"] 또는 ["2025","12","29"]
+        if(nums.length === 3){
+            // 12월 29, 20  → 2020-12-29 처럼 오면
+            if(nums[0].length === 2){
+                return nums[2] + "-" +
+                       nums[0].padStart(2, "0") + "-" +
+                       nums[1].padStart(2, "0");
+            }
         }
+
+        // 2025-12-29 같은 정상 형태
+        if(nums.length >= 3){
+            return nums[0] + "-" +
+                   nums[1].padStart(2, "0") + "-" +
+                   nums[2].padStart(2, "0");
+        }
+
+        return v;
     }
 
     function renderReviewCards(targetSelector, data){
