@@ -4,6 +4,7 @@ package com.kh.moviediary.websocket.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +27,19 @@ import com.kh.moviediary.websocket.model.vo.Note;
 @RequestMapping("/websocket")
 public class WebSocketController {
 	
-	@GetMapping("/noteHandler") // 이 경로가 jsp의 href와 일치해야 합니다.
-    public String noteHandlerPage() {
-        return "websocket/noteHandler"; // 실제 파일 위치: /WEB-INF/views/websocket/noteHandler.jsp
-    }
+	
+	@GetMapping("/noteHandler")
+	public String noteHandlerPage(HttpSession session, RedirectAttributes ra,HttpServletRequest request) {
+	    
+	    Member loginUser = (Member)session.getAttribute("loginUser");
+	    
+	    if(loginUser == null) {
+	    	String referer = request.getHeader("Referer"); 
+	        ra.addFlashAttribute("alertMsg", "로그인 후 이용해주세요.");
+	        return "redirect:" + referer ;
+	    }
+	    return "websocket/noteHandler"; 
+	}
 	
 	@Autowired
 	private NoteService noteService;
@@ -38,12 +48,6 @@ public class WebSocketController {
 	public String insertNote(Note n, HttpSession session, RedirectAttributes ra) {
 		// 1. 세션에서 로그인 정보를 가져옵니다.
 	    Member loginUser = (Member)session.getAttribute("loginUser");
-	    
-	    // [보안] 로그인이 안 된 경우를 체크합니다 (Null 방지)
-	    if(loginUser == null) {
-	        ra.addFlashAttribute("alertMsg", "로그인 후 이용 가능합니다.");
-	        return "redirect:/"; 
-	    }
 	    
 	    // 2. 발신자 ID 설정
 	    n.setSendId(loginUser.getUserId());
