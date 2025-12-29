@@ -17,6 +17,8 @@ public interface NoteService {
 
 	Note selectNoteDetail(int nno);
 
+	int deleteNote(int nno);
+
     
  
 }

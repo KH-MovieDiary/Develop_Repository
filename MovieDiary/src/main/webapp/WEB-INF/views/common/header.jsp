@@ -272,23 +272,19 @@
 	    var noteSocket;
 	
 	    $(document).ready(function() {
-	        if("${loginUser}" != "") { // 로그인 상태일 때만 연결
+	        if("${loginUser}" != "") {
 	            connectWS();
 	        }
 	    });
 	
 	    function connectWS() {
-	        // 주소 뒤에 contextPath가 중복되지 않도록 확인하세요
 	        noteSocket = new WebSocket("ws://localhost:8080/moviediary/note-ws");
 	        
-	        // 팝업창에서 더 쉽게 찾을 수 있도록 window 객체에 직접 할당
 	        window.noteSocket = noteSocket; 
 
 	        noteSocket.onmessage = function(event) {
 	            if(event.data === "newNote") {
 	                alert("📩 새로운 쪽지가 도착했습니다!");
-	                // 알림과 동시에 리스트 자동 갱신을 원하시면 아래 주석 해제
-	                // location.reload(); 
 	            }
 	        };
 	    }

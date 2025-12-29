@@ -92,5 +92,11 @@
 	    ORDER BY NOTE_NO DESC
 	</select>
 	
+	<update id="deleteNote" parameterType="_int">
+	    UPDATE NOTE
+	       SET STATUS = 'N'
+	     WHERE NOTE_NO = #{nno}
+	</update>
+	
 
 </mapper>

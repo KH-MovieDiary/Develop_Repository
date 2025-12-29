@@ -167,6 +167,8 @@
         const type = "${type}" || "received";
         location.href = "noteDetail?nno=" + nno + "&type=" + type;
     }
+    
+    
 </script>
 
 </body>

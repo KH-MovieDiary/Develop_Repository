@@ -12,6 +12,7 @@
 <style>
     body { font-family: 'Noto Sans KR', sans-serif; background-color: #f8f9fa; padding: 50px 0; }
     .detail-container { max-width: 700px; margin: auto; background: #fff; padding: 50px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+    .detail-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f3f5; margin-bottom: 30px; padding-bottom: 20px; }
     
     .detail-header { border-bottom: 2px solid #f1f3f5; margin-bottom: 30px; padding-bottom: 20px; }
     .detail-title { font-weight: 700; color: #333; font-size: 24px; margin-bottom: 10px; }
@@ -38,6 +39,28 @@
     .btn-reply:hover { background-color: #000; transform: translateY(-2px); }
     .btn-list { background-color: #fff; border: 1px solid #ddd; color: #666; }
     .btn-list:hover { background-color: #f8f9fa; color: #333; }
+
+.btn-delete-small { 
+    background-color: #fff; 
+    color: #ff4d4f; 
+    border: 1px solid #ff4d4f; 
+    padding: 4px 10px; 
+    border-radius: 8px; 
+    font-size: 13px; 
+    font-weight: 500; 
+    transition: all 0.2s;
+}
+
+.btn-delete-small:hover { 
+    background-color: #ff4d4f; 
+    color: #fff; 
+    text-decoration: none;
+}
+
+.btn-delete-small i { margin-right: 3px; }
+
+
+
 </style>
 </head>
 <body>
@@ -46,8 +69,12 @@
 
 <div class="detail-container">
     <div class="detail-header">
-        <div class="detail-title">✉️ 쪽지 읽기</div>
-    </div>
+    <div class="detail-title">✉️ 쪽지 읽기</div>
+	    <button type="button" class="btn-delete-small" onclick="deleteNote(${n.noteNo});">
+	        <i class="fas fa-trash-alt"></i> 삭제
+	    </button>
+	</div>
+    
 
     <div class="detail-body">
         <div class="info-row">
@@ -89,6 +116,36 @@
 	    </c:choose>
 	</div>
 </div>
+
+<script>
+    function deleteNote(nno) {
+        if(confirm("정말 이 쪽지를 삭제하시겠습니까?")) {
+            $.ajax({
+                url: "${pageContext.request.contextPath}/websocket/deleteNote",
+                type: "post",
+                data: { nno: nno },
+                success: function(result) {
+                    if(result === "success") {
+                        alert("쪽지가 성공적으로 삭제되었습니다.");
+                        // 삭제 후 목록으로 이동 (현재 사용자의 타입에 맞게 이동)
+                        var type = "${loginUser.nickName eq n.sendNickName ? 'sent' : 'received'}";
+                        location.href = "noteList?type=" + type;
+                    } else {
+                        alert("쪽지 삭제에 실패했습니다.");
+                    }
+                },
+                error: function() {
+                    console.log("삭제 통신 실패");
+                }
+            });
+        }
+    }
+</script>
+
+
+
+
+
 
 </body>
 </html>
