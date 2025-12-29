@@ -219,7 +219,7 @@
 	                <li><a href="${contextRoot}">HOME</a></li>
 	                <li><a href="${contextRoot}/movieInfo.mo">영화 정보</a></li>
 	                <li><a href="${contextRoot}/reviewList.bo">감상평</a></li>
-	                <li><a href="${contextRoot }/mypage.me">마이페이지</a></li>
+	                <li><a href="${contextRoot }/mypage.me" onclick="return checkLogin();">마이페이지</a></li>
 	                <li>
 	                    <form action="${contextRoot}/movieInfo.mo" method="get" class="search-form">
 					    <input type="text" class="search-input" name="keyword" placeholder="영화 제목을 검색해보세요">
@@ -263,6 +263,46 @@
 		</script>
 		<c:remove var="alertMsg" scope="session" />
 	</c:if>
+	
+	
+	
+	
+	
+	<script>
+	    var noteSocket;
+	
+	    $(document).ready(function() {
+	        if("${loginUser}" != "") { // 로그인 상태일 때만 연결
+	            connectWS();
+	        }
+	    });
+	
+	    function connectWS() {
+	        // 주소 뒤에 contextPath가 중복되지 않도록 확인하세요
+	        noteSocket = new WebSocket("ws://localhost:8080/moviediary/note-ws");
+	        
+	        // 팝업창에서 더 쉽게 찾을 수 있도록 window 객체에 직접 할당
+	        window.noteSocket = noteSocket; 
+
+	        noteSocket.onmessage = function(event) {
+	            if(event.data === "newNote") {
+	                alert("📩 새로운 쪽지가 도착했습니다!");
+	                // 알림과 동시에 리스트 자동 갱신을 원하시면 아래 주석 해제
+	                // location.reload(); 
+	            }
+	        };
+	    }
+	    
+	    function checkLogin() {
+	        var loginUser = "${loginUser}";
+	        
+	        if (loginUser == "") {
+	            alert("로그인 후 이용 가능합니다.");
+	            return false; 
+	        }
+	        return true;
+	    }
+	</script>
 	
 	
 </body>

@@ -5,53 +5,83 @@
   
 <mapper namespace="noteMapper">
 
-	<resultMap id="noteResultMap" type="Note">
+    <resultMap id="noteResultMap" type="Note">
         <id column="NOTE_NO" property="noteNo"/>
-        <result column="SEND_ID" property="sendId"/>
-        <result column="RECEIVE_ID" property="receiveId"/>
-        <result column="NCONTENT" property="noteContent"/>
+        <result column="SENDER_NICK" property="sendNickName"/>
+        <result column="RECEIVER_NICK" property="receiveNickName"/>
+        <result column="NCONTENT" property="noteContent"/> 
         <result column="CREATE_DATE" property="time"/>
         <result column="STATUS" property="status"/>
     </resultMap>
 
-	<insert id="insertNote">
-	    INSERT INTO NOTE (
- 				  NOTE_NO
- 				, SEND_ID
- 				, RECEIVE_ID
- 				, NCONTENT
- 				, STATUS)
-	    VALUES (SEQ_NNO.NEXTVAL
-	    	, #{sendId}
-	    	, #{receiveId}
-	    	, #{noteContent}
-	    	, 'Y')
-	</insert>
-	
-	<select id="selectReceivedNoteList" resultMap="noteResultMap">
-	    SELECT *
-	    FROM NOTE
-	    WHERE RECEIVE_ID = #{userId}
-	      AND STATUS = 'Y'
-	    ORDER BY NOTE_NO DESC
-	</select>
-	
-	<select id="selectSentNoteList" resultMap="noteResultMap">
-	    SELECT *
-	    FROM NOTE
-	    WHERE SEND_ID = #{userId}
-	      AND STATUS = 'Y'
-	    ORDER BY NOTE_NO DESC
-	</select>
-	
-	<select id="selectListCount" resultType="_int">
-	    SELECT COUNT(*)
-	    FROM NOTE
-	    WHERE RECEIVE_ID = #{userId} AND STATUS = 'Y'
-	</select>
-	
-	<select id="selectSentListCount" resultType="_int">
-	    SELECT COUNT(*) FROM NOTE WHERE SEND_ID = #{userId} AND STATUS = 'Y'
+    <insert id="insertNote">
+        INSERT INTO NOTE (NOTE_NO, SEND_ID, RECEIVE_ID, NCONTENT, STATUS)
+        VALUES (
+            SEQ_NNO.NEXTVAL,
+            (SELECT USER_ID FROM MEMBER WHERE NICKNAME = #{sendNickName}),
+            (SELECT USER_ID FROM MEMBER WHERE NICKNAME = #{receiveNickName}),
+            #{noteContent},
+            'Y'
+        )
+    </insert>
+    
+    <select id="selectReceivedNoteList" resultMap="noteResultMap">
+        SELECT 
+            N.NOTE_NO,
+            M1.NICKNAME AS SENDER_NICK,
+            M2.NICKNAME AS RECEIVER_NICK,
+            N.NCONTENT,
+            N.CREATE_DATE
+        FROM NOTE N
+        JOIN MEMBER M1 ON (N.SEND_ID = M1.USER_ID)
+        JOIN MEMBER M2 ON (N.RECEIVE_ID = M2.USER_ID)
+        WHERE M2.NICKNAME = #{userId}
+          AND N.STATUS = 'Y'
+        ORDER BY N.NOTE_NO DESC
+    </select>
+    
+    <select id="selectSentNoteList" resultMap="noteResultMap">
+        SELECT 
+            N.NOTE_NO,
+            M1.NICKNAME AS SENDER_NICK,
+            M2.NICKNAME AS RECEIVER_NICK,
+            N.NCONTENT,
+            N.CREATE_DATE
+        FROM NOTE N
+        JOIN MEMBER M1 ON (N.SEND_ID = M1.USER_ID)
+        JOIN MEMBER M2 ON (N.RECEIVE_ID = M2.USER_ID)
+        WHERE M1.NICKNAME = #{userId}
+          AND N.STATUS = 'Y'
+        ORDER BY N.NOTE_NO DESC
+    </select>
+    
+    <select id="selectListCount" resultType="_int">
+        SELECT COUNT(*)
+        FROM NOTE N
+        JOIN MEMBER M ON (N.RECEIVE_ID = M.USER_ID)
+        WHERE M.NICKNAME = #{userId} AND N.STATUS = 'Y' 
+    </select>
+    
+    <select id="selectSentListCount" resultType="_int">
+        SELECT COUNT(*)
+        FROM NOTE N
+        JOIN MEMBER M ON (N.SEND_ID = M.USER_ID)
+        WHERE M.NICKNAME = #{userId} AND N.STATUS = 'Y'
+    </select>   
+    
+    
+     <select id="selectNoteDetail" resultMap="noteResultMap">
+	    SELECT 
+	        N.NOTE_NO,
+	        M1.NICKNAME AS SENDER_NICK,
+	        M2.NICKNAME AS RECEIVER_NICK,
+	        N.NCONTENT,
+	        N.CREATE_DATE
+	    FROM NOTE N
+	    JOIN MEMBER M1 ON (N.SEND_ID = M1.USER_ID)
+	    JOIN MEMBER M2 ON (N.RECEIVE_ID = M2.USER_ID)
+	    WHERE N.NOTE_NO = #{nno}
+	      AND N.STATUS = 'Y'
 	</select>
 
 	<select id="selectNoteList" resultMap="noteResultMap">
@@ -62,4 +92,5 @@
 	    ORDER BY NOTE_NO DESC
 	</select>
 	
+
 </mapper>

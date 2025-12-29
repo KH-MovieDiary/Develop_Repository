@@ -31,7 +31,7 @@
 		<beans:property name="maxUploadSize" value="100000000"/>
 	</beans:bean>
 	
-	<beans:bean class="com.kh.moviediary.websocket.server.NoteHandler" id="noteHandler"/>
+	<beans:bean class="com.kh.moviediary.websocket.controller.WebsocketHandler" id="noteHandler"/>
 
 	<websocket:handlers>
 	    <websocket:mapping handler="noteHandler" path="/note-ws"/>
