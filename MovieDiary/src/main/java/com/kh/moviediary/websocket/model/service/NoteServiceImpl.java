@@ -44,6 +44,11 @@ public class NoteServiceImpl implements NoteService {
 		return Dao.selectSentListCount(sqlSession, userId);
 	}
 
+	@Override
+	public Note selectNoteDetail(int nno) {
+		return Dao.selectNoteDetail(sqlSession, nno);
+	}
+
 
 	
 

@@ -207,7 +207,7 @@
 			<br> 
 			<div style="float: right; display: flex; gap: 10px;">
 			    <a class="listBtn" id="sendNoteBtn" 
-			       href="${contextRoot}/websocket/noteHandler?targetId=${review.userId}">쪽지 보내기</a>
+			       href="${contextRoot}/websocket/noteHandler?targetId=${review.nickname}">쪽지 보내기</a>
 			    
 			    <a class="listBtn" id="listBtn" 
 			       href="${contextRoot}/reviewList.bo">목록으로</a>

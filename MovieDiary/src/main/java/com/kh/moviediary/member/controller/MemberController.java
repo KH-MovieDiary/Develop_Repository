@@ -42,13 +42,9 @@ public class MemberController {
 	
 	@RequestMapping("/updateForm.me")
 	public String updateForm(HttpSession session, Model model) {
-		// 세션에 저장된 로그인 유저 정보를 가져옵니다.
 	    Member loginUser = (Member)session.getAttribute("loginUser");
 	    
-	    // 유저가 선택했던 장르 문자열이 있다면 (예: "10751,27")
 	    if (loginUser.getFavoriteGenre() != null && !loginUser.getFavoriteGenre().equals("")) {
-	        // 콤마를 기준으로 잘라서 리스트로 변환합니다.
-	        // List로 변환해두면 JSP의 fn:contains나 반복문에서 비교하기 매우 좋습니다.
 	        java.util.List<String> genreList = java.util.Arrays.asList(loginUser.getFavoriteGenre().split(","));
 	        model.addAttribute("genreList", genreList);
 	    }
@@ -154,7 +150,7 @@ public class MemberController {
 	
 	@RequestMapping("logout.me")
 	public String logoutMember(HttpSession session) {
-	    session.invalidate(); // 세션 무효화 (로그아웃)
+	    session.invalidate();
 	    return "redirect:/";
 	}
 	
@@ -172,10 +168,9 @@ public class MemberController {
 	
 	@RequestMapping("update.me")
 	public String updateMember(Member m, String[] favoriteGenre, MultipartFile uploadFile, HttpSession session, Model model) {
-		// 1. 새로운 첨부파일(프로필 사진)이 넘어온 경우 처리
+
 	    if(uploadFile != null && !uploadFile.getOriginalFilename().equals("")) {
-	        
-	        // 기존 파일이 있다면 삭제하는 로직을 추가하면 더 깔끔합니다 (선택사항)
+	       
 	        
 	        String originName = uploadFile.getOriginalFilename();
 	        String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
@@ -186,39 +181,29 @@ public class MemberController {
 	        
 	        try {
 	            uploadFile.transferTo(new File(savePath + changeName));
-	            // 새로운 경로를 Member 객체에 세팅
 	            m.setPicture("resources/uploadFiles/" + changeName);
 	        } catch (IOException e) {
 	            e.printStackTrace();
 	        }
 	    } else {
-	        // 파일을 새로 올리지 않았다면 기존 사진 경로를 유지해야 합니다.
-	        // JSP에서 <input type="hidden" name="picture" value="${loginUser.picture}"> 로 넘겨줘야 함
+
 	    }
 	    
-	    // 1. 선호 장르 배열 처리 (비즈니스 로직)
 	    if (favoriteGenre != null && favoriteGenre.length > 0) {
-	        // 배열을 "10751,27,9648" 형태의 문자열로 결합
 	        String joinGenres = String.join(",", favoriteGenre);
 	        
-	        // [보안/유효성 검사] DB 컬럼 크기가 100바이트이므로 길이 체크
 	        if (joinGenres.length() > 100) {
-	            // 자르거나 에러 처리
 	            joinGenres = joinGenres.substring(0, 100);
 	        }
 	        
-	        m.setFavoriteGenre(joinGenres); // 가공된 데이터를 객체에 삽입
+	        m.setFavoriteGenre(joinGenres);
 	    } else {
-	        m.setFavoriteGenre(null); // 선택 안했을 경우 처리
+	        m.setFavoriteGenre(null);
 	    }
 	    
-
-	    // 2. 서비스 호출하여 DB 업데이트 (이메일, 생년월일, 성별, 장르, 사진 등)
 	    int result = service.updateMember(m);
 	    
 	    if(result > 0) {
-	        // 3. [중요] DB 업데이트 성공 시 세션 정보 갱신
-	        // updateMember 서비스 성공 후, 변경된 정보로 다시 DB 조회를 해와야 세션이 최신화됩니다.
 	        Member updateMember = service.loginUser(m); 
 	        session.setAttribute("loginUser", updateMember);
 	        session.setAttribute("alertMsg", "성공적으로 정보가 수정되었습니다.");
@@ -232,18 +217,14 @@ public class MemberController {
 	
 	@RequestMapping("delete.me")
 	public String deleteMember(String userId, HttpSession session, javax.servlet.http.HttpServletRequest request, Model model) {
-	    
-	    // STATUS 컬럼을 'N'으로 바꾸는 서비스 호출
+	   
 	    int result = service.deleteMember(userId);
 	    
 	    if(result > 0) {
-	    	// 1. 기존 세션 파괴 (로그아웃 효과)
 	        request.getSession().invalidate();
 	        
-	        // 2. 새로운 세션 생성 (true를 인자로 주면 새 세션 발급)
 	        HttpSession newSession = request.getSession(true);
 	        
-	        // 3. 새 세션에 알림 메시지 저장
 	        newSession.setAttribute("alertMsg", "성공적으로 탈퇴되었습니다. 그동안 이용해주셔서 감사합니다.");
 	        
 	        return "redirect:/";
