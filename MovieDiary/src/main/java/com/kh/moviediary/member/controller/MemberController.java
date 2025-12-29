@@ -40,10 +40,19 @@ public class MemberController {
 		return "member/memberEnrollForm";
 	}
 	
+	
+	
 	@RequestMapping("/updateForm.me")
 	public String updateForm(HttpSession session, Model model) {
+		
 	    Member loginUser = (Member)session.getAttribute("loginUser");
+
+	    if (loginUser == null) {
+	    	session.setAttribute("alertMsg", "로그인 후 이용가능합니다.");
+	        return "redirect:/";
+	    } 
 	    
+
 	    if (loginUser.getFavoriteGenre() != null && !loginUser.getFavoriteGenre().equals("")) {
 	        java.util.List<String> genreList = java.util.Arrays.asList(loginUser.getFavoriteGenre().split(","));
 	        model.addAttribute("genreList", genreList);

@@ -23,20 +23,28 @@ public class MypageController {
     private static final String BASE_URL = "https://api.themoviedb.org/3";
     private static final String IMG_URL  = "https://image.tmdb.org/t/p/w500";
 
-    @GetMapping("/mypage")
+    @GetMapping("/mypage.me")
     public String mypage(HttpSession session, Model model) {
 
         // content1 test data
-        Member loginUser = Member.builder()
-                .userId("testUser01")
-                .nickName("테스트유저")
-                .birthday("1988-12-05")
-                .gender("M")
-                .favoriteGenre("액션, SF")
-                .picture(null)
-                .createDate(new java.sql.Date(System.currentTimeMillis()))
-                .build();
-
+//        Member loginUser = Member.builder()
+//                .userId("testUser01")
+//                .nickName("테스트유저")
+//                .birthday("1988-12-05")
+//                .gender("M")
+//                .favoriteGenre("액션, SF")
+//                .picture(null)
+//                .createDate(new java.sql.Date(System.currentTimeMillis()))
+//                .build();
+    	
+    	Member loginUser = (Member)session.getAttribute("loginUser");
+    	
+    	if (loginUser == null) {
+            session.setAttribute("alertMsg", "비정상적인 접근입니다. 로그인 후 이용해주세요.");
+            return "redirect:/"; // 메인 페이지로 강제 이동 (주소창도 깔끔하게 변경)
+        }
+    	
+    	
         session.setAttribute("loginUser", loginUser);
         model.addAttribute("loginUser", loginUser);
         
