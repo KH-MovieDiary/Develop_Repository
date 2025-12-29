@@ -165,8 +165,8 @@
         font-weight:800;
 
         background: rgba(0,0,0,0.18);
-        color: rgba(255,255,255,0.92);
-
+        /* color: rgba(255,255,255,0.92); */
+		color : black;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
