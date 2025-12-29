@@ -62,9 +62,4 @@
 	    ORDER BY NOTE_NO DESC
 	</select>
 	
-	
-	
-	
-	
-	
 </mapper>

@@ -2,6 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
+ <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,7 +16,13 @@
     width: 70%;
     height: 100vh;
     margin: 0 auto;
+    padding: 24px;
 }
+
+body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #f8f9fa;
+        }
 
 /* 상단 검색 영역 */
 .board-top {
