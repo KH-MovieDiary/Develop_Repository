@@ -250,7 +250,6 @@
                 <select id="filter" onchange="goSearch(1)">
                     <option value="release_date" ${sort=="release_date" ? "selected" : ""}>개봉일(최신)</option>
                     <option value="popularity" ${sort=="popularity" ? "selected" : ""}>인기</option>
-                    <option value="vote_average" ${sort=="vote_average" ? "selected" : ""}>평점</option>
                 </select>
             </div>
         </div>

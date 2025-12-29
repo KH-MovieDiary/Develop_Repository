@@ -64,6 +64,7 @@
 		    border-radius: 6px;
 		    line-height: 1.5;
 		    white-space: pre-wrap;
+		    
 		}
 		
 		.replyArea tbody td:last-child {
@@ -142,6 +143,7 @@
 	        font-weight: bold;
 	        display: flex;
 	        align-items: center;
+	        
 		}
 		
 		#replyBtn2:hover{
@@ -234,6 +236,7 @@
 	label {
 	    cursor: pointer;
 	}
+	
 </style>
 
 </head>
@@ -331,6 +334,9 @@
 												
 						</c:choose>
 										
+						
+					</th>
+					<th>
 						<div id="replyBtnArea">
 							<c:choose>
 								<c:when test="${empty loginUser}">
@@ -341,8 +347,6 @@
 								</c:otherwise>
 							</c:choose>
 						</div>
-					</th>
-					<th>
 					</th>
 					<th>
 					</th>
