@@ -316,7 +316,7 @@
 						<c:choose>
 									
 							<c:when	test="${empty loginUser}">
-								<textarea id="replyContent1" placeholder="로그인 후 이용가능합니다." readonly></textarea>
+								<textarea id="replyContent1" placeholder="로그인 후 이용가능합니다." disabled></textarea>
 							</c:when>
 													
 							<c:otherwise>
