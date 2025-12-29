@@ -32,14 +32,16 @@
             color: var(--text);
         }
 
-        #wrap {
-            width: 70%;
-            height: 100vh;
-            margin: auto;
-            padding-top: 24px;
-            padding-bottom: 24px;
-            box-sizing: border-box;
-        }
+		        #wrap{
+		    width: 70%;
+		    min-height: 100vh;
+		    height: auto;
+		    margin: auto;
+		    padding-top: 24px;
+		    padding-bottom: 24px;
+		    box-sizing: border-box;
+		}
+
 
         #content {
             width: 90%;
@@ -52,7 +54,7 @@
 
         #movieRank {
             width: 100%;
-            height: 62%;
+            height: 430px;
             margin: auto;
             display: flex;
             flex-direction: column;
@@ -63,7 +65,7 @@
             box-shadow: 0 18px 60px rgba(0,0,0,0.35);
         }
 
-        #live_comment {
+        #live_comment{
             width: 100%;
             height: 32%;
             margin: auto;
@@ -107,7 +109,7 @@
         #content_movieRank {
             width: 100%;
             height: calc(100% - 72px);
-            padding: 16px 16px 18px 16px;
+            padding: 22px 16px 22px 16px;
             box-sizing: border-box;
             position: relative;
             overflow: hidden;
@@ -158,8 +160,8 @@
         }
 
         .item_content {
-            width: 165px;
-            height: 260px;
+            width: 175px;
+            height: 300px;
             border-radius: 16px;
             overflow: hidden;
             border: 1px solid rgba(255,255,255,0.10);
@@ -170,7 +172,7 @@
             transform: translateZ(0);
         }
 
-        .poster_item { width: 100%; height: 78%; background: rgba(255,255,255,0.04); }
+        .poster_item { width: 100%; height: 82%; background: rgba(255,255,255,0.04); }
         .poster_item img{ width: 100%; height: 100%; object-fit: cover; display:block; }
         .poster_fallback{
             width:100%; height:100%;
@@ -181,8 +183,8 @@
         }
         .title_item {
             width: 100%;
-            height: 22%;
-            padding: 10px 10px;
+            height: 18%;
+            padding: 12px 10px;
             box-sizing: border-box;
             display:flex;
             align-items:center;
@@ -317,6 +319,48 @@
             color:#777;
             font-size: 13px;
         }
+        #popular_sub{
+		    height: 100%;
+		    display: flex;
+		    gap: 12px;
+		    align-items: stretch;
+		    overflow-x: auto;
+		    overflow-y: hidden;
+		    padding-bottom: 6px;
+		    box-sizing: border-box;
+		}
+
+		#popular_sub::-webkit-scrollbar{
+		    height: 8px;
+		}
+		#popular_sub::-webkit-scrollbar-thumb{
+		    background: rgba(0,0,0,0.15);
+		    border-radius: 8px;
+		}
+		#popular_sub::-webkit-scrollbar-track{
+		    background: transparent;
+		}
+        
+        #popular_review{
+		    width: 100%;
+		    height: 32%;
+		    margin: auto;
+		    border-radius: 18px;
+		    border: 1px solid var(--line);
+		    background: rgba(255,255,255,0.05);
+		    box-shadow: 0 18px 60px rgba(0,0,0,0.25);
+		    padding: 18px;
+		    box-sizing: border-box;
+		}
+        .review-card{
+		    cursor: pointer;
+		    transition: transform 0.15s ease, box-shadow 0.15s ease;
+		}
+		
+		.review-card:hover{
+		    transform: translateY(-4px);
+		    box-shadow: 0 14px 32px rgba(0,0,0,0.18);
+		}
     </style>
 </head>
 
@@ -329,7 +373,7 @@
                 <div id="header_movieRank">
                     <div class="rank-title">
                         <div class="h1">현재 상영작</div>
-                        <div class="sub">마우스를 올리면 잠깐 멈추고, 클릭하면 상세 모달이 열려요</div>
+                        <div class="sub"></div>
                     </div>
                     <div><a href="${contextRoot}/movieInfo.mo">더보기</a></div>
                 </div>
@@ -389,6 +433,17 @@
                     <div id="sub"></div>
                 </div>
             </div>
+            <div id="popular_review">
+		    <div class="live-header">
+		        <div class="h">인기글 TOP 5</div>
+		        <div class="sub"></div>
+		    </div>
+		
+		    <div class="live-body">
+		        <div id="popular_sub"></div>
+    </div>
+</div>
+            
         </div>
     </div>
 
@@ -396,80 +451,101 @@
     <jsp:include page="/WEB-INF/views/common/movieModal.jsp" />
 
     <script>
-        document.addEventListener("click", function(e){
-            var card = e.target.closest(".item_content");
-            if(!card) return;
+    document.addEventListener("click", function(e){
 
-            var tmdbId = card.getAttribute("data-tmdb-id");
-            if(!tmdbId) return;
-
-            openModal(tmdbId);
-        });
-
-        function formatDate(v){
-            if(!v) return "";
-            try{
-                var s = String(v);
-                if(s.length >= 10) return s.substring(0,10);
-                return s;
-            }catch(e){
-                return "";
-            }
+        var movieCard = e.target.closest(".item_content");
+        if(movieCard){
+            var tmdbId = movieCard.getAttribute("data-tmdb-id");
+            if(tmdbId) openModal(tmdbId);
+            return; 
         }
 
-        $(function(){
-            $.ajax({
-                url: "<c:url value='/reviewGet'/>",
-                dataType: "json",
-                success: function(data){
-                    console.log("ajax success:", data);
+        var reviewCard = e.target.closest(".review-card");
+        if(reviewCard){
+            var reviewId = reviewCard.getAttribute("data-review-id");
+            if(!reviewId) return;
 
-                    if(!data || data.length === 0){
-                        $("#sub").html("<div class='empty-box'>아직 감상문이 없습니다</div>");
-                        return;
-                    }
+            location.href = "<c:url value='/detail.review'/>?rno=" + reviewId;
+            return;
+        }
+    });
 
-                    var html = "";
+    function formatDate(v){
+        if(!v) return "";
+        try{
+            var s = String(v);
+            if(s.length >= 10) return s.substring(0,10);
+            return s;
+        }catch(e){
+            return "";
+        }
+    }
 
-                    var limit = Math.min(5, data.length);
+    function renderReviewCards(targetSelector, data){
+        if(!data || data.length === 0){
+            $(targetSelector).html("<div class='empty-box'>아직 글이 없습니다</div>");
+            return;
+        }
 
-                    for(var i=0; i<limit; i++){
-                        var r = data[i];
+        var html = "";
+        var limit = Math.min(5, data.length);
 
-                        var reviewTitle = (r.reviewTitle == null) ? "" : r.reviewTitle;
-                        var movieTitle  = (r.movieTitle  == null) ? "" : r.movieTitle;
-                        var writer      = (r.nickname   == null || r.nickname === "") ? (r.userId == null ? "" : r.userId) : r.nickname;
+        for(var i=0; i<limit; i++){
+            var r = data[i];
 
-                        var viewCount   = (r.viewCount == null) ? 0 : r.viewCount;
-                        var likeCount   = (r.likeCount == null) ? 0 : r.likeCount;
-                        var createDate  = formatDate(r.createDate);
+            var reviewTitle = (r.reviewTitle == null) ? "" : r.reviewTitle;
+            var movieTitle  = (r.movieTitle  == null) ? "" : r.movieTitle;
+            var writer      = (r.nickname   == null || r.nickname === "") ? (r.userId == null ? "" : r.userId) : r.nickname;
 
-                        html += ""
-                          + "<div class='review-card'>"
-                          +   "<div>"
-                          +     "<div class='review-title'>" + reviewTitle + "</div>"
-                          +     "<div class='review-movie'>🎬 " + movieTitle + "</div>"
-                          +     "<div class='review-writer'>✍️ " + writer + "</div>"
-                          +   "</div>"
-                          +   "<div>"
-                          +     "<div class='review-meta'>"
-                          +       "<div class='pill'>👀 " + viewCount + "</div>"
-                          +       "<div class='pill'>👍 " + likeCount + "</div>"
-                          +     "</div>"
-                          +     "<div class='review-date'>📅 " + createDate + "</div>"
-                          +   "</div>"
-                          + "</div>";
-                    }
+            var viewCount   = (r.viewCount == null) ? 0 : r.viewCount;
+            var likeCount   = (r.likeCount == null) ? 0 : r.likeCount;
+            var createDate  = formatDate(r.createDate);
 
-                    $("#sub").html(html);
-                },
-                error: function(xhr){
-                    console.log("ajax error:", xhr.status, xhr.responseText);
-                    $("#sub").html("<div class='empty-box'>불러오기 실패 ("+xhr.status+")</div>");
-                }
-            });
+            html += ""
+              + "<div class='review-card' data-review-id='" + r.reviewId + "' style='cursor:pointer;'>"
+              +   "<div>"
+              +     "<div class='review-title'>" + reviewTitle + "</div>"
+              +     "<div class='review-movie'>🎬 " + movieTitle + "</div>"
+              +     "<div class='review-writer'>✍️ " + writer + "</div>"
+              +   "</div>"
+              +   "<div>"
+              +     "<div class='review-meta'>"
+              +       "<div class='pill'>👀 " + viewCount + "</div>"
+              +       "<div class='pill'>👍 " + likeCount + "</div>"
+              +     "</div>"
+              +     "<div class='review-date'>📅 " + createDate + "</div>"
+              +   "</div>"
+              + "</div>";
+        }
+
+        $(targetSelector).html(html);
+    }
+
+    $(function(){
+        $.ajax({
+            url: "<c:url value='/reviewGet'/>",
+            dataType: "json",
+            success: function(data){
+                renderReviewCards("#sub", data);
+            },
+            error: function(xhr){
+                $("#sub").html("<div class='empty-box'>불러오기 실패 ("+xhr.status+")</div>");
+            }
         });
-    </script>
+
+        $.ajax({
+            url: "<c:url value='/reviewPopularTop5'/>",
+            dataType: "json",
+            success: function(data){
+                renderReviewCards("#popular_sub", data);
+            },
+            error: function(xhr){
+                $("#popular_sub").html("<div class='empty-box'>불러오기 실패 ("+xhr.status+")</div>");
+            }
+        });
+    });
+	</script>
+
 
 </body>
 </html>
