@@ -40,6 +40,14 @@
 	    </websocket:handshake-interceptors>
 	</websocket:handlers>
 	
-	
+	<interceptors>
+		 
+		 <interceptor>
+		 	<mapping path="/detail.review"/>
+		 	<beans:bean class="com.kh.moviediary.interceptor.DetailDirectBlockInterceptor"/>
+		 
+		 
+		 </interceptor>
+	</interceptors>
 	
 </beans:beans>
