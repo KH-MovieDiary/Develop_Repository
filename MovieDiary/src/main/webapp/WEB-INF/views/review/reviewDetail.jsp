@@ -208,8 +208,8 @@
 			<div style="float: right; display: flex; gap: 10px;">
 			  <c:if test="${review.userId ne loginUser.userId }">
 			    <a class="listBtn" id="sendNoteBtn" 
-			       href="${contextRoot}/websocket/noteHandler?targetId=${review.userId}">쪽지 보내기</a>
-			  </c:if>  
+			       href="${contextRoot}/websocket/noteHandler?targetId=${review.userId}">쪽지 보내기</a>  
+			  </c:if>
 			    <a class="listBtn" id="listBtn" 
 			       href="${contextRoot}/reviewList.bo">목록으로</a>
 			</div>
