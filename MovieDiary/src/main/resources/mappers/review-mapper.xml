@@ -126,7 +126,7 @@
  	</choose>
  	
  	<choose>
- 		<when test="sort == 'count'">
+ 		<when test="sort == 'like'">
  			ORDER BY LIKE_COUNT DESC
  		</when>
  		<when test="sort == 'count'">
