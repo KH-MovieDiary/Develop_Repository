@@ -16,7 +16,7 @@
    ========================= */
 .wrap {
     width: 70%;
-    height: 100vh;
+    flex : 1;
     margin: auto;
     background-color: #f4f6f8;
 }
@@ -491,14 +491,10 @@
 	    $("#pwdErrorMsg").hide();
 	});
 
-
-
-
-
-
 </script>
-
-
+        
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
+
+
 </body>
 </html>
