@@ -212,7 +212,7 @@
 	        border-radius:18px;
 	        border:1px solid var(--line);
 	        background: rgba(255,255,255,0.05);
-	        box-shadow:0 18px 60px rgba(0,0,0,0.25);
+	       box-shadow: 0 0 30px rgba(0,0,0,0.2);
 	        padding:18px;
 	    }
 	
