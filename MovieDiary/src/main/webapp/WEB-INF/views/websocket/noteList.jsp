@@ -102,52 +102,70 @@
 	            </table>
 	            
 	            
-	            <div id="pagingArea" class="mt-4">
-	    <ul class="pagination justify-content-center">
-	        <c:choose>
-	            <c:when test="${ pi.currentPage eq 1 }">
-	                <li class="page-item disabled"><a class="page-link" href="#">&lt;</a></li>
-	            </c:when>
-	            <c:otherwise>
-	                <li class="page-item"><a class="page-link" href="noteList?page=${pi.currentPage - 1}">&lt;</a></li>
-	            </c:otherwise>
-	        </c:choose>
+	           </div> </div> <div id="pagingArea" class="mt-4">
+		        <ul class="pagination justify-content-center">
+		            <c:choose>
+		                <c:when test="${ pi.currentPage eq 1 }">
+		                    <li class="page-item disabled"><a class="page-link" href="#">&lt;</a></li>
+		                </c:when>
+		                <c:otherwise>
+		                    <li class="page-item">
+		                        <a class="page-link" href="noteList?page=${pi.currentPage - 1}&type=${type}">&lt;</a>
+		                    </li>
+		                </c:otherwise>
+		            </c:choose>
+		
+		            <c:forEach var="p" begin="${pi.startPage}" end="${pi.endPage}">
+		                <li class="page-item ${p eq pi.currentPage ? 'active' : ''}">
+		                    <a class="page-link" href="noteList?page=${p}&type=${type}">${p}</a>
+		                </li>
+		            </c:forEach>
+		
+		            <c:choose>
+		                <c:when test="${ pi.currentPage eq pi.maxPage or pi.maxPage eq 0 }">
+		                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
+		                </c:when>
+		                <c:otherwise>
+		                    <li class="page-item">
+		                        <a class="page-link" href="noteList?page=${pi.currentPage + 1}&type=${type}">&gt;</a>
+		                    </li>
+		                </c:otherwise>
+		            </c:choose>
+		        </ul>
+		    </div>
+	           
+	           
+	           
+	           
 	
-	        <c:forEach var="p" begin="${pi.startPage}" end="${pi.endPage}">
-	            <li class="page-item ${p eq pi.currentPage ? 'active' : ''}">
-	                <a class="page-link" href="noteList?page=${p}">${p}</a>
-	            </li>
-	        </c:forEach>
-	
-	        <c:choose>
-	            <c:when test="${ pi.currentPage eq pi.maxPage or pi.maxPage eq 0 }">
-	                <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
-	            </c:when>
-	            <c:otherwise>
-	                <li class="page-item"><a class="page-link" href="noteList?page=${pi.currentPage + 1}">&gt;</a></li>
-	            </c:otherwise>
-	        </c:choose>
-	    </ul>
-	</div>
-	
-	<style>
-	    .pagination .page-link { color: #333; border: 1px solid #dee2e6; }
-	    .pagination .page-item.active .page-link { 
-	        background-color: #blue; /* 포인트 노란색 */
-	        border-color: #ffc107;
-	        color: white;
-	    }
-	    .pagination .page-link:hover { background-color: #f8f9fa; color: #ffc107; }
-	</style>
-            
-            
-        </div>
-    </div>
     
     <div class="text-right mt-4">
         <button class="btn btn-outline-dark" onclick="location.href='${pageContext.request.contextPath}/'">메인으로</button>
     </div>
-</div>
+
+
+
+<script>
+    $(function() {
+        // 서버에서 넘겨준 type이 'sent'일 경우
+        if("${type}" == "sent") {
+            // 1. 기존 활성화된 탭 해제
+            $("#received-tab").removeClass("active");
+            $("#received").removeClass("show active");
+            
+            // 2. 보낸 쪽지함 탭 활성화
+            $("#sent-tab").addClass("active");
+            $("#sent").addClass("show active");
+        }
+        
+        // 탭 버튼 자체를 클릭했을 때 페이지가 새로고침되면서 데이터를 새로 읽어오게 하고 싶다면 (선택 사항)
+        $('#noteTab a').on('click', function (e) {
+            var selectedType = $(this).attr('id') == 'sent-tab' ? 'sent' : 'received';
+            // 탭 클릭 시 해당 탭의 1페이지로 이동
+            location.href = "noteList?page=1&type=" + selectedType;
+        });
+    });
+</script>
 
 </body>
 </html>

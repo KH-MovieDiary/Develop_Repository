@@ -64,45 +64,40 @@ public class WebSocketController {
 	
 	
 	@RequestMapping("/noteList")
-	public String noteList(@RequestParam(value="page", defaultValue="1") int currentPage, 
+	public String noteList(@RequestParam(value="page", defaultValue="1") int currentPage,
+	                       // 1. type 파라미터를 추가로 받습니다. (기본값은 받은 쪽지함인 'received')
+	                       @RequestParam(value="type", defaultValue="received") String type, 
 	                       HttpSession session, Model model) {
 	    
-	    // 1. 로그인한 유저의 아이디 가져오기
 	    Member loginUser = (Member)session.getAttribute("loginUser");
-	    
 	    if(loginUser == null) {
 	        return "redirect:/"; 
 	    }
-
 	    String userId = loginUser.getUserId();
 	    
-	    // 2. 페이징 처리에 필요한 요소 설정
-	    int boardLimit = 5;  // [요청사항] 한 페이지에 5개씩
-	    int pageLimit = 10;  // 페이징바에 표시할 페이지 수
-	    
-	 // WebSocketController.java 수정
-	    int receivedCount = noteService.selectListCount(userId);      // 받은 쪽지 개수
-	    int sentCount = noteService.selectSentListCount(userId);     // 보낸 쪽지 개수 (새로 만든 메서드)
+	    // 2. 현재 선택된 탭(type)에 따라서만 개수를 세도록 수정 (페이징의 정확도를 위해)
+	    int listCount = type.equals("received") ? 
+	                    noteService.selectListCount(userId) : 
+	                    noteService.selectSentListCount(userId);
 
-	    
-	    // 둘 중 더 큰 값을 listCount로 사용 (두 탭 모두 페이징이 작동하게 함)
-	    int listCount = Math.max(receivedCount, sentCount); 
-
+	    int boardLimit = 5;  
+	    int pageLimit = 10;  
 
 	    ReviewPageInfo pi = Pagination.getPageInfo(listCount, currentPage, boardLimit, pageLimit);
 	    
+	    // 3. 리스트 조회 (현재는 두 리스트를 다 가져오지만, 성능을 위해 선택된 것만 가져와도 좋습니다)
 	    List<Note> receivedList = noteService.selectReceivedNoteList(pi, userId);
 	    List<Note> sentList = noteService.selectSentNoteList(pi, userId);
 	    
-	    
-	    // 5. 데이터 담아서 전달
 	    model.addAttribute("pi", pi);
 	    model.addAttribute("receivedList", receivedList); 
 	    model.addAttribute("sentList", sentList);
 	    
+	    // 4. 매우 중요: 화면에서 ${type}을 사용할 수 있도록 모델에 담아줍니다.
+	    model.addAttribute("type", type);
+	    
 	    return "websocket/noteList";
 	}
-	
 
 	
 	
