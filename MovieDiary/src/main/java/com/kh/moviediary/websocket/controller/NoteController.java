@@ -115,21 +115,43 @@ public class NoteController {
 	}
 	
 	@RequestMapping("/noteDetail")
-	public String noteDetail(@RequestParam("nno") int nno, 
-	                         @RequestParam("type") String type, 
-	                         Model model) {
-	    
+	public String noteDetail(@RequestParam("nno") int nno,
+	                         @RequestParam("type") String type,
+	                         Model model,
+	                         HttpSession session) {
+
+	    // 0) 로그인 체크 (비로그인 차단)
+	    Member loginUser = (Member) session.getAttribute("loginUser");
+	    if (loginUser == null) {
+	        return "redirect:/";
+	    }
+
 	    Note n = noteService.selectNoteDetail(nno);
-	    
-	    if(n != null) {
+
+	    if (n != null) {
+
+	        // 1) 소유자 체크: 받은 사람 or 보낸 사람만 열람 가능
+	        String loginNick = loginUser.getNickName();
+
+	        boolean isOwner =
+	                loginNick != null &&
+	                (loginNick.equals(n.getReceiveNickName()) || loginNick.equals(n.getSendNickName()));
+
+	        if (!isOwner) {
+	            // 다른 기능 건드리지 않기: 조용히 목록으로 보냄
+	            return "redirect:/websocket/noteList?type=" + type;
+	        }
+
 	        model.addAttribute("n", n);
-	        model.addAttribute("type", type); // 목록으로 돌아갈 때 필요한 상태값
+	        model.addAttribute("type", type);
 	        return "websocket/noteDetail";
+
 	    } else {
 	        model.addAttribute("alertMsg", "존재하지 않는 쪽지입니다.");
 	        return "redirect:/websocket/noteList?type=" + type;
 	    }
 	}
+
 
 	
 	
