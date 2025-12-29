@@ -11,23 +11,34 @@
 <title>게시판</title>
 
 <style>
-/* 전체 레이아웃 */
-.board-wrap {
-    width: 70%;
-    height: 100vh;
-    margin: 0 auto;
-    padding: 24px;
-}
+		.board-wrap {
+		    width: 70%;
+            min-height: 100vh;
+            margin: 0 auto;
+            display: block;
+            justify-content: center;
+            align-items: center;
+		}
 
+		.innerOuter{
+            width: 100%;
+            padding: 50px 60px;
+            background-color: #ffffff;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-radius: 20px;
+            border: none;
+            padding: 80px 100px;
+            margin: 20px 0;
+        }
+        
 body {
       font-family: 'Noto Sans KR', sans-serif;
       background-color: #f8f9fa;
         }
 
-/* 상단 검색 영역 */
 .board-top {
     display: flex;
-    justify-content: space-between; /* 좌우로 벌림 */
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
 }
@@ -38,7 +49,6 @@ body {
     gap: 8px;
 }
 
-/* 테이블 */
 .board-table {
     width: 100%;
     border-collapse: collapse;
@@ -99,6 +109,12 @@ body {
 	display: flex;
 	justify-content: center;
 }
+
+		#sortOption,
+		#searchOption{
+			cursor: pointer; 
+		}
+		
 </style>
 </head>
 
@@ -107,7 +123,7 @@ body {
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
 <div class="board-wrap">
-
+	<div class="innerOuter">
     <h2>게시판</h2>
 
     <div class="board-top">
@@ -236,7 +252,7 @@ body {
 	        <input type="text" name="keyword" value="${map.keyword}" placeholder="검색어 입력">
 			<button type="submit">검색</button>
 	</form>	
-	
+	</div>
 </div>
 
 	<jsp:include page="/WEB-INF/views/common/footer.jsp"/>

@@ -19,23 +19,24 @@
             background-color: #f8f9fa;
         }
 
-        .movie-register-wrapper {
+         .movie-register-wrapper {
             width: 70%;
             min-height: 100vh;
             margin: 0 auto;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 50px 0;
         }
 
         .innerOuter {
             width: 100%;
             padding: 50px 60px;
-            border-radius: 18px;
-            border: 1px solid var;
-            background: rgba(255,255,255,0.05);
-            box-shadow: 0 18px 60px rgba(0,0,0,0.25);
+            background-color: #ffffff;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-radius: 20px;
+            border: none;
+            padding: 80px 100px;
+            margin: 20px 0;
         }
         
         .comment-area{
@@ -70,10 +71,8 @@
 		}
 		
 		.replyArea tbody td:first-child {
-		    width: 100px;
-		    max-width: 100px;
+		    width: 160px;
 		    font-weight: bold;
-		    white-space: nowrap;
 		    overflow: hidden;
 		    text-overflow: ellipsis;
 		}
@@ -96,6 +95,8 @@
 		.replyArea tbody td:last-child {
 			width:40px;
 		    padding: 0;
+		    text-align: center;
+		    vertical-align: middle;
 		}
 		
 		#replyContent {
@@ -107,8 +108,60 @@
 		    font-size: 14px;
 		}
 		
+		.replyArea thead th{
+			padding: 10px;
+			box-sizing: border-box;
+			font-size: 14px;
+		}
+		
+		.replyArea thead th:nth-child(2){
+			padding: 0;
+		}
+		
 		.replyArea tbody tr {
 		    border-bottom: 1px solid lightgrey;
+		}
+		
+		.replyArea tbody td.noReply {
+		    font-size: 20px;
+		    text-align: center;
+		    color: #666;
+		    padding: 20px 0;
+		}
+		
+		.delBtn {
+		    background: none;
+		    border: none;
+		    padding: 0;
+		    cursor: pointer;
+		}
+		
+		#replyBtnArea {
+			width: 100%;
+		    margin: 8px 0;
+		    display: flex;
+		    justify-content: flex-end;
+		}
+		
+		#replyBtn1,
+		#replyBtn2{
+			background-color: white; 
+	        border: 1px solid #ddd;  
+	        padding: 10px 20px;      
+	        border-radius: 20px; 
+	        font-size: 12px;
+	        font-weight: bold;
+	        display: flex;
+	        align-items: center;
+			cursor: pointer;
+		}
+		
+		#replyBtn2:hover{
+			border: 1px solid #757575;
+		}
+		
+		#privateOption{
+			cursor: pointer; 		
 		}
 		
 	.btn-area{
@@ -273,27 +326,37 @@
 						<th>
 							댓글(<span id="rCount"></span>)
 						</th>
-						<th colspan="2">
+						<th>
 							<c:choose>
-								
+									
 								<c:when	test="${empty loginUser}">
 									<textarea id="replyContent" placeholder="로그인 후 이용가능합니다." readonly></textarea>
 								</c:when>
-									
+													
 								<c:otherwise>
-								<div class="replyOption">
-									<label>
-										<input type="checkbox" id="privateReply" value="Y">
-										작성자에게만 표시
-									</label>
-								</div>	
-								<textarea id="replyContent" placeholder="댓글을 작성하세요."></textarea>
+									<div class="replyOption">
+										<label id="privateOption">
+											<input type="checkbox" id="privateReply" value="Y">
+											작성자에게만 표시
+										</label>
+									</div>	
+									<textarea id="replyContent" placeholder="댓글을 작성하세요."></textarea>
 								</c:otherwise>
-								
+												
 							</c:choose>
+										
+							<div id="replyBtnArea">
+								<c:choose>
+									<c:when test="${empty loginUser}">
+										<button type="button" id="replyBtn1" disabled>댓글 등록</button>
+									</c:when>
+									<c:otherwise>
+										<button type="button" id="replyBtn2">댓글 등록</button>
+									</c:otherwise>
+								</c:choose>
+							</div>
 						</th>
 						<th>
-							<button id="replyBtn">등록</button>
 						</th>
 					</tr>
 				</thead>
@@ -414,7 +477,7 @@ function replyList(){
 
 		                        let delBtn = $("<button>")
 		                            .addClass("delBtn")
-		                            .text("삭제")
+		                            .text("🗑️")
 		                            .data("rcno", r.reviewCommentId);
 
 		                        tr.append(
