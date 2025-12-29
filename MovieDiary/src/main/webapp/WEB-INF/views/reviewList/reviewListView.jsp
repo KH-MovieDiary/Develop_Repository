@@ -26,7 +26,7 @@ body {
     border-radius: 18px;
 	box-shadow: 0 18px 60px rgba(0,0,0,0.1);
 }
-
+        
 .board-top {
     display: flex;
     justify-content: space-between;
@@ -169,6 +169,11 @@ body {
         background-color: #111; 
     }
     
+	#sortOption,
+	#searchOption{
+		cursor: pointer; 
+	}
+		
 </style>
 </head>
 
@@ -306,7 +311,6 @@ body {
 	        <input type="text" name="keyword" value="${map.keyword}" placeholder="검색어 입력">
 			<button type="submit" class="btn-search">검색</button>
 	</form>	
-	
 </div>
 
 	<jsp:include page="/WEB-INF/views/common/footer.jsp"/>

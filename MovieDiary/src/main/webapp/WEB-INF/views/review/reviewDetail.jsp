@@ -22,7 +22,7 @@
 		    padding: 0;
         }
 
-        .movie-register-wrapper {
+         .movie-register-wrapper {
             width: 70%;
 		    margin: 0 auto;
 		    padding: 50px;
@@ -30,31 +30,11 @@
 		    background: rgba(255,255,255,0.05);
 		    border-radius: 18px;
 			box-shadow: 0 18px 60px rgba(0,0,0,0.1);
-        }
-
-        .comment-area{
-        	width:70%;
-        	margin: 0 auto;
-        	display: flex;
-        	justify-content: center;
-        	align-items: center;
-        }
-        
-        .comment-input{
-        	width: 100%;
-        	display: flex;
-        	justify-content: center;
-        	gap: 5px;
-        }
-
-		#commentContent{
-			width: 70%;
-        	height: 40px;
-        	resize: none;
-		}
+        } 
 		
 		.replyArea{
 			width: 100%;
+			table-layout: fixed;
 		}
 		
 		.replyArea tbody td {
@@ -71,6 +51,7 @@
 		}
 		
 		.replyArea tbody td:nth-child(2) {
+			width: auto;
 		    background-color: #f8f9fa;
 		    border-radius: 6px;
 		    line-height: 1.5;
@@ -102,7 +83,6 @@
 		    font-size: 14px;
 		    border: 1px solid #ddd;
         	border-radius: 5px;
-        	transition: border-color 0.2s;
 		}
 		
 		.replyArea thead th{
@@ -111,15 +91,28 @@
 			font-size: 14px;
 		}
 		
+		.replyArea thead th:first-child{
+			width: 160px;
+		}
+		
 		.replyArea thead th:nth-child(2){
+			width: auto;
 			padding: 0;
+		}
+		
+		.replyArea thead th:nth-child(3){
+			width: 120px;		
+		}
+		
+		.replyArea thead th:last-child{
+			width: 40px;
 		}
 		
 		.replyArea tbody tr {
 		    border-bottom: 1px solid lightgrey;
 		}
 		
-		replyArea tbody td.noReply {
+		.replyArea tbody td.noReply {
 		    font-size: 20px;
 		    text-align: center;
 		    color: #666;
@@ -130,7 +123,6 @@
 		    background: none;
 		    border: none;
 		    padding: 0;
-		    cursor: pointer;
 		}
 		
 		#replyBtnArea {
@@ -150,7 +142,6 @@
 	        font-weight: bold;
 	        display: flex;
 	        align-items: center;
-			cursor: pointer;
 		}
 		
 		#replyBtn2:hover{
@@ -180,8 +171,6 @@
         padding: 10px 30px;
         border-radius: 5px;
         font-weight: bold;
-        cursor: pointer;
-        
         background: linear-gradient(180deg, rgba(255,255,255,.95), rgba(248,250,252,.95));
         border: 1px solid rgba(0,0,0,.08);
         transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease, opacity .12s ease;
@@ -218,7 +207,6 @@
         border-radius: 30px; 
         font-size: 16px;
         font-weight: bold;
-        cursor: pointer;
         transition: all 0.3s ease;
         display: flex;
         align-items: center;
@@ -242,6 +230,12 @@
         transform: scale(1.1); 
         display: inline-block;
     }
+    
+    button,
+	.delBtn,
+	label {
+	    cursor: pointer;
+	}
 </style>
 
 </head>
@@ -296,10 +290,10 @@
                 </tr>
             </table>
 				
-	        <div class="btn-area">          
-				<button type="button" id="likeBtn" class="${likeYn == 'Y' ? 'y' : ''}">
+	     <div class="btn-area">          
+			<button type="button" id="likeBtn" class="${likeYn == 'Y' ? 'y' : ''}">
 					<span class="heart-icon">♥</span> <span id="likeCount">${review.likeCount }</span>
-				</button>
+			</button>
 				   
 			<div class="right-btns">
 				<c:if test="${review.userId eq loginUser.userId }">
@@ -324,7 +318,7 @@
 						<c:choose>
 									
 							<c:when	test="${empty loginUser}">
-								<textarea id="replyContent1" placeholder="로그인 후 이용가능합니다." disabled></textarea>
+								<textarea id="replyContent1" placeholder="로그인 후 이용가능합니다." readonly></textarea>
 							</c:when>
 													
 							<c:otherwise>
@@ -349,6 +343,8 @@
 								</c:otherwise>
 							</c:choose>
 						</div>
+					</th>
+					<th>
 					</th>
 					<th>
 					</th>
@@ -445,7 +441,10 @@ function replyList(){
 					$(".replyArea tbody").html("");
 					if(list.length === 0){
 						let tr = $("<tr>");
-						tr.append($("<td>").attr("colspan", 2).text("조회된 댓글이 없습니다"));
+						tr.append($("<td>")
+								.attr("colspan", 4)
+								.addClass("noReply")
+								.text("조회된 댓글이 없습니다"));
 						$(".replyArea tbody").append(tr);
 					}else{
 						for(let r of list){
@@ -503,7 +502,7 @@ function replyList(){
     				
     				url : "insertReply.re",
     				data : {
-    					content : $("#replyContent").val(),
+    					content : $("#replyContent2").val(),
     					userId : "${loginUser.userId}",
     					reviewId : ${review.reviewId},
     					privateYn : $("#privateReply").is(":checked") ? "Y" : "N"
