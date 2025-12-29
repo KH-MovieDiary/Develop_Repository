@@ -48,7 +48,7 @@
 
         <div class="btn-area">
             <button type="button" class="btn-custom btn-send" onclick="sendNote();">보내기</button>
-            <button type="button" class="btn-custom btn-back" onclick="noteDetail();">취소</button>
+            <button type="button" class="btn-custom btn-back" onclick="history.back();">취소</button>
         </div>
     </div>
 
