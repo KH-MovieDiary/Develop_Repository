@@ -245,12 +245,12 @@
         <h3>감상평 상세보기</h3>
 		<br> 
 			<div style="float: right; display: flex; gap: 10px;">
-			  <c:if test="${review.userId ne loginUser.userId }">
-			    <a class="listBtn" id="sendNoteBtn" 
-			       href="${contextRoot}/websocket/noteHandler?targetId=${review.userId}">쪽지 보내기</a>  
-			  </c:if>
-			    <a class="listBtn" id="listBtn" 
-			       href="${contextRoot}/reviewList.bo">목록으로</a>
+			    <c:if test="${not empty loginUser and review.userId ne loginUser.userId}">
+			        <a class="listBtn" id="sendNoteBtn" 
+			           href="${contextRoot}/websocket/noteHandler?targetId=${review.nickname}">쪽지 보내기</a>
+			    </c:if>
+			
+			    <a class="listBtn" id="listBtn" href="${contextRoot}/reviewList.bo">목록으로</a>
 			</div>
 			<br><br>
             

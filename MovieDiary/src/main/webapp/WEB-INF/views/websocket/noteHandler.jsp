@@ -3,14 +3,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>실시간 쪽지 보내기</title>
+<title>쪽지 보내기</title>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 
 <style>
-    /* ... 제공해주신 스타일 유지 ... */
     body { font-family: 'Noto Sans KR', sans-serif; background-color: #f8f9fa; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
     .note-card { width: 70%; min-width:800px; height:70%; min-height:600px; background: #fff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); padding: 40px; border: none; }
     .note-header { text-align: center; margin-bottom: 30px; }
@@ -31,8 +30,6 @@
 </style>
 </head>
 <body>
-
-<form action="${pageContext.request.contextPath}/websocket/insertNote.do" method="post">
     <div class="note-card">
         <div class="note-header">
             <h2>쪽지 보내기</h2>
@@ -40,57 +37,67 @@
 
         <div class="form-group">
             <label>받는 사람</label>
-            <input type="text" name="receiveId" id="targetId" value="${param.targetId}" 
+            <input type="text" id="receiveNickName" value="${targetId}" 
                    class="form-control form-control-plaintext" readonly>
         </div>
 
         <div class="form-group">
             <label>내용</label>
-            <textarea name="noteContent" id="noteMsg" class="form-control" required></textarea>
+            <textarea id="noteMsg" class="form-control" required></textarea>
         </div>
 
         <div class="btn-area">
-        	<button type="submit" class="btn-custom btn-send">보내기</button>
-            <button type="button" class="btn-custom btn-back" onclick="history.back();">취소</button>
+            <button type="button" class="btn-custom btn-send" onclick="sendNote();">보내기</button>
+            <button type="button" class="btn-custom btn-back" onclick="noteDetail();">취소</button>
         </div>
     </div>
-</form>
 
-<script>
-    function sendNote() {
-        var target = $("#targetId").val();
-        var content = $("#noteMsg").val();
-        
-        if(!content.trim()) { 
-            alert("보낼 내용을 입력해주세요."); 
-            return; 
-        }
-
-        $.ajax({
-            url: "${pageContext.request.contextPath}/websocket/insertNote.do",
-            data: {
-                receiveId: target, // Note VO의 필드명과 일치
-                noteContent: content  // Note VO의 필드명과 일치
-            },
-            type: "post",
-            success: function(result) {
-                if(result === "success") {
-                    // 서버가 정상 가동 중이므로 웹소켓 알림을 시도합니다
-                    if(window.opener && window.opener.noteSocket && window.opener.noteSocket.readyState === WebSocket.OPEN) {
-                        window.opener.noteSocket.send(target + "|" + content);
-                    }
-                    alert("쪽지를 보냈습니다.");
-                    location.href = "${pageContext.request.contextPath}/websocket/noteList";
-                } else {
-                    alert("쪽지 발송에 실패했습니다.");
-                }
-            },
-            error: function() { 
-                alert("서버 통신 중 오류가 발생했습니다."); 
-            }
-        });
-    }
-</script>
-
+	<script>
+		function sendNote() {
+		    const target = $("#receiveNickName").val();
+		    const content = $("#noteMsg").val();
+		    const sender = "${loginUser.nickName}";
+		
+		    if(!content.trim()) { 
+		        alert("보낼 내용을 입력해주세요."); 
+		        return; 
+		    }
+		
+		    $.ajax({
+				url: "${pageContext.request.contextPath}/websocket/insertNote.do",
+		        type: "post",
+		        data: {
+		            receiveNickName: target,
+		            sendNickName: sender,
+		            noteContent: content
+		        },
+				success: function(result) {
+				    if(result === "success") {
+				        const target = $("#receiveNickName").val();
+				        const content = $("#noteMsg").val();
+				        
+				        try {
+				            var pSocket = window.opener ? window.opener.noteSocket : null;
+				            
+				            if (pSocket && pSocket.readyState === WebSocket.OPEN) {
+				                pSocket.send(target + "|" + content); 
+				                console.log("부모 창 소켓을 통해 신호를 쐈습니다.");
+				            } else {
+				                console.error("부모 창의 소켓을 사용할 수 없습니다.");
+				            }
+				        } catch (e) {
+				            console.error("웹소켓 발송 중 스크립트 에러: " + e);
+				        }
+				
+			        alert("쪽지를 보냈습니다.");
+			        window.close();}
+					},
+					
+		        error: function() { 
+		            alert("서버 통신 중 오류가 발생했습니다."); 
+		        }
+		    });
+		}
+	</script>
 </body>
 </html>
