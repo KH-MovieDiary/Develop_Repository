@@ -1,130 +1,93 @@
 package com.kh.moviediary.mypage.controller;
 
-import java.sql.Date;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.moviediary.member.vo.Member;
-import com.kh.moviediary.reviewlist.vo.ReviewList;
+import com.kh.moviediary.mypage.service.MypageService;
+import com.kh.moviediary.tmdb.service.TmdbService;
 
 @Controller
 public class MypageController {
 
-    private static final String API_KEY = "7c6e7a1753d67ca027fa6776c3dbba6f";
-    private static final String BASE_URL = "https://api.themoviedb.org/3";
-    private static final String IMG_URL  = "https://image.tmdb.org/t/p/w500";
+    @Autowired
+    private MypageService mypageService;
+
+    @Autowired
+    private TmdbService tmdbService;
 
     @GetMapping("/mypage.me")
     public String mypage(HttpSession session, Model model) {
 
-        // content1 test data
-//        Member loginUser = Member.builder()
-//                .userId("testUser01")
-//                .nickName("테스트유저")
-//                .birthday("1988-12-05")
-//                .gender("M")
-//                .favoriteGenre("액션, SF")
-//                .picture(null)
-//                .createDate(new java.sql.Date(System.currentTimeMillis()))
-//                .build();
-    	
-    	Member loginUser = (Member)session.getAttribute("loginUser");
-    	
-    	if (loginUser == null) {
-            session.setAttribute("alertMsg", "비정상적인 접근입니다. 로그인 후 이용해주세요.");
-            return "redirect:/"; // 메인 페이지로 강제 이동 (주소창도 깔끔하게 변경)
-        }
-    	
-    	
-        session.setAttribute("loginUser", loginUser);
+        Member loginUser = (Member) session.getAttribute("loginUser");
+        if (loginUser == null) return "redirect:/login.me";
+
+        String userId = loginUser.getUserId();
+
         model.addAttribute("loginUser", loginUser);
-        
-        //content3 test data start
-        List<ReviewList> myReviewList = new ArrayList<ReviewList>();
-
-        for (int i = 1; i <= 25; i++) {
-            ReviewList review = ReviewList.builder()
-                    .reviewId(String.valueOf(i))
-                    .movieId(1000 + i)
-                    .content("테스트 감상평 내용 " + i)
-                    .viewCount((int)(Math.random() * 200))
-                    .likeCount((int)(Math.random() * 50))
-                    .userId(loginUser.getUserId())
-                    .createDate(new Date(System.currentTimeMillis()))
-                    .build();
-
-            myReviewList.add(review);
-        }
-
-        model.addAttribute("myReviewList", myReviewList);
-        
-        //content4 test data 
-        List<Map<String, Object>> myActivityList = new ArrayList<Map<String, Object>>();
-
-        for (int i = 1; i <= 20; i++) {
-            Map<String, Object> map = new HashMap<String, Object>();
-            map.put("reviewId", i);
-            map.put("activityType", i % 2 == 0 ? "COMMENT" : "LIKE");
-            map.put("likeCount", (int)(Math.random() * 100));
-            map.put("createDate", new Date(System.currentTimeMillis()));
-
-            myActivityList.add(map);
-        }
-
-        model.addAttribute("myActivityList", myActivityList);
-
-        
-        // 2️⃣ mainpage에서 쓰던 방식 그대로
-        String url =
-                BASE_URL + "/movie/now_playing"
-                + "?api_key=" + API_KEY
-                + "&language=ko-KR"
-                + "&region=KR"
-                + "&page=1";
-
-        RestTemplate rt = new RestTemplate();
-        List<Map<String, Object>> likedMovies = new ArrayList<Map<String, Object>>();
-
-        try {
-            @SuppressWarnings("unchecked")
-            Map<String, Object> result = rt.getForObject(url, Map.class);
-
-            @SuppressWarnings("unchecked")
-            List<Map<String, Object>> results =
-                    (List<Map<String, Object>>) result.get("results");
-
-            for (Map<String, Object> m : results) {
-                if (likedMovies.size() >= 10) break;
-
-                String posterPath = (String) m.get("poster_path");
-                if (posterPath != null) {
-                    m.put("posterUrl", IMG_URL + posterPath);
-                } else {
-                    m.put("posterUrl", "");
-                }
-
-                likedMovies.add(m);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        model.addAttribute("likedMovies", likedMovies);
+        model.addAttribute("wishList", mypageService.getWishList(userId));
+        model.addAttribute("myReviewList", mypageService.getMyReviewList(userId));
+        model.addAttribute("myCommentList", mypageService.getMyCommentList(userId, 10));
 
         return "mypage/mypage";
     }
+
+    // ✅ 위시리스트 포스터 비동기 로딩용
+    @ResponseBody
+    @PostMapping(value="/mypage/wishlist/posters", produces="application/json;charset=UTF-8")
+    public Map<String, Object> wishlistPosters(@RequestBody Map<String, Object> body,
+                                               HttpSession session) {
+
+        Member loginUser = (Member) session.getAttribute("loginUser");
+        if (loginUser == null) return Map.of("result", "LOGIN");
+
+        Object idsObj = body.get("movieIds");
+        if (!(idsObj instanceof List)) return Map.of("result", "FAIL", "message", "movieIds required");
+
+        @SuppressWarnings("unchecked")
+        List<Object> raw = (List<Object>) idsObj;
+
+        List<String> ids = new ArrayList<>();
+        for (Object o : raw) {
+            if (o == null) continue;
+            String s = String.valueOf(o).trim();
+            if (!s.isEmpty()) ids.add(s);
+        }
+
+        Map<String, String> posters = tmdbService.getPosterUrlsByMovieIds(ids, 40);
+        return Map.of("result", "OK", "posters", posters);
+    }
+
+    // 댓글 상세(원문 + 좋아요/싫어요 수)
+    @ResponseBody
+    @GetMapping(value="/mypage/comment/info", produces="application/json;charset=UTF-8")
+    public Map<String, Object> commentInfo(@RequestParam int commentId, HttpSession session) {
+
+        Member loginUser = (Member) session.getAttribute("loginUser");
+        if (loginUser == null) return Map.of("result", "LOGIN");
+
+        return mypageService.getCommentInfo(commentId, loginUser.getUserId());
+    }
+
+    @ResponseBody
+    @PostMapping(value="/mypage/comment/delete", produces="text/plain;charset=UTF-8")
+    public String deleteComment(@RequestParam int commentId, HttpSession session) {
+        Member loginUser = (Member) session.getAttribute("loginUser");
+        if (loginUser == null) return "LOGIN";
+
+        int result = mypageService.deleteMyComment(commentId, loginUser.getUserId());
+        return (result > 0) ? "OK" : "FAIL";
+    }
 }
-
-
-
-

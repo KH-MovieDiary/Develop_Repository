@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class MovieLike {
+	//VO복구 
     private int movieId;
-    private String userId;
-    // DB 컬럼이 LIKE 라면 문자열 값: 'LIKE' or 'DISLIKE'
     private String likeType;
+    private String userId;
 }

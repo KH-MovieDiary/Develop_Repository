@@ -1,50 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
-	
-	<!-- Root Context: defines shared resources visible to all other web components -->
-		
-		<bean class="org.apache.commons.dbcp2.BasicDataSource" id="dataSource">
-			<property name="driverClassName" value="oracle.jdbc.OracleDriver"/>
-			<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
-			<property name="username" value="MOVIEDIARY"/>
-			<property name="password" value="MD"/>
-		</bean>
-		
-		<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
-			<property name="dataSource" ref="dataSource"/>
-			<property name="configLocation" value="classpath:mybatis-config.xml"/>
-			<property name="mapperLocations" value="classpath:mappers/*-mapper.xml"/>
-		</bean>
-		
-		<bean class="org.mybatis.spring.SqlSessionTemplate" id="sqlSession">
-			<constructor-arg ref="sqlSessionFactory"/>
-		</bean>
-		
-		
-<!-- 		 스케줄러  --> 
-<!-- 		<task:annotation-driven/> -->
-		
-<!-- 		<task:scheduler id="taskScheduler" pool-size="10"/> -->
-		
-<!-- 		트랜잭션 매니저 사용 설정 --> 
-<!-- 		<tx:annotation-driven/> -->
-		
-<!-- 		<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"> -->
-<!-- 			<property name="dataSource" ref="dataSource"/> -->
-<!-- 		</bean> -->
-		
-<!-- 		servlet-context가 아닌 root-context에서 읽는 component 분리  --> 
-		
-<!-- 		<context:component-scan base-package="com.kh.spring" use-default-filters="false"> -->
-<!-- 			<context:include-filter type="annotation" expression="org.springframework.sterotype.Service"/> -->
-<!-- 			<context:include-filter type="annotation" expression="org.springframework.sterotype.Repository"/> -->
-<!-- 			<context:include-filter type="annotation" expression="org.aspectj.lang.annotation.Aspect"/> -->
-<!-- 		</context:component-scan> -->
-		 
-		
-		
-		
-	
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+         http://www.springframework.org/schema/beans  https://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- ✅ 1) TMDB properties 읽기 (src/main/resources/tmdb.properties) -->
+    <context:property-placeholder location="classpath:tmdb.properties" />
+
+    <!-- ✅ 2) Service/DAO/Component Bean 스캔 (TmdbServiceImpl, MypageServiceImpl 등 등록용) -->
+    <context:component-scan base-package="com.kh.moviediary" />
+
+    <!-- Root Context: defines shared resources visible to all other web components -->
+
+    <bean class="org.apache.commons.dbcp2.BasicDataSource" id="dataSource">
+        <property name="driverClassName" value="oracle.jdbc.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+        <property name="username" value="MOVIEDIARY"/>
+        <property name="password" value="MD"/>
+    </bean>
+
+    <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <property name="mapperLocations" value="classpath:mappers/*-mapper.xml"/>
+    </bean>
+
+    <bean class="org.mybatis.spring.SqlSessionTemplate" id="sqlSession">
+        <constructor-arg ref="sqlSessionFactory"/>
+    </bean>
+
+    <!-- 아래 주석들은 그대로 유지 -->
+    <!-- 스케줄러 -->
+    <!-- <task:annotation-driven/> -->
+    <!-- <task:scheduler id="taskScheduler" pool-size="10"/> -->
+
+    <!-- 트랜잭션 매니저 사용 설정 -->
+    <!-- <tx:annotation-driven/> -->
+    <!-- <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+         <property name="dataSource" ref="dataSource"/>
+    </bean> -->
+
+    <!-- (참고) 기존 주석 블록은 base-package가 com.kh.spring이라 현재 프로젝트에는 안 맞습니다.
+         필요하면 나중에 필터링 스캔을 할 때 com.kh.moviediary로 바꿔서 사용하세요. -->
+    <!--
+    <context:component-scan base-package="com.kh.moviediary" use-default-filters="false">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Component"/>
+    </context:component-scan>
+    -->
+
 </beans>
