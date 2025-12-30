@@ -82,28 +82,6 @@ body {
     margin-top: 40px;
 }
 
-.comment-input {
-    display: flex;
-    justify-content: center;   
-    align-items: center;
-    gap: 10px;                 
-}
-
-#commentContent {
-    width: 80%;
-    height: 40px;
-    resize: none;
-    padding: 8px;
-    font-size: 14px;
-}
-
-.btn-comment {
-    height: 40px;
-    padding: 0 16px;
-    font-size: 14px;
-    cursor: pointer;
-}
-
 .board-table tbody tr {
     cursor: pointer;-
 }
