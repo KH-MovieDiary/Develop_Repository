@@ -280,7 +280,9 @@
 
             <div class="profile-info">
                 <p><span>닉네임</span> ${loginUser.nickName}</p>
-                <p><span>생년월일</span>${loginUser.birthday}</p>	
+                <p><span>생년월일</span>
+				<fmt:formatDate value="${loginUser.birthday}" pattern="yyyy년 MM월 dd일"/>
+				</p>	
     			<p><span>나이</span> 만 ${loginUser.age}세</p>
                 <p><span>성별</span> 
 			        <c:choose>

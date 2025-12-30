@@ -114,7 +114,7 @@ public class NoteController {
 	                         Model model,
 	                         HttpSession session) {
 
-	    // 0) 로그인 체크 (비로그인 차단)
+	    // 비로그인 차단
 	    Member loginUser = (Member) session.getAttribute("loginUser");
 	    if (loginUser == null) {
 	        return "redirect:/";
@@ -124,7 +124,7 @@ public class NoteController {
 
 	    if (n != null) {
 
-	        // 1) 소유자 체크: 받은 사람 or 보낸 사람만 열람 가능
+	        // 받은 사람, 보낸 사람만 열람 가능
 	        String loginNick = loginUser.getNickName();
 
 	        boolean isOwner =
