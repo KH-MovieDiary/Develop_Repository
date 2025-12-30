@@ -321,7 +321,7 @@
 				    <p><span>성별</span>
 					<div class="gender-wrapper">
 					    <input type="radio" name="gender" id="male" value="M" 
-					           ${loginUser.gender eq 'M' ? 'checked' : ''} required>
+					           ${loginUser.gender eq 'M' ? 'checked' : ''} >
 					    <label for="male">남성</label>
 					    
 					    <input type="radio" name="gender" id="female" value="F" 
