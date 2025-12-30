@@ -133,28 +133,28 @@ public class MemberController {
 	    int result = service.insertMember(m);
 	    
 	    if(result > 0) {
-	        session.setAttribute("alertMsg", "회원가입성공");
+	        session.setAttribute("alertMsg", "회원가입성공! 로그인 후 이용하시기 바랍니다.");
 	        return "redirect:/"; 
 	    } else {
-	        session.setAttribute("alertMsg", "회원가입실패");
 	        return "common/errorPage";
 	    }
 	}
 	
+	
 	@RequestMapping("login.me")
 	public String loginUser(Member m, HttpSession session, Model model) {
-		Member loginUser = service.loginUser(m);
-		
-		if(loginUser != null && bcrypt.matches(m.getUserPwd(), loginUser.getUserPwd())) {
-			session.setAttribute("alertMsg", "로그인 성공");
-			session.setAttribute("loginUser", loginUser);
-			
-			return "redirect:/";
-		}else {
-			session.setAttribute("alertMsg", "로그인 실패");
-			return "redirect:/";
-		}
+	    Member loginUser = service.loginUser(m);
+	    
+	    if(loginUser != null && bcrypt.matches(m.getUserPwd(), loginUser.getUserPwd())) {
+	        session.setAttribute("loginUser", loginUser);
+	        session.setAttribute("alertMsg", "로그인 성공");
+	        return "redirect:/";
+	    } else {
+	        session.setAttribute("alertMsg", "로그인 실패");
+	        return "redirect:/";
+	    }
 	}
+	
 	
 	
 	@RequestMapping("logout.me")

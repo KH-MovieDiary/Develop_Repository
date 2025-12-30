@@ -326,7 +326,7 @@
 				    
 				    <p><span>성별</span>
 					<div class="gender-wrapper">
-					    <input type="radio" name="gender" id="male" value="M" required>
+					    <input type="radio" name="gender" id="male" value="M">
 					    <label for="male">남성</label>
 					    
 					    <input type="radio" name="gender" id="female" value="F">
@@ -602,6 +602,31 @@
 	    // 기타 필수 입력칸 감지
 	    $requiredInputs.on("input change", function() {
 	        checkFormValidity();
+	    });
+	    
+	    
+	 	// 초기화 버튼 클릭 시 실행될 로직
+	    $(".btn-danger-custom").click(function() {
+	        // 1. 모든 readonly 속성 제거
+	        $("#inputId, #nickName").removeAttr("readonly");
+	        
+	        // 2. 모든 유효성 검사 상태 변수 초기화
+	        isIdChecked = false;
+	        isNickNameChecked = false;
+	        isPwdValid = false;
+	        isPwdConditionMet = false;
+	        isPwdMatched = false;
+	        
+	        // 3. 안내 메시지(div)들 숨기기
+	        $("#resultDiv, #resultDiv2, #resultDiv2_1, #resultDiv3").hide().text("");
+	        
+	        // 4. 프로필 이미지 미리보기 초기화
+	        $("#titleImg").hide().attr("src", "");
+	        $("#titleImgArea").css("border", "2px dashed #ddd");
+	        $(".custom-file-label").text("파일을 선택하세요");
+
+	        // 5. 회원가입 버튼 비활성화
+	        $(".btn-primary").prop("disabled", true);
 	    });
 
 	});
