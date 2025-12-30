@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mypageMapper">
+
+  <!-- =========================
+       content2 : 위시리스트
+       Service/DAO: String userId 단일 파라미터
+       ========================= -->
+  <select id="selectWishListByUserId"
+          parameterType="string"
+          resultType="hashmap">
+    SELECT
+      ML.MOVIE_ID    AS "movieId",
+      ML.LIKE_TYPE   AS "likeType",
+      M.MOVIE_TITLE  AS "movieTitle"
+    FROM MOVIE_LIKE ML
+    JOIN MOVIE M ON M.MOVIE_ID = ML.MOVIE_ID
+    WHERE ML.USER_ID = #{value}
+    ORDER BY ML.MOVIE_ID DESC
+  </select>
+
+
+  <!-- =========================
+       content3 : 내가 쓴 감상평
+       Service/DAO: String userId 단일 파라미터
+       ========================= -->
+  <select id="selectMyReviewListByUserId"
+          parameterType="string"
+          resultType="hashmap">
+    SELECT
+        R.REVIEW_ID     AS "reviewId",
+        R.REVIEW_TITLE  AS "reviewTitle",
+        R.VIEW_COUNT    AS "viewCount",
+        R.LIKE_COUNT    AS "likeCount",
+        R.CREATE_DATE   AS "createDate",
+        R.USER_ID       AS "userId",
+        MV.MOVIE_TITLE  AS "movieTitle",
+        MB.NICKNAME     AS "nickname"
+    FROM REVIEW R
+    JOIN MOVIE MV ON MV.MOVIE_ID = R.MOVIE_ID
+    LEFT JOIN MEMBER MB ON MB.USER_ID = R.USER_ID
+    WHERE R.USER_ID = #{value}
+    ORDER BY R.CREATE_DATE DESC
+  </select>
+
+
+  <!-- =========================
+       content4 : 내가 쓴 댓글 목록 (최신순, limit)
+       Service/DAO: Map param { userId, limit }
+       Oracle 호환 위해 ROWNUM 방식
+       ========================= -->
+  <select id="selectMyCommentList"
+          parameterType="map"
+          resultType="hashmap">
+    SELECT *
+    FROM (
+      SELECT
+          RC.REVIEW_COMMENT_ID AS "commentId",
+          RC.CREATE_DATE       AS "createDate",
+          RC.CONTENT           AS "content",
+          RC.REVIEW_ID         AS "reviewId",
+          R.REVIEW_TITLE       AS "reviewTitle"
+      FROM REVIEW_COMMENT RC
+      JOIN REVIEW R ON R.REVIEW_ID = RC.REVIEW_ID
+      WHERE RC.USER_ID = #{userId}
+        AND NVL(RC.PRIVATE_YN, 'N') = 'N'
+      ORDER BY RC.CREATE_DATE DESC, RC.REVIEW_COMMENT_ID DESC
+    )
+    WHERE ROWNUM &lt;= #{limit}
+  </select>
+
+
+  <!-- =========================
+       삭제 모달용 : 댓글 상세
+       (REVIEW_COMMENT_LIKE 테이블 미존재 전제 → 좋아요/싫어요 제외)
+       Service/DAO: Map param { commentId, userId }
+       ========================= -->
+  <select id="selectCommentInfo"
+          parameterType="map"
+          resultType="hashmap">
+    SELECT
+        RC.REVIEW_COMMENT_ID AS "commentId",
+        RC.CONTENT           AS "content",
+        RC.CREATE_DATE       AS "createDate",
+        RC.REVIEW_ID         AS "reviewId",
+        R.REVIEW_TITLE       AS "reviewTitle"
+    FROM REVIEW_COMMENT RC
+    JOIN REVIEW R ON R.REVIEW_ID = RC.REVIEW_ID
+    WHERE RC.REVIEW_COMMENT_ID = #{commentId}
+      AND RC.USER_ID = #{userId}
+  </select>
+
+
+  <!-- =========================
+       내 댓글만 삭제
+       Service/DAO: Map param { commentId, userId }
+       ========================= -->
+  <delete id="deleteMyComment" parameterType="map">
+    DELETE FROM REVIEW_COMMENT
+    WHERE REVIEW_COMMENT_ID = #{commentId}
+      AND USER_ID = #{userId}
+  </delete>
+
+</mapper>
