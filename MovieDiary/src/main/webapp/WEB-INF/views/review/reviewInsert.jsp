@@ -123,7 +123,7 @@
         <div class="innerOuter">
             <h2 class="form-title">영화감상문 작성하기</h2>
             
-            <form id="enrollForm" method="post" action="${pageContext.request.contextPath}/insert.review">
+            <form id="enrollForm" method="post" action="${contextRoot}/insert.review">
    		
    				<div class="form-group">
                     <label for="reviewTitle">감상평 제목</label>
@@ -319,7 +319,6 @@ function searchMovieAjax() {
 }
 
 function selectMovie(id, title) {
-
  $("input[name='movieTitle']").val(title);
  $("input[name='movieId']").val(id);
  closeSearchModal();

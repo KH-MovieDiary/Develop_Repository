@@ -10,4 +10,7 @@ public interface MainPageService {
 
 	List<Review> reviewGet();
 
+	List<Review> reviewPopularTop5();
+
+
 }

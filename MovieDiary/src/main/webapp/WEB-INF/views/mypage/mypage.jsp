@@ -41,6 +41,11 @@ body{
   padding-top: 24px;
   padding-bottom: 24px;
   box-sizing: border-box;
+.wrap {
+    width: 70%;
+    flex : 1;
+    margin: auto;
+    background-color: #f4f6f8;
 }
 
 /* 3) section은 흰색 카드로 고정 (섹션만 흰색) */
@@ -915,11 +920,12 @@ function loadWishListPostersAsync() {
   });
 }
 </script>
-
-
-
-
+        
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
+
+
+
+
 
 </body>
 </html>

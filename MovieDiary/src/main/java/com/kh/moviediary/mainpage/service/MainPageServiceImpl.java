@@ -23,4 +23,9 @@ public class MainPageServiceImpl implements MainPageService {
 		return dao.reviewGet(sqlSession);
 	}
 
+	@Override
+	public List<Review> reviewPopularTop5() {
+		return dao.reviewPopularTop5(sqlSession);
+	}
+
 }

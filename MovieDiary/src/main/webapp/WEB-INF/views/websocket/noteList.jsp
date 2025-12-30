@@ -30,7 +30,6 @@
 
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
-<br>
 <div class="list-container">
     <div class="list-header">
         <h3 class="font-weight-bold">✉️ 나의 쪽지함</h3>
@@ -60,8 +59,10 @@
                         <c:when test="${not empty receivedList}">
                             <c:forEach var="n" items="${receivedList}">
                                 <tr>
-                                    <td class="user-id">${n.sendId}</td>
-                                    <td><div class="note-content">${n.noteContent}</div></td>
+                                    <td class="user-id">${n.sendNickName}</td>
+                                    <td>
+                                        <div class="note-content" onclick="moveDetail(${n.noteNo});">${n.noteContent}</div>
+                                    </td>
                                     <td><small class="text-muted">${n.time}</small></td>
                                 </tr>
                             </c:forEach>
@@ -74,80 +75,101 @@
             </table>
         </div>
 
-	        <div class="tab-pane fade" id="sent" role="tabpanel">
-	            <table class="table table-hover">
-	                <thead>
-	                    <tr>
-	                        <th width="20%">받는 사람</th>
-	                        <th width="55%">내용</th>
-	                        <th width="25%">날짜</th>
-	                    </tr>
-	                </thead>
-	                <tbody>
-	                    <c:choose>
-	                        <c:when test="${not empty sentList}">
-	                            <c:forEach var="n" items="${sentList}">
-	                                <tr>
-	                                    <td class="user-id">${n.receiveId}</td>
-	                                    <td><div class="note-content">${n.noteContent}</div></td>
-	                                    <td><small class="text-muted">${n.time}</small></td>
-	                                </tr>
-	                            </c:forEach>
-	                        </c:when>
-	                        <c:otherwise>
-	                            <tr><td colspan="3" class="empty-msg">보낸 쪽지가 없습니다.</td></tr>
-	                        </c:otherwise>
-	                    </c:choose>
-	                </tbody>
-	            </table>
-	            
-	            
-	            <div id="pagingArea" class="mt-4">
-	    <ul class="pagination justify-content-center">
-	        <c:choose>
-	            <c:when test="${ pi.currentPage eq 1 }">
-	                <li class="page-item disabled"><a class="page-link" href="#">&lt;</a></li>
-	            </c:when>
-	            <c:otherwise>
-	                <li class="page-item"><a class="page-link" href="noteList?page=${pi.currentPage - 1}">&lt;</a></li>
-	            </c:otherwise>
-	        </c:choose>
-	
-	        <c:forEach var="p" begin="${pi.startPage}" end="${pi.endPage}">
-	            <li class="page-item ${p eq pi.currentPage ? 'active' : ''}">
-	                <a class="page-link" href="noteList?page=${p}">${p}</a>
-	            </li>
-	        </c:forEach>
-	
-	        <c:choose>
-	            <c:when test="${ pi.currentPage eq pi.maxPage or pi.maxPage eq 0 }">
-	                <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
-	            </c:when>
-	            <c:otherwise>
-	                <li class="page-item"><a class="page-link" href="noteList?page=${pi.currentPage + 1}">&gt;</a></li>
-	            </c:otherwise>
-	        </c:choose>
-	    </ul>
-	</div>
-	
-	<style>
-	    .pagination .page-link { color: #333; border: 1px solid #dee2e6; }
-	    .pagination .page-item.active .page-link { 
-	        background-color: #blue; /* 포인트 노란색 */
-	        border-color: #ffc107;
-	        color: white;
-	    }
-	    .pagination .page-link:hover { background-color: #f8f9fa; color: #ffc107; }
-	</style>
-            
-            
+        <div class="tab-pane fade" id="sent" role="tabpanel">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th width="20%">받는 사람</th>
+                        <th width="55%">내용</th>
+                        <th width="25%">날짜</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:choose>
+                        <c:when test="${not empty sentList}">
+                            <c:forEach var="n" items="${sentList}">
+                                <tr>
+                                    <td class="user-id">${n.receiveNickName}</td>
+                                    <td>
+                                        <div class="note-content" onclick="moveDetail(${n.noteNo});">${n.noteContent}</div>
+                                    </td>
+                                    <td><small class="text-muted">${n.time}</small></td>
+                                </tr>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <tr><td colspan="3" class="empty-msg">보낸 쪽지가 없습니다.</td></tr>
+                        </c:otherwise>
+                    </c:choose>
+                </tbody>
+            </table>
         </div>
     </div>
-    
+
+    <div id="pagingArea" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <c:choose>
+                <c:when test="${ pi.currentPage eq 1 }">
+                    <li class="page-item disabled"><a class="page-link" href="#">&lt;</a></li>
+                </c:when>
+                <c:otherwise>
+                    <li class="page-item">
+                        <a class="page-link" href="noteList?page=${pi.currentPage - 1}&type=${type}">&lt;</a>
+                    </li>
+                </c:otherwise>
+            </c:choose>
+
+            <c:forEach var="p" begin="${pi.startPage}" end="${pi.endPage}">
+                <li class="page-item ${p eq pi.currentPage ? 'active' : ''}">
+                    <a class="page-link" href="noteList?page=${p}&type=${type}">${p}</a>
+                </li>
+            </c:forEach>
+
+            <c:choose>
+                <c:when test="${ pi.currentPage eq pi.maxPage or pi.maxPage eq 0 }">
+                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
+                </c:when>
+                <c:otherwise>
+                    <li class="page-item">
+                        <a class="page-link" href="noteList?page=${pi.currentPage + 1}&type=${type}">&gt;</a>
+                    </li>
+                </c:otherwise>
+            </c:choose>
+        </ul>
+    </div>
+
     <div class="text-right mt-4">
         <button class="btn btn-outline-dark" onclick="location.href='${pageContext.request.contextPath}/'">메인으로</button>
     </div>
 </div>
+
+<script>
+    $(function() {
+
+        if("${type}" == "sent") {
+            $("#received-tab").removeClass("active");
+            $("#received").removeClass("show active");
+            $("#sent-tab").addClass("active");
+            $("#sent").addClass("show active");
+        }
+
+
+        $('#noteTab a').on('click', function (e) {
+            e.preventDefault();
+            var selectedType = $(this).attr('id') == 'sent-tab' ? 'sent' : 'received';
+            if("${type}" == selectedType) return;
+            location.href = "noteList?page=1&type=" + selectedType;
+        });
+    });
+
+
+    function moveDetail(nno) {
+        const type = "${type}" || "received";
+        location.href = "noteDetail?nno=" + nno + "&type=" + type;
+    }
+    
+    
+</script>
 
 </body>
 </html>

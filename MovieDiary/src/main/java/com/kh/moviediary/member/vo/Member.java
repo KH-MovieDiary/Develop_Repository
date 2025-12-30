@@ -1,6 +1,6 @@
 package com.kh.moviediary.member.vo;
 
-import java.util.Date;
+import java.sql.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

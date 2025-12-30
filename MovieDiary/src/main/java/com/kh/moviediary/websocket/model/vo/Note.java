@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @Data
 public class Note {
 	private int noteNo;
-	private String sendId;
-	private String receiveId;
+	private String sendNickName;
+	private String receiveNickName;
 	private String time;
 	private String noteContent;
 	private String status;

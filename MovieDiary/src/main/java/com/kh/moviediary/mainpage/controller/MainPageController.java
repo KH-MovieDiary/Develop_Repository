@@ -9,11 +9,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 import com.kh.moviediary.mainpage.service.MainPageService;
 import com.kh.moviediary.review.model.vo.Review;
+import com.kh.moviediary.review.service.ReviewService;
 
 @Controller
 public class MainPageController {
@@ -25,6 +27,8 @@ public class MainPageController {
     @Autowired
     private MainPageService service;
 
+    @Autowired
+    private ReviewService reviewService;
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String mainPage(Model model) {
 
@@ -87,4 +91,17 @@ public class MainPageController {
         List<Review> list = service.reviewGet();
         return list;
     }
+    
+    @ResponseBody
+    @RequestMapping(value="/reviewPopularTop5", produces="application/json; charset=UTF-8")
+    public List<Review> reviewPopularTop5() {
+    	List<Review> list = service.reviewPopularTop5();
+    	return list;
+    }
+    
+    @RequestMapping("/reviewDetail")
+    public String reviewDetail(@RequestParam("reviewId") int reviewId) {
+        return "redirect:/detail.review?rno=" + reviewId;
+    }
+
 }

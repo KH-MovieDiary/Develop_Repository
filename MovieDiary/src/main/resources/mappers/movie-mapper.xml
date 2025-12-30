@@ -170,6 +170,7 @@
 
 	<select id="reviewGet" resultType="com.kh.moviediary.review.model.vo.Review">
 		    SELECT
+		  R.REVIEW_ID AS reviewId,
 		  R.REVIEW_TITLE AS reviewTitle,
 		  R.CONTENT      AS content,
 		  R.VIEW_COUNT   AS viewCount,
@@ -184,6 +185,30 @@
 		ORDER BY R.CREATE_DATE DESC
 		FETCH FIRST 5 ROWS ONLY
 	</select>
+	<select id="reviewPopularTop5" resultType="com.kh.moviediary.review.model.vo.Review">
+    SELECT *
+    FROM (
+        SELECT
+        	r.review_id    AS reviewId,
+            r.REVIEW_TITLE AS reviewTitle,
+            r.CONTENT      AS content,
+            r.VIEW_COUNT   AS viewCount,
+            r.LIKE_COUNT   AS likeCount,
+            r.CREATE_DATE  AS createDate,
+            r.USER_ID      AS userId,
+            mb.NICKNAME    AS nickname,
+            mv.MOVIE_TITLE AS movieTitle
+        FROM REVIEW r
+        JOIN MOVIE mv
+            ON mv.MOVIE_ID = r.MOVIE_ID
+        LEFT JOIN MEMBER mb
+            ON mb.USER_ID = r.USER_ID
+        ORDER BY r.LIKE_COUNT DESC, r.CREATE_DATE DESC
+    )
+    WHERE ROWNUM &lt;= 5
+	</select>
+
+	
 	 <select id="exists" parameterType="map" resultType="int">
         SELECT COUNT(*)
         FROM COMMENT_LIKE

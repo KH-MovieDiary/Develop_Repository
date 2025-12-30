@@ -14,4 +14,8 @@ public class MainPageDao {
 		return sqlSession.selectList("movieMapper.reviewGet");
 	}
 
+	public List<Review> reviewPopularTop5(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectList("movieMapper.reviewPopularTop5");
+	}
+
 }

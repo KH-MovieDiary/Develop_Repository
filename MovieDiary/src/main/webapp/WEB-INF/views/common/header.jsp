@@ -219,7 +219,7 @@
 	                <li><a href="${contextRoot}">HOME</a></li>
 	                <li><a href="${contextRoot}/movieInfo.mo">영화 정보</a></li>
 	                <li><a href="${contextRoot}/reviewList.bo">감상평</a></li>
-	                <li><a href="${contextRoot }/mypage.me">마이페이지</a></li>
+	                <li><a href="${contextRoot }/mypage.me" onclick="return checkLogin();">마이페이지</a></li>
 	                <li>
 	                    <form action="${contextRoot}/movieInfo.mo" method="get" class="search-form">
 					    <input type="text" class="search-input" name="keyword" placeholder="영화 제목을 검색해보세요">
@@ -263,6 +263,42 @@
 		</script>
 		<c:remove var="alertMsg" scope="session" />
 	</c:if>
+	
+	
+	
+	
+	
+	<script>
+	    var noteSocket;
+	
+	    $(document).ready(function() {
+	        if("${loginUser}" != "") {
+	            connectWS();
+	        }
+	    });
+	
+	    function connectWS() {
+	        noteSocket = new WebSocket("ws://localhost:8080/moviediary/note-ws");
+	        
+	        window.noteSocket = noteSocket; 
+
+	        noteSocket.onmessage = function(event) {
+	            if(event.data === "newNote") {
+	                alert("📩 새로운 쪽지가 도착했습니다!");
+	            }
+	        };
+	    }
+	    
+	    function checkLogin() {
+	        var loginUser = "${loginUser}";
+	        
+	        if (loginUser == "") {
+	            alert("로그인 후 이용 가능합니다.");
+	            return false; 
+	        }
+	        return true;
+	    }
+	</script>
 	
 	
 </body>
