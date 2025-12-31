@@ -43,8 +43,10 @@ public class DetailDirectBlockInterceptor implements HandlerInterceptor {
             boolean fromList = referer != null && (referer.contains(ctx + "/reviewList.bo")
             									|| referer.contains(ctx + "/searchList.bo"));
             boolean fromMovieInfo = referer != null && referer.contains(ctx + "/movieInfo.mo");
+            
+            boolean fromMyPage = referer != null && referer.contains(ctx + "/mypage");
 
-            if (!(fromMain || fromList || fromMovieInfo)) {
+            if (!(fromMain || fromList || fromMovieInfo || fromMyPage)) {
                 response.sendRedirect(ctx + "/reviewList.bo");
                 return false;
             }

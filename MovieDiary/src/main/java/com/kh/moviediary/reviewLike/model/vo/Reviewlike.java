@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-
 public class Reviewlike {
 	private int reviewId;		//	REVIEW_ID	NUMBER
 	private String userId;		//	USER_ID	VARCHAR2(30 BYTE)
