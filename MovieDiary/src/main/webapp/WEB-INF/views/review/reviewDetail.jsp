@@ -512,7 +512,7 @@ function replyList(){
     				success : function(result){
     					if(result>0){
     						alert("댓글 등록 성공");
-    						$("#replyContent").val("");
+    						$("#replyContent2").val("");
     						replyList();
     					}else{
     						alert("댓글 등록 실패");
