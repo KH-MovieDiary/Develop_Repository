@@ -17,12 +17,13 @@ import com.kh.moviediary.common.MoviePageInfo;
 @Controller
 public class MovieController {
 
-    private static final String API_KEY = "7c6e7a1753d67ca027fa6776c3dbba6f";
-    private static final String BASE_URL = "https://api.themoviedb.org/3";
-    private static final String IMG_URL  = "https://image.tmdb.org/t/p/w500";
+    private static final String API_KEY = "7c6e7a1753d67ca027fa6776c3dbba6f"; 
+    private static final String BASE_URL = "https://api.themoviedb.org/3"; 
+    private static final String IMG_URL  = "https://image.tmdb.org/t/p/w500"; 
 
     private static final Map<String, CacheEntry> CACHE = new HashMap<String, CacheEntry>();
-    private static final long CACHE_TTL_MS = 60_000;
+
+    private static final long CACHE_TTL_MS = 60_000; 
 
     private static class CacheEntry {
         long savedAt;
@@ -32,7 +33,7 @@ public class MovieController {
             this.savedAt = savedAt;
             this.data = data;
         }
-    }
+    } 
 
     @GetMapping("/movieInfo.mo")
     public String movieInfo(

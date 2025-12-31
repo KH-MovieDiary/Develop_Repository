@@ -333,8 +333,7 @@
         <div id="content">
             <div id="movieRank">
                 <div id="header_movieRank">
-                    <div class="rank-title">
-                        <div class="h1">현재 상영작</div>
+                    <div class="rank-title">                     
                         <div class="sub"></div>
                     </div>
                     <div><a href="${contextRoot}/movieInfo.mo">더보기</a></div>
