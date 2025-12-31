@@ -1,6 +1,5 @@
 package com.kh.moviediary.review.dao;
 
-import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 

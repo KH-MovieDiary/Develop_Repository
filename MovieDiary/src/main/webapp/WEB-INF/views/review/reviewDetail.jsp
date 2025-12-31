@@ -226,7 +226,7 @@
         background-color: #fff0f1; 
     }
     
-    #likeBtn.y .heart-icon {
+    #likeBtn.y .heart {
         transform: scale(1.1); 
         display: inline-block;
     }
@@ -293,7 +293,7 @@
 				
 	     <div class="btn-area">          
 			<button type="button" id="likeBtn" class="${likeYn == 'Y' ? 'y' : ''}">
-					<span class="heart-icon">♥</span> <span id="likeCount">${review.likeCount }</span>
+					<span class="heart">♥</span> <span id="likeCount">${review.likeCount }</span>
 			</button>
 				   
 			<div class="right-btns">

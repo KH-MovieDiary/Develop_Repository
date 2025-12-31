@@ -75,9 +75,6 @@ public class ReviewController {
 				
 				String releaseDate = (String)map.get("release_date");
 				m.setReleaseDateStr(releaseDate != null ? releaseDate : "");
-
-				String overview = (String)map.get("overview");
-				m.setContent(overview != null ? overview : "");
 				
 				String content = (map.get("overview") == null) ? "" : String.valueOf(map.get("overview"));
 				m.setContent(content);
@@ -125,7 +122,6 @@ public class ReviewController {
 	
 	@RequestMapping("/detail.review")
 	public String reviewDetail(@RequestParam(value="rno") int rno,Model model,HttpSession session,HttpServletRequest request) {
-		
 		
 		int result = service.increaseCount(rno);
 		
