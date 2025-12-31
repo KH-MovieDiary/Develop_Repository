@@ -41,4 +41,8 @@ public class NoteDao {
 	public int deleteNote(SqlSessionTemplate sqlSession, int nno) {
 		return sqlSession.update("noteMapper.deleteNote",nno);
 	}
+
+	public String checkReceiverStatus(SqlSessionTemplate sqlSession, String nickName) {
+		return sqlSession.selectOne("noteMapper.checkReceiverStatus",nickName);
+	}
 }

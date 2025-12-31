@@ -98,5 +98,11 @@
 	     WHERE NOTE_NO = #{nno}
 	</update>
 	
+	<select id="checkReceiverStatus" resultType="string">
+	    SELECT STATUS 
+	    FROM MEMBER 
+	    WHERE NICKNAME = #{nickname}
+	</select>
+	
 
 </mapper>

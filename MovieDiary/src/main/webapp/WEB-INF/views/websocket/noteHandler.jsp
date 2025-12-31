@@ -89,6 +89,10 @@
 			        alert("쪽지를 보냈습니다.");
 			        location.href = "${contextRoot}/reviewList.bo";
 			        
+			        } else if(result === "invalid"){
+			        	alert("탈퇴하였거나 수신할수 없는 사용자입니다.");
+			        } else{
+			        	alert("쪽지 발송에 실패하였습니다.")
 			        }
 					},
 					
