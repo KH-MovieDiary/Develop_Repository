@@ -39,6 +39,17 @@ public class NoteController {
 	        return "redirect:" + (referer != null ? referer : "/");
 	    }
 	    
+	    String validTarget = (String)session.getAttribute("validNoteTarget");
+	    
+	    if(targetId == null || !targetId.equals(validTarget)) {
+	    	session.setAttribute("alertMsg", "잘못된 접근입니다. 정상적인 경로를 이용해주세요.");
+	        
+	        String referer = request.getHeader("Referer");
+	        return "redirect:" + (referer != null ? referer : "/");
+	    }
+	    
+
+	    
 	    model.addAttribute("targetId", targetId);
 	    return "websocket/noteHandler"; 
 	}
