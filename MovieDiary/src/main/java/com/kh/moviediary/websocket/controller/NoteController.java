@@ -59,6 +59,13 @@ public class NoteController {
             return "fail";
         }
         
+        String receiverStatus = noteService.checkReceiverStatus(n.getReceiveNickName());
+        
+        if("N".equals(receiverStatus)) {
+        	return "invalid";
+        }
+        
+        
         n.setSendNickName(loginUser.getNickName());
         
         int result = noteService.insertNote(n);

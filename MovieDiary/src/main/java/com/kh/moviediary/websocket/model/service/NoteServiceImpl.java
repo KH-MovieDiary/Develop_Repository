@@ -54,6 +54,11 @@ public class NoteServiceImpl implements NoteService {
 		return Dao.deleteNote(sqlSession, nno);
 	}
 
+	@Override
+	public String checkReceiverStatus(String nickName) {
+		return Dao.checkReceiverStatus(sqlSession, nickName);
+	}
+
 
 	
 
