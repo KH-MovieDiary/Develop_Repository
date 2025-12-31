@@ -143,7 +143,7 @@ public class ReviewController {
 	                likeYn = likeResult;
 	            }
 	        }
-	        //닉네임 유효 검사
+	        
 	        session.setAttribute("validNoteTarget", r.getNickname());
 	        
 			model.addAttribute("review", r);
