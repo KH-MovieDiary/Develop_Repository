@@ -144,6 +144,8 @@ public class ReviewController {
 	            }
 	        }
 	        
+	        session.setAttribute("validNoteTarget", r.getNickname());
+	        
 			model.addAttribute("review", r);
 			model.addAttribute("likeYn", likeYn);
 			
