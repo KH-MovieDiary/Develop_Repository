@@ -138,7 +138,7 @@
 			            	    <input type="hidden" name="movieId" value="${movieId}">
 			       			</c:when>
 							<c:otherwise>
-			            		 <input type="text" id="movieTitle" class="form-control" name="movieTitle" placeholder="영화를 검색하세요" onclick="openSearchModal()" required>
+			            		 <input type="text" id="movieTitle" class="form-control" name="movieTitle" placeholder="영화를 검색하세요" onfocus="openSearchModal()" required>
        							 <input type="hidden" name="movieId" value="${movieId}">
 			            	</c:otherwise>
 			        </c:choose>
