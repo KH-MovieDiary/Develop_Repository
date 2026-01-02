@@ -58,7 +58,7 @@
     </beans:bean>
 
     <!-- 7) WebSocket Handler -->
-    <beans:bean class="com.kh.moviediary.websocket.server.NoteHandler" id="noteHandler"/>
+    <beans:bean class="com.kh.moviediary.websocket.service.NoteHandler" id="noteHandler"/>
  
 
     <websocket:handlers>
