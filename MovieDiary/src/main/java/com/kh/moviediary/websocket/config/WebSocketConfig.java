@@ -8,19 +8,21 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
 
 import com.kh.moviediary.websocket.controller.WebsocketHandler;
+import com.kh.moviediary.websocket.service.NoteHandler;
 
+//WebSocketConfig.java
 @Configuration
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
-	
-	@Autowired
-    private WebsocketHandler websocketHandler;
+ 
+ @Autowired
+ private NoteHandler noteHandler; // 반드시 NoteHandler 타입을 주입받으세요!
 
-    @Override
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(websocketHandler, "/note-ws")
-                .addInterceptors(new HttpSessionHandshakeInterceptor())
-                .setAllowedOrigins("*");
-    }
-
+ @Override
+ public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+     // 경로(/note-ws)와 핸들러(noteHandler)가 정확히 매칭되어야 합니다.
+     registry.addHandler(noteHandler, "/note-ws")
+             .addInterceptors(new HttpSessionHandshakeInterceptor())
+             .setAllowedOrigins("*");
+ }
 }

@@ -286,8 +286,9 @@
 	        window.noteSocket = noteSocket; 
 
 	        noteSocket.onmessage = function(event) {
-	            if(event.data === "newNote") {
-	                alert("📩 새로운 쪽지가 도착했습니다!");
+	            var data = event.data.split("|");
+	            if(data[0] === "RECEIVED_NOTE") {
+	                alert("쪽지가 도착했습니다!");
 	            }
 	        };
 	    }

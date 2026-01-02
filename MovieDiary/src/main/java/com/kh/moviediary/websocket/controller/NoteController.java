@@ -20,6 +20,7 @@ import com.kh.moviediary.common.vo.ReviewPageInfo;
 import com.kh.moviediary.member.vo.Member;
 import com.kh.moviediary.websocket.model.service.NoteService;
 import com.kh.moviediary.websocket.model.vo.Note;
+import com.kh.moviediary.websocket.service.NoteHandler;
 
 
 @Controller
@@ -51,7 +52,7 @@ public class NoteController {
 
 	    
 	    model.addAttribute("targetId", targetId);
-	    return "websocket/noteHandler"; 
+	    return "websocket/noteHandler";
 	}
 
 	
@@ -83,7 +84,7 @@ public class NoteController {
 
         if(result > 0) {
             try {
-                WebsocketHandler.sendNoteAlarm(n.getReceiveNickName());
+                NoteHandler.sendAlarm(n.getReceiveNickName());
             } catch (Exception e) {
                 e.printStackTrace();
             }
