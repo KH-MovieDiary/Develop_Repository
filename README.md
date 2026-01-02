@@ -1,4 +1,4 @@
-# 🎬 KH-MovieDiary
+# 🎬 KH-Filmory
 
 영화 검색 및 리뷰를 위한 웹 프로젝트입니다.  
 TMDB API를 활용하여 영화 정보를 제공하고,  
